@@ -60,6 +60,8 @@ defmodule Database.Schema do
         %{"columns"=>columns, "rows"=> results, "success" => true }
      {:error, {:error, :error, _, error, _}} ->
         %{"success"=> false, "error" => error}
+    {:ok, 1} ->
+        %{"success"=> false, "error" => "This is bad"}
     end
 
 
