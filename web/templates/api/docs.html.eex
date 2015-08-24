@@ -1,0 +1,9 @@
+
+<ol class="breadcrumb">
+  <li><a href="/">Home</a>
+  <li><a href="/<%= @theme %>"><%= capitalize(@theme)%></a></li>
+  <li class="active"><%= capitalize(@service) %> Documentation</li>
+</ol>
+
+
+<h2><%= capitalize(@service) %> Documentation</h2>

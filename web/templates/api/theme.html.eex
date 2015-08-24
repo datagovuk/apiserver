@@ -1,0 +1,22 @@
+
+<ol class="breadcrumb">
+  <li><a href="/">Home</a>
+  <li class="active"><%= capitalize(@theme)%></li>
+</ol>
+
+
+
+
+<div id="swagger-ui-container" class="swagger-ui-wrap">
+
+</div>
+
+<script type="text/javascript">
+ window.swaggerUi = new SwaggerUi({
+        url: "/swagger/test.json",
+        dom_id: "swagger-ui-container",
+        apisSorter : "alpha"
+});
+
+window.swaggerUi.load();
+</script>
