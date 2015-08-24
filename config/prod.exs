@@ -13,7 +13,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :api_server, ApiServer.Endpoint,
   http: [port: 4000 ],
-  url: [host: "example.com", port: 80]
+  url: [host: "api.data.gov.uk", port: 80]
 
 
 config :api_server, ApiServer.Endpoint,

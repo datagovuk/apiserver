@@ -13,6 +13,10 @@ defmodule ApiServer do
       # worker(ApiServer.Worker, [arg1, arg2, arg3]),
     ]
 
+    ini_path = System.get_env("DGU_ETL_CONFIG")
+    ok = :econfig.register_config(:inifile, [String.to_char_list(ini_path)], [])
+
+    Database.Lookups.load_manifests
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options

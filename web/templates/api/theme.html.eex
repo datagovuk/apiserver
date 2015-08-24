@@ -5,18 +5,109 @@
 </ol>
 
 
+ <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#basic" aria-controls="home" role="tab" data-toggle="tab">Basic</a></li>
+    <li role="presentation"><a href="#advanced" aria-controls="profile" role="tab" data-toggle="tab">Advanced</a></li>
+</ul>
 
 
-<div id="swagger-ui-container" class="swagger-ui-wrap">
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="basic" style="margin-top: 20px;">
+        <div id="swagger-ui-container" class="swagger-ui-wrap">
 
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="advanced">
+        <div id="swagger-ui-container" class="swagger-ui-wrap" style="margin-top: 20px;">
+            <div class="info" id="api_info"><div class="info_title">Health API</div></div>
+        </div>
+
+        <div id="schemas">
+            <h3>Schemas</h3>
+            <ul class="nav nav-pills nav-stacked col-md-3" id="schematabs">
+                <%= for {key, v}<- @schema do %>
+                <li><a href="#<%= key %>" data-toggle="tab"><%= capitalize(key) %></a></li>
+                <% end %>
+            </ul>
+
+            <div class="tab-content">
+                <%= for {key, v}<- @schema do %>
+                <div role="tabpanel" class="tab-pane active" id="<%= key %>" style="margin-top: 20px;">
+                    <%= for {name, type}<- v do %>
+                        <span class="badge badge-default"><%= name %> - <%= type %></span>&nbsp;&nbsp;
+                    <% end %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+
+        <br/><br/>
+        <div style="margin-top: 10px;">
+            <div id="editor">SELECT * FROM <%= first_key(@schema) %> limit 10;</div>
+            <button class="btn btn-default" onclick="execute_query();return false;">Execute</button>
+            <div id="download" class="pull-right" style="display:none;"><a id="dllink" href="">Download as CSV</a></div>
+        </div>
+
+        <div id="error" class="alert alert-danger" style="display:none;"></div>
+        <table id="queryresults" class="table table-striped" style="border-top: 20px;">
+
+        </table>
+    </div>
 </div>
 
+
+
 <script type="text/javascript">
+
  window.swaggerUi = new SwaggerUi({
-        url: "/swagger/test.json",
+        url: "/swagger/<%= @theme %>.json",
         dom_id: "swagger-ui-container",
         apisSorter : "alpha"
 });
 
 window.swaggerUi.load();
+
+var editor = ace.edit("editor");
+editor.setTheme("ace/theme/monokai");
+editor.getSession().setMode("ace/mode/sql");
+
+function execute_query() {
+    $("#error").empty();
+    $("#error").hide();
+    var val = editor.getValue();
+    if (!val) return;
+    $.ajax({
+        method: "GET",
+        url: "/api/<%= @theme %>/sql?query=" + encodeURIComponent(val),
+        dataType: "json"
+    }).done(function(object) {
+        $("#queryresults").empty();
+
+        if (!object.success) {
+            $("#download").hide();
+            $("#error").html(object.error);
+            $("#error").show();
+            editor.focus();
+        } else {
+            $("#dllink").attr('href', "/api/<%= @theme %>/sql?query=" + encodeURIComponent(editor.getValue()) + "&format=csv")
+            $("#download").show();
+
+            var r = "<TH>" + object.columns.join("</TH><TH>") + "</TH>";
+            $("#queryresults").append("<THEAD>");
+            $("#queryresults").append("<TR>" + r + "</TR>");
+            $("#queryresults").append("</THEAD>");
+            $("#queryresults").append("<TBODY>");
+            var len = object.rows.length;
+            for( var i =0; i< len; i++) {
+                var row = object.rows[i];
+                var line = "<TD>" + row.join("</TD><TD>") + "</TD>";
+                $("#queryresults").append("<TR>" + line + "</TR>");
+            }
+            $("#queryresults").append("<TBODY>");
+        }
+    });
+}
+
+
+$('#schematabs a:first').tab('show')
 </script>

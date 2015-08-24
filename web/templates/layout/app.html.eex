@@ -30,6 +30,11 @@
     <script src="<%= static_path(@conn, "/js/marked.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/swagger-oauth.js") %>"></script>
 
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/snippets/sql.js"></script>
+
   </head>
 
   <body  class="swagger-section">

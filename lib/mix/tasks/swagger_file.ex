@@ -27,16 +27,23 @@ defmodule SwaggerFile do
      }
   end
 
-  defp add_info(output, data) do
-    {:ok, hostname} = :inet.gethostname()
-    {:ok,{:hostent, fullhost,[],:inet,_,[_]}} = :inet.gethostbyname(hostname)
+  defp get_host("dev") do
+    "127.0.0.1:4000"
+  end
 
+  defp get_host("prod") do
+    "api.data.gov.uk"
+  end
+
+  defp add_info(output, data) do
     root = String.downcase(data["title"])
 
     output = Dict.put(output, "schemes", ["http"])
     output = Dict.put(output, "swagger", "2.0")
-    output = Dict.put(output, "basepath", "/#{root}")
-    output = Dict.put(output, "host", to_string(fullhost))
+    output = Dict.put(output, "basepath", "/api")
+
+
+    output = Dict.put(output, "host", get_host(System.get_env("MIX_ENV")))
 
     info = %{
       "description" => data["description"],
@@ -50,29 +57,38 @@ defmodule SwaggerFile do
   defp add_api_endpoints(output, data) do
     svcs = data["services"]
       |> Enum.map(fn sdict -> add_api_endpoint(data["title"], sdict) end)
+      |> List.flatten
       |> Enum.into(%{})
+
     Dict.put(output, "paths", svcs)
   end
 
   defp add_api_endpoint(theme, service_dict) do
-    name = service_dict["name"]
+    Enum.map(service_dict["searchables"], fn s ->
+        add_searchable_endpoint( theme, service_dict, s)
+    end)
+  end
+
+  defp add_searchable_endpoint(theme, service_dict, searchable) do
+    service_name = service_dict["name"]
+    name = searchable["name"]
     endpoint = %{
       "tags"=> [service_dict["name"]],
       "security" => [],
       #"summary" => "Find",
-      "description" => "TODO",
-      "operationId" => "get_#{name}",
+      "description" => searchable["description"],
+      "operationId" => "get_#{service_name}_#{name}",
       "produces" => [
-         "application/xml",
+         #"application/xml",
          "application/json",
-         "text/csv"
+         #"text/csv"
       ],
       "responses" => %{
         "200" => %{
             "description" => "Successful operation",
             "schema" => %{
               "type" => "array",
-              "items" => %{"$ref" => "#/definitions/#{name}"}
+              "items" => %{"$ref" => "#/definitions/#{service_name}"}
             }
           },
         "400" => %{
@@ -81,22 +97,19 @@ defmodule SwaggerFile do
       }
     }
 
-    params = service_dict["searchable"]
-      |> Enum.map(fn x->  get_parameters(x) end)
-    endpoint = Dict.put(endpoint, "parameters", params)
-
+    endpoint = Dict.put(endpoint, "parameters", get_parameters(searchable))
     get = %{"get": endpoint}
-    {"/#{String.downcase(theme)}/#{name}", get}
+    {"/api/#{String.downcase(theme)}/#{service_name}/by_#{name}", get}
   end
 
   defp get_parameters(param_dict) do
-    %{
-      "name" => param_dict["name"],
-      "in" => "query",
-      "description" => param_dict["description"],
-      "required" => false,
-      "type" => "string"
-     }
+    [%{
+          "name" => param_dict["name"],
+          "in" => "query",
+          "description" => "",
+          "required" => true,
+          "type" => "string"
+         }]
   end
 
   defp add_definitions(output, data) do
@@ -118,38 +131,16 @@ defmodule SwaggerFile do
 
   defp properties_from_db(theme, service_dict) do
     schema = Database.Schema.get_schema(String.downcase(theme), service_dict["name"])
-    IO.inspect schema
     property_format(schema)
     |> Enum.into(%{})
   end
 
   defp property_format(data) do
-    x = data
+    data
     |> Enum.map( fn {k,v} ->
       {k, %{"type" => "string"}}
     end )
-    IO.inspect x
   end
 
-
-  """
-
- "Category": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "Category"
-      }
-    },
-
-  """
 
 end

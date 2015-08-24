@@ -17,7 +17,7 @@ defmodule ApiServer.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [mod: {ApiServer, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :httpoison]]
+     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :httpoison, :gproc, :econfig]]
   end
 
   # Specifies which paths to compile per environment

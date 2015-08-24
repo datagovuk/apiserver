@@ -5,4 +5,9 @@ defmodule ApiServer.ApiView do
     String.capitalize(string)
   end
 
+  def first_key(m) when is_map(m) do
+    k = hd(Map.keys(m))
+    String.downcase(k)
+  end
+
 end

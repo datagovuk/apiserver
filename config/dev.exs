@@ -11,7 +11,7 @@ config :api_server, ApiServer.Endpoint,
   debug_errors: true,
   code_reloader: true,
   cache_static_lookup: false,
-  check_origin: ["http://localhost:4000"]
+  check_origin: ["*"]
 
 # Watch static and templates for browser reloading.
 config :api_server, ApiServer.Endpoint,

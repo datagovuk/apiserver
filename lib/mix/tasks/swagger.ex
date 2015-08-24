@@ -27,7 +27,11 @@ defmodule Mix.Tasks.Swagger do
       {:ok, data} = Yomel.decode_file(ymlfile)
 
       output = SwaggerFile.generate(data)
-      IO.puts Poison.encode!(output, [])
+      {:ok, data} = Poison.encode_to_iodata(output, [indent: 4])
+
+      :ok = File.write("priv/static/swagger/#{theme}.json", data)
+
+      IO.puts "Wrote JSON file to priv/static/swagger/#{theme}.json"
 
       :application.stop(:econfig)
       :application.stop(:gproc)
