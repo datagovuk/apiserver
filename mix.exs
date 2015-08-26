@@ -17,7 +17,7 @@ defmodule ApiServer.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [mod: {ApiServer, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :httpoison, :gproc, :econfig]]
+     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :httpoison, :gproc, :econfig, :yaml_elixir]]
   end
 
   # Specifies which paths to compile per environment
@@ -39,7 +39,8 @@ defmodule ApiServer.Mixfile do
      { :epgsql, github: "epgsql/epgsql"},
      { :poolboy, github: "devinus/poolboy" },
      { :econfig, github: "benoitc/econfig" },
-     { :yomel, "~> 0.2.2" }
+     { :yaml_elixir, github: "KamilLelonek/yaml-elixir" },
+     { :yamerl, github: "yakaz/yamerl" }
   ]
   end
 end

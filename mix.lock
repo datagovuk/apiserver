@@ -20,5 +20,4 @@
   "ranch": {:hex, :ranch, "1.1.0"},
   "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"},
   "yamerl": {:git, "git://github.com/yakaz/yamerl.git", "ae810a808817d9482b4628ae3e20d746e3729fe0", []},
-  "yaml_elixir": {:hex, :yaml_elixir, "1.0.0"},
-  "yomel": {:hex, :yomel, "0.2.2"}}
+  "yaml_elixir": {:git, "git://github.com/KamilLelonek/yaml-elixir.git", "fcafa4933cc7e2c8a1002dfd03c2a7249dc08565", []}}

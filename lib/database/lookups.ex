@@ -11,7 +11,7 @@ defmodule Database.Lookups do
   end
 
   defp load_single_manifest(filepath) do
-    {:ok, [data]} = Yomel.decode_file(filepath)
+    data = YamlElixir.read_from_file(filepath)
 
     theme = String.downcase(data["title"])
     services = data["services"]

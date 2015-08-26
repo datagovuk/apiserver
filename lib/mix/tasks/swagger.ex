@@ -17,6 +17,8 @@ defmodule Mix.Tasks.Swagger do
     def run([theme]) do
       :application.start(:gproc)
       :application.start(:econfig)
+      :application.start(:yaml_elixir)
+      :application.start(:yamerl)
 
       ini_path = System.get_env("DGU_ETL_CONFIG")
       ok = :econfig.register_config(:inifile, [String.to_char_list(ini_path)], [])
@@ -24,9 +26,10 @@ defmodule Mix.Tasks.Swagger do
       #[theme] = args
       ymlfile = ETLConfig.get_config("manifest", "location") |> Path.join("#{theme}.yml")
       IO.puts "Attempting to load #{ymlfile}"
-      {:ok, data} = Yomel.decode_file(ymlfile)
 
-      output = SwaggerFile.generate(data)
+      data = YamlElixir.read_from_file(ymlfile)
+
+      output = SwaggerFile.generate([data])
       {:ok, data} = Poison.encode_to_iodata(output, [indent: 4])
 
       :ok = File.write("priv/static/swagger/#{theme}.json", data)
@@ -35,6 +38,8 @@ defmodule Mix.Tasks.Swagger do
 
       :application.stop(:econfig)
       :application.stop(:gproc)
+      :application.stop(:yamerl)
+      :application.stop(:yaml_elixir)
     end
 
 
