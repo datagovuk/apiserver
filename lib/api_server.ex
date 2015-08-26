@@ -15,6 +15,7 @@ defmodule ApiServer do
 
     ini_path = System.get_env("DGU_ETL_CONFIG")
     ok = :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
+    IO.inspect ini_path
 
     Database.Lookups.load_manifests
 
