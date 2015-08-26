@@ -49,7 +49,7 @@ defmodule Database.Schema do
     {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
       [{:database, to_char_list(dbname)}])
 
-    {:ok, _, _} = :epgsql.squery(connection, 'set statement_timeout to 1000;')
+    {:ok, _, _} = :epgsql.squery(connection, 'set statement_timeout to 100;')
 
     resp = case :epgsql.squery(connection, to_char_list(query)) do
       {:ok, fields, data} ->
