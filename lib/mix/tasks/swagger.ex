@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Swagger do
       :application.start(:yamerl)
 
       ini_path = System.get_env("DGU_ETL_CONFIG")
-      ok = :econfig.register_config(:inifile, [String.to_char_list(ini_path)], [])
+      ok = :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
 
       #[theme] = args
       ymlfile = ETLConfig.get_config("manifest", "location") |> Path.join("#{theme}.yml")
