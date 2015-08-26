@@ -32,7 +32,7 @@ defmodule SwaggerFile do
   end
 
   defp get_host("prod") do
-    "api.data.gov.uk"
+    System.get_env("HOST")
   end
 
   defp add_info(output, data) do
