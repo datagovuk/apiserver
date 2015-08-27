@@ -1,5 +1,44 @@
 defmodule Database.Schema do
 
+  defp get_connection(database) do
+    dbuser = ETLConfig.get_config("database", "reader_username")
+    dbpass = ETLConfig.get_config("database", "reader_password")
+
+    {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
+      [{:database, to_char_list(database)}])
+
+    connection
+  end
+
+  def get_schemas(dbname) do
+    q = """
+      SELECT table_name, column_name, data_type
+      FROM information_schema.columns
+      WHERE table_schema = 'public';
+    """
+
+    connection = get_connection(dbname)
+
+    {:ok, _, results} = connection
+    |> :epgsql.squery(to_char_list(q))
+
+
+    data = results
+    |> Enum.group_by(fn x->
+        elem(x, 0)
+       end)
+    |> Enum.map( fn {k, v} ->
+        cells = Enum.map(v, fn x-> {elem(x, 1), elem(x, 2)} end)
+        |> Enum.into(%{})
+        IO.inspect cells
+        {k, cells}
+       end)
+    |> Enum.into(%{})
+
+    :epgsql.close(connection)
+    data
+  end
+
   def get_schema(dbname, table) do
     q = """
       SELECT column_name, data_type
@@ -8,12 +47,7 @@ defmodule Database.Schema do
         AND table_name   = '#{table}';
     """
 
-    dbuser = ETLConfig.get_config("database", "reader_username")
-    dbpass = ETLConfig.get_config("database", "reader_password")
-
-    {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
-      [{:database, to_char_list(dbname)}])
-
+    connection = get_connection(dbname)
     {:ok, _, results} = :epgsql.squery(connection, to_char_list(q))
     :epgsql.close(connection)
 
@@ -21,12 +55,8 @@ defmodule Database.Schema do
   end
 
  def call_api(dbname, query, args) do
-    dbuser = ETLConfig.get_config("database", "reader_username")
-    dbpass = ETLConfig.get_config("database", "reader_password")
 
-    {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
-      [{:database, to_char_list(dbname)}])
-
+    connection = get_connection(dbname)
     {:ok, fields, data} = :epgsql.equery(connection, to_char_list(query), Enum.map(args, fn x -> to_char_list(x) end))
 
     columns = fields

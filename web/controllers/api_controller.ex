@@ -8,10 +8,7 @@ defmodule ApiServer.ApiController do
 
     # Get the schema for the theme, and assign it to the
     # connection so we can render in template. We can optimize this...
-    schemas = %{
-      "hospitals" => Database.Schema.get_schema(theme, "hospitals" ),
-      "clinics"   => Database.Schema.get_schema(theme, "clinics" ),
-    }
+    schemas = Database.Schema.get_schemas(theme)
 
     conn
     |> assign(:theme, theme)
