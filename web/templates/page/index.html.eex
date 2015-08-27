@@ -14,7 +14,13 @@
     <div class="col-md-4">
         <a href="/health">
         <h3>Health-related APIs</h3>
-        <img src="/images/theme_health.jpg" width="300">
+        <img src="/images/theme_health.jpg" width="300" height="180">
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="/transport">
+        <h3>Transport APIs</h3>
+        <img src="/images/theme_transport.jpg" width="300" height="180">
         </a>
     </div>
 </div>

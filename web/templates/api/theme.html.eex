@@ -19,7 +19,7 @@
     </div>
     <div role="tabpanel" class="tab-pane" id="advanced">
         <div id="swagger-ui-container" class="swagger-ui-wrap" style="margin-top: 20px;">
-            <div class="info" id="api_info"><div class="info_title">Health API</div></div>
+            <div class="info" id="api_info"><div class="info_title"><%= capitalize(@theme)%> API</div></div>
         </div>
 
         <div id="schemas">

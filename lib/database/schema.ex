@@ -32,10 +32,18 @@ defmodule Database.Schema do
     columns = fields
     |> Enum.map(fn x -> elem(x, 1) end)
 
-
     results = data
-    |> Enum.map(fn r -> Enum.zip(columns, Tuple.to_list(r)) end)
+    |> Enum.map(fn row ->
+      row
+      |> Tuple.to_list
+      |> Enum.map(fn cell-> clean(cell) end)
+      # Turn row into a list
+    end)
+    |> Enum.map(fn r -> Enum.zip(columns, r) end)
     |> Enum.map(fn res -> Enum.into(res, %{}) end )
+
+#    |> Tuple.to_list
+#    |> Enum.map(fn c -> Enum.map(c, fn x-> clean(x) end) end)
 
     :epgsql.close(connection)
 
@@ -49,7 +57,7 @@ defmodule Database.Schema do
     {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
       [{:database, to_char_list(dbname)}])
 
-    {:ok, _, _} = :epgsql.squery(connection, 'set statement_timeout to 100;')
+    {:ok, _, _} = :epgsql.squery(connection, 'set statement_timeout to 1000;')
 
     resp = case :epgsql.squery(connection, to_char_list(query)) do
       {:ok, fields, data} ->
@@ -66,11 +74,16 @@ defmodule Database.Schema do
         %{"success"=> false, "error" => "This is bad"}
     end
 
-
-
     :epgsql.close(connection)
     resp
   end
 
+  defp clean({{year, month, day}, {hr, mn, sec}}) do
+    "#{day}/#{month}/#{year} #{hr}:#{mn}:#{sec}"
+  end
+
+  defp clean(val) do
+     val
+  end
 
 end
