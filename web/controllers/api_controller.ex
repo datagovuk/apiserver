@@ -9,10 +9,12 @@ defmodule ApiServer.ApiController do
     # Get the schema for the theme, and assign it to the
     # connection so we can render in template. We can optimize this...
     schemas = Database.Schema.get_schemas(theme)
+    host = "http://" <> (System.get_env("HOST") || "localhost:4000")
 
     conn
     |> assign(:theme, theme)
     |> assign(:schema, schemas)
+    |> assign(:host, host)
     |> render("theme.html")
   end
 
@@ -20,6 +22,19 @@ defmodule ApiServer.ApiController do
   A raw SQL endpoint for the specified theme. The schema should have been
   send as part of the theme action...
   """
+  def theme_sql(conn, %{"theme"=>theme, "format"=>"csv"}=params) do
+    res = Database.Schema.call_sql_api(theme, params["query"])
+
+    csv_stream = [res["columns"]|res["rows"]] |> CSV.encode
+
+    conn
+    |> put_layout(false)
+    |> put_resp_content_type("text/csv")
+    |> put_resp_header("content-disposition", "attachment; filename=\"query.csv\";")
+    |> assign(:csv_stream, csv_stream)
+    |> render "csv.html"
+  end
+
   def theme_sql(conn, %{"theme"=>theme}=params) do
     json conn, Database.Schema.call_sql_api(theme, params["query"])
   end

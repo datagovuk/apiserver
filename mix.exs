@@ -36,6 +36,7 @@ defmodule ApiServer.Mixfile do
      {:poison, "~> 1.4.0"},
      {:corsica, "~> 0.3"},
      {:httpoison, "~> 0.7.2"},
+     {:csv, "~> 1.1.0"},
      { :epgsql, github: "epgsql/epgsql"},
      { :poolboy, github: "devinus/poolboy" },
      { :econfig, github: "benoitc/econfig" },

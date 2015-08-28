@@ -1,0 +1,1 @@
+<%= for row<- @csv_stream do %><%= {:safe,row} %><% end %>

@@ -46,7 +46,7 @@
             <div id="editor">SELECT * FROM <%= first_key(@schema) %> limit 10;</div>
             <button class="btn btn-default" onclick="execute_query();return false;">Execute</button>
             <div id="download" class="pull-right" style="display:none;">
-                <a id="dllink" target="_blank" href="">Download as CSV</a><br/>
+                <a id="dllink" href="">Download as CSV</a><br/>
                 <a id="sql-url" target="_blank" href="">Download as JSON</a>
             </div>
         </div>
@@ -94,10 +94,10 @@ function execute_query() {
             $("#error").show();
             editor.focus();
         } else {
-            $("#sql-url").attr('href', url);
+            $("#sql-url").attr('href', '<%= @host %>' + url);
             $("#sql-url").show();
 
-            $("#dllink").attr('href', url + "&format=csv")
+            $("#dllink").attr('href', '<%= @host %>' + url + '&format=csv')
             $("#download").show();
 
             var r = "<TH>" + object.columns.join("</TH><TH>") + "</TH>";
