@@ -28,9 +28,9 @@ defmodule ApiServer.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 0.17"},
+    [{:phoenix, "~> 1.0.2"},
      {:phoenix_html, "~> 2.0"},
-     {:phoenix_live_reload, "~> 0.6", only: :dev},
+     {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
      {:plug, "~> 1.0"},
      {:poison, "~> 1.4.0"},
