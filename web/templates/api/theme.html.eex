@@ -63,59 +63,5 @@
 
 <script type="text/javascript">
 
- window.swaggerUi = new SwaggerUi({
-        url: "/swagger/<%= @theme %>.json",
-        dom_id: "swagger-ui-container",
-        apisSorter : "alpha"
-});
-
-window.swaggerUi.load();
-
-var editor = ace.edit("editor");
-editor.setTheme("ace/theme/monokai");
-editor.getSession().setMode("ace/mode/sql");
-
-function execute_query() {
-    $("#error").empty();
-    $("#error").hide();
-    var val = editor.getValue();
-    if (!val) return;
-    var url = "/api/<%= @theme %>/sql?query=" + encodeURIComponent(val);
-    $.ajax({
-        method: "GET",
-        url: url,
-        dataType: "json"
-    }).done(function(object) {
-        $("#queryresults").empty();
-
-        if (!object.success) {
-            $("#download").hide();
-            $("#error").html(object.error);
-            $("#error").show();
-            editor.focus();
-        } else {
-            $("#sql-url").attr('href', '<%= @host %>' + url);
-            $("#sql-url").show();
-
-            $("#dllink").attr('href', '<%= @host %>' + url + '&format=csv')
-            $("#download").show();
-
-            var r = "<TH>" + object.columns.join("</TH><TH>") + "</TH>";
-            $("#queryresults").append("<THEAD>");
-            $("#queryresults").append("<TR>" + r + "</TR>");
-            $("#queryresults").append("</THEAD>");
-            $("#queryresults").append("<TBODY>");
-            var len = object.rows.length;
-            for( var i =0; i< len; i++) {
-                var row = object.rows[i];
-                var line = "<TD>" + row.join("</TD><TD>") + "</TD>";
-                $("#queryresults").append("<TR>" + line + "</TR>");
-            }
-            $("#queryresults").append("<TBODY>");
-        }
-    });
-}
-
-
 $('#schematabs a:first').tab('show')
 </script>

@@ -10,8 +10,6 @@
     <title>Data.gov.uk - API Server</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/bootstrap.min.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/style.css") %>">
-
-    <link rel="stylesheet" media="screen" href="<%= static_path(@conn, "/css/screen.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
 
 
@@ -20,24 +18,14 @@
 
     <script src="<%= static_path(@conn, "/js/jquery.slideto.min.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/jquery.wiggle.min.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/jquery.ba-bbq.min.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/handlebars-2.0.0.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/underscore-min.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/backbone-min.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/swagger-ui.js") %>"></script>
-
-    <script src="<%= static_path(@conn, "/js/highlight.7.3.pack.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/marked.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/swagger-oauth.js") %>"></script>
-
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/snippets/sql.js"></script>
 
   </head>
 
-  <body  class="swagger-section">
+  <body>
 <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
         <div class="navbar-header">
