@@ -11,7 +11,6 @@ body {
     border: solid 3px #ddd;
 }
 
-.swagger-ui-wrap {margin-left: 0px !important;}
 
 #resources_container { margin-left 0px !important; padding-left: 0px !important; }
 #resources { margin-left -30px !important; padding-left: 0px !important; }

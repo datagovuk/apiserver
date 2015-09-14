@@ -2,7 +2,7 @@ defmodule ApiServer.ApiController do
   use ApiServer.Web, :controller
 
   @doc """
-  The theme homepage containing the swagger UI and information
+  The theme homepage containing the API UI and information on usage
   """
   def theme(conn, %{"theme"=>theme}=params) do
 
