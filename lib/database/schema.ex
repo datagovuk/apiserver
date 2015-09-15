@@ -30,7 +30,6 @@ defmodule Database.Schema do
     |> Enum.map( fn {k, v} ->
         cells = Enum.map(v, fn x-> {elem(x, 1), elem(x, 2)} end)
         |> Enum.into(%{})
-        IO.inspect cells
         {k, cells}
        end)
     |> Enum.into(%{})
@@ -71,9 +70,6 @@ defmodule Database.Schema do
     end)
     |> Enum.map(fn r -> Enum.zip(columns, r) end)
     |> Enum.map(fn res -> Enum.into(res, %{}) end )
-
-#    |> Tuple.to_list
-#    |> Enum.map(fn c -> Enum.map(c, fn x-> clean(x) end) end)
 
     :epgsql.close(connection)
 

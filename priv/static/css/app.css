@@ -1,11 +1,22 @@
 body {
   min-height: 2000px;
+  background-color: #eee;
 }
 
 .navbar-static-top {
   margin-bottom: 19px;
 }
 
+.nav-tabs {
+    border-bottom: solid 4px #ddd;
+}
+.nav-tabs li.active a, .nav-tabs li.active a:hover {
+    background-color: #fff;
+}
+.nav-tabs li a, .nav-tabs li a:hover {
+    background-color: #999;
+    color: white;
+}
 
 .theme-box {
     border: solid 3px #ddd;
@@ -29,4 +40,27 @@ body {
     xmargin-bottom: 20px;
     position: relative;
     width:100%;
+}
+
+
+
+.service {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 40px;
+    border-radius: 4px;
+}
+h4 {
+    font-weight: bold;
+}
+.api_desc {
+    margin-top: 40px;
+}
+.url_label {
+    margin-left: 20px;
+    font-size: 1.2em;
+    color: #333;
+}
+.toolow {
+    margin-top: -10px;
 }

@@ -16,6 +16,31 @@
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="basic" style="margin-top: 20px;">
 
+    <%= for {name, description, documentation} <- services @manifest do %>
+        <div class="service">
+            <h3><%= description %></h3>
+            <p><%= documentation %></p>
+
+            <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
+                <div class="api_desc">
+                    <h4><%= description %></h4>
+
+                    <span class="label label-default">GET</span>
+                    <span class="url_label">http://api.data.gov.uk/<%= @theme %>/<%= name %>/by_<%= fname %>?</span>
+
+                    <div class="pull-right">
+                        <button class="toolow btn btn-sm btn-default">Make request</button>
+                        &nbsp;
+                        <button class="toolow btn btn-sm btn-default">Get CSV</button>
+                    </div>
+                </div>
+                <hr/>
+            <% end %>
+        </div>
+    <% end %>
+
+
+
     </div>
     <div role="tabpanel" class="tab-pane" id="advanced">
 

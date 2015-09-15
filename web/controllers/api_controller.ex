@@ -10,10 +10,12 @@ defmodule ApiServer.ApiController do
     # connection so we can render in template. We can optimize this...
     schemas = Database.Schema.get_schemas(theme)
     host = "http://" <> (System.get_env("HOST") || "localhost:4000")
+    manifest = Database.Lookups.find_theme(theme)
 
     conn
     |> assign(:theme, theme)
     |> assign(:schema, schemas)
+    |> assign(:manifest, manifest)
     |> assign(:host, host)
     |> render("theme.html")
   end

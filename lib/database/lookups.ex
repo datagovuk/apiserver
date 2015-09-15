@@ -1,7 +1,8 @@
 defmodule Database.Lookups do
 
   def load_manifests() do
-    :ets.new(:services, [:named_table])
+     :ets.new(:services, [:named_table])
+     :ets.new(:themes,   [:named_table])
 
      path = ETLConfig.get_config("manifest", "location")
 
@@ -14,7 +15,9 @@ defmodule Database.Lookups do
     data = YamlElixir.read_from_file(filepath)
 
     theme = String.downcase(data["title"])
-    services = data["services"]
+    :ets.insert(:themes, {theme, data})
+
+    data["services"]
     |> Enum.map(fn x-> process_service(x) end)
     |> List.flatten
     |> Enum.into(%{})
@@ -22,8 +25,6 @@ defmodule Database.Lookups do
       {k, v} = s
       :ets.insert(:services, {"#{theme}/#{k}", v})
     end)
-
-
   end
 
   defp process_service(service) do
@@ -37,6 +38,13 @@ defmodule Database.Lookups do
 
   def find(key) do
     case :ets.lookup(:services, key) do
+      [{^key, bucket}] -> bucket
+      [] -> nil
+    end
+  end
+
+  def find_theme(key) do
+    case :ets.lookup(:themes, key) do
       [{^key, bucket}] -> bucket
       [] -> nil
     end

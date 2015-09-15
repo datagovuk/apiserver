@@ -14,9 +14,13 @@ defmodule ApiServer do
     ]
 
     ini_path = System.get_env("DGU_ETL_CONFIG")
+    if ini_path == nil do
+      IO.puts "DGU_ETL_CONFIG is not defined"
+      System.halt(1)
+    end
     ok = :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
-    IO.inspect ini_path
 
+    # Load the manifests into ETS.
     Database.Lookups.load_manifests
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
