@@ -7,6 +7,10 @@ body {
   margin-bottom: 19px;
 }
 
+.jumbotron {
+    background-color: white;
+}
+
 .nav-tabs {
     border-bottom: solid 4px #ddd;
 }
@@ -22,9 +26,12 @@ body {
     border: solid 3px #ddd;
 }
 
-
-#resources_container { margin-left 0px !important; padding-left: 0px !important; }
-#resources { margin-left -30px !important; padding-left: 0px !important; }
+.input_bottom {
+    border: none;
+    border-bottom: solid 1px #ddd;
+    color: #666;
+}
+.input_bottom:focus {outline: none; }
 
 #editor {
     position: relative;
@@ -54,13 +61,21 @@ h4 {
     font-weight: bold;
 }
 .api_desc {
-    margin-top: 40px;
+    margin-top: 20px;
 }
 .url_label {
-    margin-left: 20px;
     font-size: 1.2em;
     color: #333;
 }
 .toolow {
     margin-top: -10px;
+}
+.output {
+    margin-top: 8px;
+    border: solid 1px #aaa;
+    background-color: #eee;
+    height: 200px;
+    width: 100%;
+    overflow-y: scroll;
+    color: #333;
 }

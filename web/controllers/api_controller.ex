@@ -44,6 +44,29 @@ defmodule ApiServer.ApiController do
   @doc """
   Calls the actual API endpoint within a theme
   """
+  def service(conn, %{"theme"=>theme, "service"=>service, "method"=>method, "format"=>"csv"}=params) do
+    # Based on theme/service/method we want the sql query, and the parameters to expect
+    v = Database.Lookups.find("#{theme}/#{service}/#{method}")
+
+    res = process_api_call(params ,v)
+
+    schema = Map.keys(Database.Schema.get_schema(theme, service))
+
+    rows = Enum.map(res, fn m ->
+      Map.values(m)
+    end)
+
+    csv_stream = [schema|rows] |> CSV.encode
+
+    conn
+    |> put_layout(false)
+    |> put_resp_content_type("text/csv; charset=utf-8")
+    |> put_resp_header("content-disposition", "attachment; filename=\"query.csv\";")
+    |> assign(:csv_stream, csv_stream)
+    |> render "csv.html"
+
+  end
+
   def service(conn, %{"theme"=>theme, "service"=>service, "method"=>method}=params) do
     # Based on theme/service/method we want the sql query, and the parameters to expect
     v = Database.Lookups.find("#{theme}/#{service}/#{method}")
@@ -54,6 +77,7 @@ defmodule ApiServer.ApiController do
           json conn, res
     end
   end
+
 
   @doc """
   Documentation for the particular service.

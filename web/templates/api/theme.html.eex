@@ -25,15 +25,37 @@
                 <div class="api_desc">
                     <h4><%= description %></h4>
 
-                    <span class="label label-default">GET</span>
-                    <span class="url_label">http://api.data.gov.uk/<%= @theme %>/<%= name %>/by_<%= fname %>?</span>
+                    <form action="" method="GET" style="display:inline;" onsubmit="">
+                        <span id="<%= name %>_<%= fname %>" class="url_label"><%= @host %>/api/<%= @theme %>/<%= name %>/by_<%= fname %>?</span>
+                    </form>
+
+                    <script type="text/javascript">
+                        var s = $("#<%= name %>_<%= fname %>");
+                        var str = "";
+
+                        <%= for field <- fields do %>
+                            if(str.length > 0 ) {
+                                str += "&"
+                            }
+                            str += "<%= field %>=";
+                            str += '<input id="<%= name %>_<%= fname %>_<%= field %>" name="<%= field %>" class="input_bottom" type="text" placeholder="<%= field %>">';
+                        <% end %>
+                        s.html( s.html() + str );
+                    </script>
 
                     <div class="pull-right">
-                        <button class="toolow btn btn-sm btn-default">Make request</button>
+                        <button class="toolow btn btn-sm btn-default" onclick="request('<%= name %>_<%= fname %>');">Make request</button>
                         &nbsp;
-                        <button class="toolow btn btn-sm btn-default">Get CSV</button>
+                        <button class="toolow btn btn-sm btn-default" onclick="request('<%= name %>_<%= fname %>', 'csv');">Get CSV</button>
                     </div>
                 </div>
+
+                <div id="<%= name %>_<%= fname %>_container" style="display:none;">
+                    <pre class="output" id="<%= name %>_<%= fname %>_output" >
+                    </pre>
+                    <a href="javascript:$('#<%= name %>_<%= fname %>_container').hide();">Hide</a>
+                </div>
+
                 <hr/>
             <% end %>
         </div>
@@ -130,6 +152,35 @@ function execute_query() {
     });
 }
 
+function get_content(id) {
+    var url = "";
+    _.each($("#" + id).contents(), function(element){
+        if (element.nodeName == "#text") {
+            url += element.data;
+        } else {
+            url += element.value;
+        }
+    });
+    return url;
+}
+
+function request(id, fmt) {
+    var c = get_content(id);
+
+    if (fmt == 'csv') {
+        window.location.href = c + "&format=csv";
+        return;
+    }
+
+    $.ajax({
+        url: c,
+        dataType: "json"
+    }) .done(function( obj ) {
+        var text = JSON.stringify(obj, undefined, 2);
+        $("#" + id + "_output").html( text );
+        $("#" + id + "_container").slideDown();
+    });
+}
 
 $('#schematabs a:first').tab('show')
 </script>
