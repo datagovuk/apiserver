@@ -31,7 +31,6 @@ defmodule ApiServer.ApiView do
           ]
         end)
     end)
-    IO.inspect hd searchables
   end
 
 end
