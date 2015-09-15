@@ -31,6 +31,7 @@ defmodule ApiServer.ApiView do
           ]
         end)
     end)
+    hd searchables
   end
 
 end
