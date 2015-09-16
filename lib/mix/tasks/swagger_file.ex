@@ -99,7 +99,7 @@ defmodule SwaggerFile do
 
     endpoint = Dict.put(endpoint, "parameters", get_parameters(searchable))
     get = %{"get": endpoint}
-    {"/api/#{String.downcase(theme)}/#{service_name}/by_#{name}", get}
+    {"/api/#{String.downcase(theme)}/#{service_name}/#{name}", get}
   end
 
   defp get_parameters(param_dict) do

@@ -32,7 +32,7 @@ defmodule Database.Lookups do
     service["searchables"]
     |> Enum.map(fn s->
       sname = s["name"]
-      {"#{service_name}/by_#{sname}", %{"query"=> s["query"], "name"=>s["name"], "fields"=>s["fields"]} }
+      {"#{service_name}/#{sname}", %{"query"=> s["query"], "name"=>s["name"], "fields"=>s["fields"]} }
     end)
   end
 

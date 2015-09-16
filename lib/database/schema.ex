@@ -62,10 +62,12 @@ defmodule Database.Schema do
 
     connection = get_connection(dbname)
 
-    IO.inspect query
-    IO.inspect args
-
-    {:ok, fields, data} = :epgsql.equery(connection, to_char_list(query), Enum.map(args, fn x -> to_char_list(x) end))
+    case args do
+       [] ->
+          {:ok, fields, data} = :epgsql.squery(connection, to_char_list(query))
+        _ ->
+          {:ok, fields, data} = :epgsql.equery(connection, to_char_list(query), Enum.map(args, fn x -> to_char_list(x) end))
+    end
 
     columns = fields
     |> Enum.map(fn x -> elem(x, 1) end)

@@ -26,19 +26,23 @@
                     <h4><%= description %></h4>
 
                     <form action="" method="GET" style="display:inline;" onsubmit="">
-                        <span id="<%= name %>_<%= fname %>" class="url_label"><%= @host %>/api/<%= @theme %>/<%= name %>/by_<%= fname %>?</span>
+                        <span id="<%= name %>_<%= fname %>" class="url_label"><%= @host %>/api/<%= @theme %>/<%= name %>/<%= fname %></span>
                     </form>
 
                     <script type="text/javascript">
                         var s = $("#<%= name %>_<%= fname %>");
                         var str = "";
 
-                        <%= for field <- fields do %>
-                            if(str.length > 0 ) {
-                                str += "&"
-                            }
-                            str += "<%= field %>=";
-                            str += '<input id="<%= name %>_<%= fname %>_<%= field %>" name="<%= field %>" class="input_bottom" type="text" placeholder="<%= field %>">';
+                        <%= if fields do %>
+                            console.log("We have fields!")
+                            <%= for field <- fields do %>
+                                    if(str.length > 0 ) {
+                                        str += "&"
+                                    }
+                                    str += "<%= field %>=";
+                                    str += '<input id="<%= name %>_<%= fname %>_<%= field %>" name="<%= field %>" class="input_bottom" type="text" placeholder="<%= field %>">';
+                            <% end %>
+                            str = "?" + str;
                         <% end %>
                         s.html( s.html() + str );
                     </script>

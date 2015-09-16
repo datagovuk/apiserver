@@ -100,13 +100,12 @@ defmodule ApiServer.ApiController do
   defp process_api_call(%{"theme"=>theme, "service"=>service, "method"=>method}=params,
                        %{"name"=>param_name, "query"=>query, "fields"=>fields}) do
 
-    parameters = Enum.map(fields, fn f ->
-      Map.get(params, f)
-    end)
-
-    IO.puts "!"
-    IO.inspect parameters
-
+    parameters = case fields do
+      nil -> []
+      _ -> Enum.map(fields, fn f ->
+             Map.get(params, f)
+           end)
+    end
     Database.Schema.call_api(theme, query, parameters)
   end
 
