@@ -10,6 +10,10 @@ defmodule Database.Schema do
     connection
   end
 
+  defp release_connection(connection) do
+    :epgsql.close(connection)
+  end
+
   def get_schemas(dbname) do
     q = """
       SELECT table_name, column_name, data_type
@@ -34,7 +38,7 @@ defmodule Database.Schema do
        end)
     |> Enum.into(%{})
 
-    :epgsql.close(connection)
+    release_connection(connection)
     data
   end
 
@@ -48,7 +52,8 @@ defmodule Database.Schema do
 
     connection = get_connection(dbname)
     {:ok, _, results} = :epgsql.squery(connection, to_char_list(q))
-    :epgsql.close(connection)
+
+    release_connection(connection)
 
     Enum.into(results, %{})
   end
@@ -56,6 +61,10 @@ defmodule Database.Schema do
  def call_api(dbname, query, args) do
 
     connection = get_connection(dbname)
+
+    IO.inspect query
+    IO.inspect args
+
     {:ok, fields, data} = :epgsql.equery(connection, to_char_list(query), Enum.map(args, fn x -> to_char_list(x) end))
 
     columns = fields
@@ -71,7 +80,7 @@ defmodule Database.Schema do
     |> Enum.map(fn r -> Enum.zip(columns, r) end)
     |> Enum.map(fn res -> Enum.into(res, %{}) end )
 
-    :epgsql.close(connection)
+    release_connection(connection)
 
     results
   end
@@ -100,7 +109,8 @@ defmodule Database.Schema do
         %{"success"=> false, "error" => "This is bad"}
     end
 
-    :epgsql.close(connection)
+    release_connection(connection)
+
     resp
   end
 

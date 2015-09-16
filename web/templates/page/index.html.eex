@@ -24,5 +24,11 @@
         <img src="/images/theme_transport.jpg" width="300" height="180">
         </a>
     </div>
+    <div class="col-md-4">
+        <a href="/environment">
+        <h3>Environment APIs</h3>
+        <img src="/images/theme_environment.jpg" width="300" height="180">
+        </a>
+    </div>
 </div>
 

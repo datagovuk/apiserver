@@ -70,6 +70,7 @@ defmodule ApiServer.ApiController do
   def service(conn, %{"theme"=>theme, "service"=>service, "method"=>method}=params) do
     # Based on theme/service/method we want the sql query, and the parameters to expect
     v = Database.Lookups.find("#{theme}/#{service}/#{method}")
+
     case process_api_call(params, v) do
       nil ->
           conn |> put_status(400)
@@ -97,10 +98,14 @@ defmodule ApiServer.ApiController do
 
   @doc false
   defp process_api_call(%{"theme"=>theme, "service"=>service, "method"=>method}=params,
-                       %{"name"=>param_name, "query"=>query}) do
+                       %{"name"=>param_name, "query"=>query, "fields"=>fields}) do
 
-    parameters = String.split(param_name)
-    |> Enum.map(fn p -> Map.get(params, p) end )
+    parameters = Enum.map(fields, fn f ->
+      Map.get(params, f)
+    end)
+
+    IO.puts "!"
+    IO.inspect parameters
 
     Database.Schema.call_api(theme, query, parameters)
   end
