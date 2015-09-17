@@ -19,6 +19,7 @@ defmodule ApiServer.Router do
 
     get "/:theme/sql", ApiController, :theme_sql
     get "/:theme/:service/:method", ApiController, :service
+    get "/:theme/:service", ApiController, :service_direct
   end
 
   scope "/", ApiServer do

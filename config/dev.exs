@@ -12,6 +12,7 @@ config :api_server, ApiServer.Endpoint,
   code_reloader: true,
   cache_static_lookup: false
 
+
 # Watch static and templates for browser reloading.
 config :api_server, ApiServer.Endpoint,
   live_reload: [

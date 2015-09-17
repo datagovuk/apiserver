@@ -3,9 +3,10 @@ defmodule Database.Schema do
   defp get_connection(database) do
     dbuser = ETLConfig.get_config("database", "reader_username")
     dbpass = ETLConfig.get_config("database", "reader_password")
+    {port, _} = Integer.parse(System.get_env("PGPORT") || "5432")
 
     {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
-      [{:database, to_char_list(database)}])
+      [{:database, to_char_list(database)}, {:port, port}])
 
     connection
   end

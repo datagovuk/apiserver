@@ -3,6 +3,15 @@ body {
   background-color: #eee;
 }
 
+.tab-pane {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.tabcontainer {
+    border-right: solid 2px red;
+}
+
 .navbar-static-top {
   margin-bottom: 19px;
 }
@@ -15,7 +24,8 @@ body {
     border-bottom: solid 4px #ddd;
 }
 .nav-tabs li.active a, .nav-tabs li.active a:hover {
-    background-color: #fff;
+    background-color: #2D3E4F;
+    color:white;
 }
 .nav-tabs li a, .nav-tabs li a:hover {
     background-color: #999;

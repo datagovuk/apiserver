@@ -9,6 +9,7 @@
 
  <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#basic" aria-controls="home" role="tab" data-toggle="tab">Basic</a></li>
+    <li role="presentation"><a href="#filtered" aria-controls="profile" role="tab" data-toggle="tab">Filters</a></li>
     <li role="presentation"><a href="#advanced" aria-controls="profile" role="tab" data-toggle="tab">Advanced</a></li>
 </ul>
 
@@ -64,11 +65,17 @@
             <% end %>
         </div>
     <% end %>
-
-
-
     </div>
-    <div role="tabpanel" class="tab-pane" id="advanced">
+
+    <div role="tabpanel" class="tab-pane" id="filtered" style="margin-top: 20px;">
+        <div class="service">
+            <h3>Filters</h3>
+            <p>You can query the database by selecting or entering values for specific fields</p>
+        </div>
+    </div>
+
+
+    <div role="tabpanel" class="tab-pane" id="advanced"  style="margin-top: 20px;">
 
         <div id="schemas">
             <h3>Schemas</h3>

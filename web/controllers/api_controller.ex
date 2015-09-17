@@ -79,6 +79,15 @@ defmodule ApiServer.ApiController do
     end
   end
 
+  @doc """
+  Support for querying the endpoint directly by calling it with all of the required
+  filters in query params ....
+  """
+  def service_direct(conn, %{"theme"=>theme, "service"=>service}=params) do
+    # We want a params dict without theme and service in it ....
+
+  end
+
 
   @doc """
   Documentation for the particular service.
