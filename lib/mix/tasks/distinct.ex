@@ -2,6 +2,7 @@ defmodule Mix.Tasks.Distinct do
 
   defmodule Generate do
     use Mix.Task
+    alias Poison, as: JSON
 
     @shortdoc "Generate distinct fields for a table"
 
@@ -28,7 +29,12 @@ defmodule Mix.Tasks.Distinct do
       IO.puts "Attempting to load #{ymlfile}"
       data = YamlElixir.read_from_file(ymlfile)
 
-      process_services data["services"], String.downcase(data["title"])
+      res = process_services data["services"], String.downcase(data["title"]), %{}
+
+      path = "#{Mix.Project.app_path}/priv/static/distincts/#{theme}.json"
+
+      :ok = File.write!(path, JSON.encode!(res))
+      IO.puts "Wrote distincts file to #{path}"
 
       :application.stop(:econfig)
       :application.stop(:gproc)
@@ -37,21 +43,27 @@ defmodule Mix.Tasks.Distinct do
     end
 
 
-    defp process_services([h|t], name) do
-      process_service(h, name)
-      process_services(t, name)
+    defp process_services([h|t], theme, acc) do
+      results = process_service(h, theme)
+      acc = Dict.put(acc, h["name"], results)
+      process_services(t, theme, acc)
     end
-    defp process_services([], _), do: nil
+    defp process_services([], _, acc), do: acc
+
 
     defp process_service(service_dict, theme_name) do
-      process_table_settings(service_dict["table_settings"], theme_name, service_dict["name"])
+      service_dict["table_settings"]
+      |> process_table_settings(theme_name, service_dict["name"])
     end
+
 
     defp process_table_settings(table_settings, theme_name, name) do
-      process_choice_field(Dict.get(table_settings, "choice_fields", []), theme_name, name)
+      Dict.get(table_settings, "choice_fields", [])
+      |>  process_choice_field(theme_name, name, %{})
     end
 
-    defp process_choice_field([h|t], theme_name, name) do
+
+    defp process_choice_field([h|t], theme_name, name, acc) do
       dbuser = ETLConfig.get_config("database", "owner")
       dbpass = ETLConfig.get_config("database", "owner")
 
@@ -69,13 +81,14 @@ defmodule Mix.Tasks.Distinct do
 
       :epgsql.close(connection)
 
-      process_choice_field(t, theme_name, name)
+      process_choice_field(t, theme_name, name, Dict.put(acc, h, sorted))
     end
+
 
     defp extract_val({val}), do: val
 
-    defp process_choice_field([], _, _), do: nil
-    defp process_choice_field(nil, _, _), do: nil
+    defp process_choice_field([], _, _, acc), do: acc
+    defp process_choice_field(nil, _, _, acc), do: acc
 
   end
 end

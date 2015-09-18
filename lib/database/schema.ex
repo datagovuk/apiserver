@@ -1,4 +1,8 @@
 defmodule Database.Schema do
+  @moduledoc """
+  This module contains all of the functions used to connect to the
+  database for performing queries, and also fetching schema of tables.
+  """
 
   defp get_connection(database) do
     dbuser = ETLConfig.get_config("database", "reader_username")

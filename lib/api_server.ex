@@ -22,6 +22,7 @@ defmodule ApiServer do
 
     # Load the manifests into ETS.
     Database.Lookups.load_manifests
+    Database.Lookups.load_distincts
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options

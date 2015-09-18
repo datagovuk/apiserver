@@ -9,7 +9,7 @@ defmodule ApiServer.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/", from: :api_server, gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt themes components)
+    only: ~w(css fonts images js favicon.ico robots.txt distincts)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

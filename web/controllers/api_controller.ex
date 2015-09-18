@@ -4,13 +4,13 @@ defmodule ApiServer.ApiController do
   @doc """
   The theme homepage containing the API UI and information on usage
   """
-  def theme(conn, %{"theme"=>theme}=params) do
+  def theme(conn, %{"theme"=>theme}) do
 
     # Get the schema for the theme, and assign it to the
     # connection so we can render in template. We can optimize this...
     schemas = Database.Schema.get_schemas(theme)
     host = "http://" <> (System.get_env("HOST") || "localhost:4000")
-    manifest = Database.Lookups.find_theme(theme)
+    manifest = Database.Lookups.find(:themes, theme)
 
     conn
     |> assign(:theme, theme)
@@ -46,7 +46,7 @@ defmodule ApiServer.ApiController do
   """
   def service(conn, %{"theme"=>theme, "service"=>service, "method"=>method, "format"=>"csv"}=params) do
     # Based on theme/service/method we want the sql query, and the parameters to expect
-    v = Database.Lookups.find("#{theme}/#{service}/#{method}")
+    v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
     res = process_api_call(params ,v)
 
@@ -69,7 +69,7 @@ defmodule ApiServer.ApiController do
 
   def service(conn, %{"theme"=>theme, "service"=>service, "method"=>method}=params) do
     # Based on theme/service/method we want the sql query, and the parameters to expect
-    v = Database.Lookups.find("#{theme}/#{service}/#{method}")
+    v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
     case process_api_call(params, v) do
       nil ->
@@ -106,8 +106,8 @@ defmodule ApiServer.ApiController do
   end
 
   @doc false
-  defp process_api_call(%{"theme"=>theme, "service"=>service, "method"=>method}=params,
-                       %{"name"=>param_name, "query"=>query, "fields"=>fields}) do
+  defp process_api_call(%{"theme"=>theme}=params,
+                       %{"query"=>query, "fields"=>fields}) do
 
     parameters = case fields do
       nil -> []
