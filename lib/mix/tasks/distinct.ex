@@ -23,13 +23,18 @@ defmodule Mix.Tasks.Distinct do
       :application.start(:yamerl)
 
       ini_path = System.get_env("DGU_ETL_CONFIG")
-      ok = :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
+      :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
 
-      ymlfile = ETLConfig.get_config("manifest", "location") |> Path.join("#{theme}.yml")
+      ymlfile = "manifest"
+      |> ETLConfig.get_config("location")
+      |> Path.join("#{theme}.yml")
+
       IO.puts "Attempting to load #{ymlfile}"
       data = YamlElixir.read_from_file(ymlfile)
 
-      res = process_services data["services"], String.downcase(data["title"]), %{}
+      res = process_services(data["services"],
+                             String.downcase(data["title"]),
+                             %{})
 
       path = "#{Mix.Project.app_path}/priv/static/distincts/#{theme}.json"
 
@@ -58,7 +63,8 @@ defmodule Mix.Tasks.Distinct do
 
 
     defp process_table_settings(table_settings, theme_name, name) do
-      Dict.get(table_settings, "choice_fields", [])
+      table_settings
+      |> Dict.get("choice_fields", [])
       |>  process_choice_field(theme_name, name, %{})
     end
 
@@ -69,7 +75,9 @@ defmodule Mix.Tasks.Distinct do
 
       {port, _} = Integer.parse(System.get_env("PGPORT") || "5432")
 
-      {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
+      {:ok, connection} = :epgsql.connect('localhost',
+                                          to_char_list(dbuser),
+                                          to_char_list(dbpass),
         [{:database, to_char_list(theme_name)}, {:port, port}])
 
       {:ok, _, results} = connection
@@ -84,11 +92,10 @@ defmodule Mix.Tasks.Distinct do
       process_choice_field(t, theme_name, name, Dict.put(acc, h, sorted))
     end
 
-
-    defp extract_val({val}), do: val
-
     defp process_choice_field([], _, _, acc), do: acc
     defp process_choice_field(nil, _, _, acc), do: acc
+
+    defp extract_val({val}), do: val
 
   end
 end

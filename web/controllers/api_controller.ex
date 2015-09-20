@@ -32,7 +32,8 @@ defmodule ApiServer.ApiController do
     conn
     |> put_layout(false)
     |> put_resp_content_type("text/csv")
-    |> put_resp_header("content-disposition", "attachment; filename=\"query.csv\";")
+    |> put_resp_header("content-disposition",
+                       "attachment; filename=\"query.csv\";")
     |> assign(:csv_stream, csv_stream)
     |> render "csv.html"
   end
@@ -44,8 +45,10 @@ defmodule ApiServer.ApiController do
   @doc """
   Calls the actual API endpoint within a theme
   """
-  def service(conn, %{"theme"=>theme, "service"=>service, "method"=>method, "format"=>"csv"}=params) do
-    # Based on theme/service/method we want the sql query, and the parameters to expect
+  def service(conn, %{"theme"=>theme, "service"=>service,
+                      "method"=>method, "format"=>"csv"}=params) do
+    # Based on theme/service/method we want the sql query, and the
+    # parameters to expect
     v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
     res = process_api_call(params ,v)
@@ -61,14 +64,17 @@ defmodule ApiServer.ApiController do
     conn
     |> put_layout(false)
     |> put_resp_content_type("text/csv; charset=utf-8")
-    |> put_resp_header("content-disposition", "attachment; filename=\"query.csv\";")
+    |> put_resp_header("content-disposition",
+                       "attachment; filename=\"query.csv\";")
     |> assign(:csv_stream, csv_stream)
     |> render "csv.html"
 
   end
 
-  def service(conn, %{"theme"=>theme, "service"=>service, "method"=>method}=params) do
-    # Based on theme/service/method we want the sql query, and the parameters to expect
+  def service(conn, %{"theme"=>theme, "service"=>service,
+                      "method"=>method}=params) do
+    # Based on theme/service/method we want the sql query,
+    # and the parameters to expect
     v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
     case process_api_call(params, v) do
@@ -80,8 +86,8 @@ defmodule ApiServer.ApiController do
   end
 
   @doc """
-  Support for querying the endpoint directly by calling it with all of the required
-  filters in query params ....
+  Support for querying the endpoint directly by calling it with all of the
+  required filters in query params ....
   """
   def service_direct(conn, %{"theme"=>theme, "service"=>service}=params) do
     # We want a params dict without theme and service in it ....
@@ -92,7 +98,7 @@ defmodule ApiServer.ApiController do
   @doc """
   Documentation for the particular service.
   """
-  def service_docs(conn, %{"theme"=>theme, "service"=>service}=params) do
+  def service_docs(conn, %{"theme"=>theme, "service"=>service}=_params) do
     conn
     |> assign(:theme, theme)
     |> assign(:service, service)

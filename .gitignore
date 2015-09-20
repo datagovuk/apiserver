@@ -4,6 +4,8 @@
 /deps
 /*.ez
 
+priv/static/distincts/*.json
+
 # Generate on crash by the VM
 erl_crash.dump
 

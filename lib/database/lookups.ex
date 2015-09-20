@@ -21,7 +21,8 @@ defmodule Database.Lookups do
 
      path = ETLConfig.get_config("manifest", "location")
 
-     Path.wildcard("#{path}/*.yml")
+     "#{path}/*.yml"
+     |> Path.wildcard
      |> Enum.each(fn x-> load_single_manifest(x) end)
   end
 
@@ -43,9 +44,11 @@ defmodule Database.Lookups do
 
   defp load_distinct(distincts_file) do
     IO.puts "Loading #{distincts_file}"
-    %{"theme"=> theme} = Regex.named_captures(~r/.*\/(?<theme>\w+)\.json/, distincts_file)
+    %{"theme"=> theme} = Regex.named_captures(
+        ~r/.*\/(?<theme>\w+)\.json/, distincts_file)
 
-    blob = File.read!(distincts_file)
+    blob = distincts_file
+    |> File.read!
     |> JSON.decode!
 
     :ets.insert(:distincts, {theme, blob})
@@ -56,7 +59,9 @@ defmodule Database.Lookups do
     service["searchables"]
     |> Enum.map(fn s->
       sname = s["name"]
-      {"#{service_name}/#{sname}", %{"query"=> s["query"], "name"=>s["name"], "fields"=>s["fields"]} }
+      {"#{service_name}/#{sname}", %{"query"=> s["query"],
+                                     "name"=>s["name"],
+                                     "fields"=>s["fields"]} }
     end)
   end
 

@@ -13,13 +13,17 @@ defmodule ApiServer.ApiView do
 
   # Helpers for working with manifest ....
   def services(manifest) do
-    Dict.get(manifest, "services")
-    |> Enum.map(fn s -> {Dict.get(s, "name"),Dict.get(s, "description"), Dict.get(s,"documentation")} end )
+    manifest
+    |> Dict.get("services")
+    |> Enum.map(fn s -> {Dict.get(s, "name"),
+                         Dict.get(s, "description"),
+                         Dict.get(s,"documentation")} end)
     |> Enum.sort
   end
 
   def searchables_for_service(manifest, service_name) do
-    searchables = Dict.get(manifest, "services")
+    searchables = manifest
+    |> Dict.get("services")
     |> Enum.filter_map(fn f-> Dict.get(f, "name") == service_name end,
                        fn s -> Dict.get(s, "searchables") end)
     |> Enum.map(fn items ->

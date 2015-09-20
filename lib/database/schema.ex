@@ -9,7 +9,9 @@ defmodule Database.Schema do
     dbpass = ETLConfig.get_config("database", "reader_password")
     {port, _} = Integer.parse(System.get_env("PGPORT") || "5432")
 
-    {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
+    {:ok, connection} = :epgsql.connect('localhost',
+                                        to_char_list(dbuser),
+                                        to_char_list(dbpass),
       [{:database, to_char_list(database)}, {:port, port}])
 
     connection
@@ -71,7 +73,9 @@ defmodule Database.Schema do
        [] ->
           {:ok, fields, data} = :epgsql.squery(connection, to_char_list(query))
         _ ->
-          {:ok, fields, data} = :epgsql.equery(connection, to_char_list(query), Enum.map(args, fn x -> to_char_list(x) end))
+          {:ok, fields, data} = :epgsql.equery(connection, to_char_list(query),
+                                               Enum.map(args,
+                                                  fn x -> to_char_list(x) end))
     end
 
     columns = fields
@@ -96,7 +100,9 @@ defmodule Database.Schema do
     dbuser = ETLConfig.get_config("database", "reader_username")
     dbpass = ETLConfig.get_config("database", "reader_password")
 
-    {:ok, connection} = :epgsql.connect('localhost', to_char_list(dbuser), to_char_list(dbpass),
+    {:ok, connection} = :epgsql.connect('localhost',
+                                        to_char_list(dbuser),
+                                        to_char_list(dbpass),
       [{:database, to_char_list(dbname)}])
 
     {:ok, _, _} = :epgsql.squery(connection, 'set statement_timeout to 3000;')

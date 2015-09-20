@@ -18,7 +18,8 @@ defmodule ApiServer.Mixfile do
   def application do
     [
       mod: {ApiServer, []},
-      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :httpoison, :gproc, :econfig, :yaml_elixir]
+      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
+                     :httpoison, :gproc, :econfig, :yaml_elixir]
     ]
   end
 
@@ -35,7 +36,7 @@ defmodule ApiServer.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
      {:plug, "~> 1.0"},
-     {:poison, "~> 1.4.0"},
+     {:poison, "~> 1.5.0"},
      {:corsica, "~> 0.3"},
      {:httpoison, "~> 0.7.2"},
      {:csv, "~> 1.1.0"},
@@ -43,7 +44,8 @@ defmodule ApiServer.Mixfile do
      { :poolboy, github: "devinus/poolboy" },
      { :econfig, github: "benoitc/econfig" },
      { :yaml_elixir, github: "KamilLelonek/yaml-elixir" },
-     { :yamerl, github: "yakaz/yamerl" }
+     { :yamerl, github: "yakaz/yamerl" },
+     { :dogma,  github: "lpil/dogma", only: :dev}
   ]
   end
 end
