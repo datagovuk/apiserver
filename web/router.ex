@@ -10,16 +10,18 @@ defmodule ApiServer.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json", "application/json"]
+    plug :accepts, ["", "json", "application/json"]
     plug Corsica
   end
 
   scope "/api", ApiServer do
     pipe_through :api
 
+    get "/", ApiController, :info
+    get "/:theme", ApiController, :info
     get "/:theme/sql", ApiController, :theme_sql
     get "/:theme/:service/:method", ApiController, :service
-    get "/:theme/:service", ApiController, :service_direct
+    get "/:_theme/:_service", ApiController, :service_direct
   end
 
   scope "/", ApiServer do
@@ -31,6 +33,7 @@ defmodule ApiServer.Router do
     get "/:theme", ApiController, :theme
     get "/:theme/:service/docs", ApiController, :service_docs
 
+    get "/:_theme/:_service", ApiController, :service_direct
   end
 
 end

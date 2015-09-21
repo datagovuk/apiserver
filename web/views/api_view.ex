@@ -3,7 +3,8 @@ defmodule ApiServer.ApiView do
 
 
   def capitalize(string) do
-    String.capitalize(string)
+    string
+    |>  String.capitalize
   end
 
   def first_key(m) when is_map(m) do

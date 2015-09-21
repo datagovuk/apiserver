@@ -65,7 +65,7 @@ defmodule Database.Schema do
     Enum.into(results, %{})
   end
 
- def call_api(dbname, query, args) do
+ def call_api(dbname, query, args // []) do
 
     connection = get_connection(dbname)
 

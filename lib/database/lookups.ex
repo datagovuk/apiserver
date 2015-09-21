@@ -76,4 +76,10 @@ defmodule Database.Lookups do
     end
   end
 
+  def find_all(type) do
+    type
+    |> :ets.tab2list
+    |> Enum.into %{}
+  end
+
 end

@@ -2,6 +2,41 @@ defmodule ApiServer.ApiController do
   use ApiServer.Web, :controller
 
   @doc """
+  Returns all of the themes and their tables in one JSON response
+  """
+  def info(conn, %{"theme"=>theme}) do
+    manifests = :themes
+    |> Database.Lookups.find(theme)
+    |> get_service_basics
+
+    IO.inspect manifests
+    json conn, manifests
+  end
+
+
+  def info(conn, %{}) do
+    manifests = :themes
+    |> Database.Lookups.find_all
+    |> Enum.map(fn {k, v}->
+        {k, get_service_basics(v)}
+    end)
+    |> Enum.into %{}
+
+    json conn, manifests
+  end
+
+  defp get_service_basics(m) do
+    m
+    |> Dict.get("services")
+    |> Enum.map(fn x->
+       %{
+          "name"=> Map.get(x, "name"),
+          "description"=> Map.get(x, "description")
+        }
+    end)
+  end
+
+  @doc """
   The theme homepage containing the API UI and information on usage
   """
   def theme(conn, %{"theme"=>theme}) do
@@ -11,11 +46,13 @@ defmodule ApiServer.ApiController do
     schemas = Database.Schema.get_schemas(theme)
     host = "http://" <> (System.get_env("HOST") || "localhost:4000")
     manifest = Database.Lookups.find(:themes, theme)
+    distincts = Database.Lookups.find(:distincts, theme)
 
     conn
     |> assign(:theme, theme)
     |> assign(:schema, schemas)
     |> assign(:manifest, manifest)
+    |> assign(:distincts, distincts)
     |> assign(:host, host)
     |> render("theme.html")
   end
@@ -89,9 +126,28 @@ defmodule ApiServer.ApiController do
   Support for querying the endpoint directly by calling it with all of the
   required filters in query params ....
   """
-  def service_direct(conn, %{"theme"=>theme, "service"=>service}=params) do
+  def service_direct(conn, %{"_theme"=>theme, "_service"=>service}=params) do
     # We want a params dict without theme and service in it ....
+    parameters = params
+    |> Enum.filter(fn {k, _}-> !String.starts_with?(k, "_")  end)
+    |> Enum.filter(fn {_, v}-> String.length(v) > 0  end)
+    |> Enum.into %{}
 
+    qparams = parameters
+    |> Enum.with_index
+    |> Enum.map(fn {{k, v}, pos} ->
+        "#{k}=$#{pos+1} "
+    end)
+    |> Enum.join( " AND ")
+
+    arguments = parameters
+    |> Enum.map(fn {_, v} ->
+        v
+    end)
+
+    query = "SELECT * FROM #{service} where #{qparams}"
+
+    json conn, Database.Schema.call_api(theme, query, arguments)
   end
 
 

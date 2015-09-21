@@ -72,6 +72,52 @@
             <h3>Filters</h3>
             <p>You can query the database by selecting or entering values for specific fields</p>
         </div>
+
+        <%= for {name, description, documentation} <- services @manifest do %>
+
+            <% distincts = Map.get(@distincts, name) %>
+
+            <div class="service">
+                <h4><%= description %></h4>
+
+                <%= for {fieldname, type}<- Dict.get(@schema, name) do %>
+                <div id="filters_<%= name %>">
+                    <div class="col-md-4">
+                        <% values = Map.get(distincts, fieldname) %>
+
+                        <div class="col-md-6 dataelement" style="padding: 10px;"><%= fieldname %></div>
+                        <div class="col-md-6 dataelement" style="padding: 10px;"><%= if values == nil do %>
+                                <input class="form-control" type="text" name="<%= fieldname %>">
+                            <% else %>
+                                <select class="form-control" name="<%= fieldname %>">
+                                <option value=""></option>
+                                <%= for value <- values do %>
+                                    <option value="<%= value %>"><%= value %></option>
+                                <% end %>
+                                </select>
+                            <% end %></div>
+                    </div>
+                </div>
+                <% end %>
+
+                <div class="clearfix"></div>
+                <div class="pull-right">
+                    <button class="toolow btn btn-sm btn-default" onclick="filter_request('filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
+            &nbsp;
+                    <button class="toolow btn btn-sm btn-default" onclick="filter_request('filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'csv');">Get CSV</button>
+                </div>
+                <div class="clearfix"></div>
+
+                <div id="filters_<%= name %>_container" style="display:none;">
+                    <pre class="output" id="filters_<%= name %>_output" >
+                    </pre>
+                    <a href="javascript:$('#<%= name %>_container').hide();">Hide</a>
+                </div>
+
+
+            </div>
+
+        <% end %>
     </div>
 
 
@@ -173,6 +219,52 @@ function get_content(id) {
         }
     });
     return url;
+}
+
+function filter_request(id, theme, name, fmt) {
+    var items = [];
+
+    $("#" + id + " .dataelement").each(function(idx, elem){
+        _.each($(elem).contents(), function(element){
+            if (element.nodeName == "#text") {
+                items.push(element.data.trim());
+            } else {
+                items.push(element.value);
+            }
+        });
+    });
+
+    // There are so many #text elements in the HTML, we're ending up with too
+    // many elements.  We want to remove the even ones ....
+    var even = true;
+    var data_items = _.filter(items, function(element){
+        even = !even; // flip toggle
+        return !even; // return old result of toggle
+    });
+
+    var url = "/api/" + theme + "/" + name + "?";
+    for (var i= 0; i < data_items.length; i+=2 ){
+        url += data_items[i];
+        url += "=" + data_items[i+1];
+        if ( i < data_items.length - 2) {
+            url += "&";
+        }
+    }
+
+    $.ajax({
+        url: url,
+        dataType: "json"
+    }) .done(function( obj ) {
+        var text = JSON.stringify(obj, undefined, 2);
+        console.log(text);
+        $("#" + id + "_output").html( text );
+        $("#" + id + "_container").slideDown();
+    }).error(function(){
+        var text = "API call to " + url + " failed";
+        $("#" + id + "_output").html( text );
+        $("#" + id + "_container").slideDown();
+    });
+
 }
 
 function request(id, fmt) {
