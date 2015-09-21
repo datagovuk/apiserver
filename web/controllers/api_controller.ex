@@ -126,6 +126,33 @@ defmodule ApiServer.ApiController do
   Support for querying the endpoint directly by calling it with all of the
   required filters in query params ....
   """
+  def service_direct(conn, %{"_theme"=>theme, "_service"=>service, "_fmt"=>"csv"}=params) do
+
+    parameters = params
+    |> Enum.filter(fn {k, _}-> !String.starts_with?(k, "_")  end)
+    |> Enum.filter(fn {_, v}-> String.length(v) > 0  end)
+    |> Enum.into %{}
+
+    {query, arguments} = service_direct_query(parameters, service)
+    res = Database.Schema.call_api(theme, query, arguments)
+
+    schema = Map.keys(Database.Schema.get_schema(theme, service))
+
+    rows = Enum.map(res, fn m ->
+      Map.values(m)
+    end)
+
+    csv_stream = [schema|rows] |> CSV.encode
+
+    conn
+    |> put_layout(false)
+    |> put_resp_content_type("text/csv; charset=utf-8")
+    |> put_resp_header("content-disposition",
+                       "attachment; filename=\"query.csv\";")
+    |> assign(:csv_stream, csv_stream)
+    |> render "csv.html"
+  end
+
   def service_direct(conn, %{"_theme"=>theme, "_service"=>service}=params) do
     # We want a params dict without theme and service in it ....
     parameters = params
@@ -133,6 +160,12 @@ defmodule ApiServer.ApiController do
     |> Enum.filter(fn {_, v}-> String.length(v) > 0  end)
     |> Enum.into %{}
 
+    {query, arguments} = service_direct_query(parameters, service)
+    json conn, Database.Schema.call_api(theme, query, arguments)
+  end
+
+
+  defp service_direct_query(parameters, service) do
     qparams = parameters
     |> Enum.with_index
     |> Enum.map(fn {{k, v}, pos} ->
@@ -146,10 +179,8 @@ defmodule ApiServer.ApiController do
     end)
 
     query = "SELECT * FROM #{service} where #{qparams}"
-
-    json conn, Database.Schema.call_api(theme, query, arguments)
+    {query, arguments}
   end
-
 
   @doc """
   Documentation for the particular service.

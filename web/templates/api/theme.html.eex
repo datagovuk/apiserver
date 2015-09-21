@@ -251,6 +251,12 @@ function filter_request(id, theme, name, fmt) {
         }
     }
 
+    if (fmt == 'csv') {
+        window.location.href = url + "&_fmt=csv";
+        return;
+    }
+
+
     $.ajax({
         url: url,
         dataType: "json"
