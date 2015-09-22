@@ -65,16 +65,16 @@ defmodule Database.Schema do
     Enum.into(results, %{})
   end
 
- def call_api(dbname, query, args // []) do
+ def call_api(dbname, query, arguments \\ []) do
 
     connection = get_connection(dbname)
 
-    case args do
+    case arguments do
        [] ->
           {:ok, fields, data} = :epgsql.squery(connection, to_char_list(query))
         _ ->
           {:ok, fields, data} = :epgsql.equery(connection, to_char_list(query),
-                                               Enum.map(args,
+                                               Enum.map(arguments,
                                                   fn x -> to_char_list(x) end))
     end
 

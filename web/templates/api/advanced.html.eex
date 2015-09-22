@@ -1,0 +1,34 @@
+        <div id="schemas">
+            <h3>Schemas</h3>
+            <ul class="nav nav-pills nav-stacked col-md-3" id="schematabs">
+                <%= for {key, v}<- @schema do %>
+                <li><a href="#<%= key %>" data-toggle="tab"><%= capitalize(key) %></a></li>
+                <% end %>
+            </ul>
+
+            <div class="tab-content">
+                <%= for {key, v}<- @schema do %>
+                <div role="tabpanel" class="tab-pane active" id="<%= key %>" style="margin-top: 20px;">
+                    <%= for {name, type}<- v do %>
+                        <span class="badge badge-default"><%= name %> - <%= type %></span>&nbsp;&nbsp;
+                    <% end %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+
+        <br/><br/>
+        <div style="margin-top: 10px;">
+            <div id="editor">SELECT * FROM <%= first_key(@schema) %> limit 10;</div>
+            <button class="btn btn-default" onclick="execute_query();return false;">Execute</button>
+            <div id="download" class="pull-right" style="display:none;">
+                <a id="dllink" href="">Download as CSV</a><br/>
+                <a id="sql-url" target="_blank" href="">Download as JSON</a>
+            </div>
+        </div>
+
+        <div id="error" class="alert alert-danger" style="display:none;"></div>
+        <div class="col-md-12">
+            <table id="queryresults" class="table table-striped" style="border-top: 20px;" width="100%">
+            </table>
+        </div>

@@ -16,147 +16,21 @@
 
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="basic" style="margin-top: 20px;">
-
-    <%= for {name, description, documentation} <- services @manifest do %>
-        <div class="service">
-            <h3><%= description %></h3>
-            <p><%= documentation %></p>
-
-            <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
-                <div class="api_desc">
-                    <h4><%= description %></h4>
-
-                    <form action="" method="GET" style="display:inline;" onsubmit="">
-                        <span id="<%= name %>_<%= fname %>" class="url_label"><%= @host %>/api/<%= @theme %>/<%= name %>/<%= fname %></span>
-                    </form>
-
-                    <script type="text/javascript">
-                        var s = $("#<%= name %>_<%= fname %>");
-                        var str = "";
-
-                        <%= if fields do %>
-                            console.log("We have fields!")
-                            <%= for field <- fields do %>
-                                    if(str.length > 0 ) {
-                                        str += "&"
-                                    }
-                                    str += "<%= field %>=";
-                                    str += '<input id="<%= name %>_<%= fname %>_<%= field %>" name="<%= field %>" class="input_bottom" type="text" placeholder="<%= field %>">';
-                            <% end %>
-                            str = "?" + str;
-                        <% end %>
-                        s.html( s.html() + str );
-                    </script>
-
-                    <div class="pull-right">
-                        <button class="toolow btn btn-sm btn-default" onclick="request('<%= name %>_<%= fname %>');">Make request</button>
-                        &nbsp;
-                        <button class="toolow btn btn-sm btn-default" onclick="request('<%= name %>_<%= fname %>', 'csv');">Get CSV</button>
-                    </div>
-                </div>
-
-                <div id="<%= name %>_<%= fname %>_container" style="display:none;">
-                    <pre class="output" id="<%= name %>_<%= fname %>_output" >
-                    </pre>
-                    <a href="javascript:$('#<%= name %>_<%= fname %>_container').hide();">Hide</a>
-                </div>
-
-                <hr/>
-            <% end %>
-        </div>
-    <% end %>
+        <%= render "basic.html", manifest: @manifest, theme: @theme,
+                                    schema: @schema, distincts: @distincts,
+                                    host: @host %>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="filtered" style="margin-top: 20px;">
-        <div class="service">
-            <h3>Filters</h3>
-            <p>You can query the database by selecting or entering values for specific fields</p>
-        </div>
-
-        <%= for {name, description, documentation} <- services @manifest do %>
-
-            <% distincts = Map.get(@distincts, name) %>
-
-            <div class="service">
-                <h4><%= description %></h4>
-
-                <%= for {fieldname, type}<- Dict.get(@schema, name) do %>
-                <div id="filters_<%= name %>">
-                    <div class="col-md-4">
-                        <% values = Map.get(distincts, fieldname) %>
-
-                        <div class="col-md-6 dataelement" style="padding: 10px;"><%= fieldname %></div>
-                        <div class="col-md-6 dataelement" style="padding: 10px;"><%= if values == nil do %>
-                                <input class="form-control" type="text" name="<%= fieldname %>">
-                            <% else %>
-                                <select class="form-control" name="<%= fieldname %>">
-                                <option value=""></option>
-                                <%= for value <- values do %>
-                                    <option value="<%= value %>"><%= value %></option>
-                                <% end %>
-                                </select>
-                            <% end %></div>
-                    </div>
-                </div>
-                <% end %>
-
-                <div class="clearfix"></div>
-                <div class="pull-right">
-                    <button class="toolow btn btn-sm btn-default" onclick="filter_request('filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
-            &nbsp;
-                    <button class="toolow btn btn-sm btn-default" onclick="filter_request('filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'csv');">Get CSV</button>
-                </div>
-                <div class="clearfix"></div>
-
-                <div id="filters_<%= name %>_container" style="display:none;">
-                    <pre class="output" id="filters_<%= name %>_output" >
-                    </pre>
-                    <a href="javascript:$('#<%= name %>_container').hide();">Hide</a>
-                </div>
-
-
-            </div>
-
-        <% end %>
+        <%= render "filtered.html", manifest: @manifest, theme: @theme,
+                                    schema: @schema, distincts: @distincts,
+                                    filters: @filters %>
     </div>
 
 
     <div role="tabpanel" class="tab-pane" id="advanced"  style="margin-top: 20px;">
-
-        <div id="schemas">
-            <h3>Schemas</h3>
-            <ul class="nav nav-pills nav-stacked col-md-3" id="schematabs">
-                <%= for {key, v}<- @schema do %>
-                <li><a href="#<%= key %>" data-toggle="tab"><%= capitalize(key) %></a></li>
-                <% end %>
-            </ul>
-
-            <div class="tab-content">
-                <%= for {key, v}<- @schema do %>
-                <div role="tabpanel" class="tab-pane active" id="<%= key %>" style="margin-top: 20px;">
-                    <%= for {name, type}<- v do %>
-                        <span class="badge badge-default"><%= name %> - <%= type %></span>&nbsp;&nbsp;
-                    <% end %>
-                </div>
-                <% end %>
-            </div>
-        </div>
-
-        <br/><br/>
-        <div style="margin-top: 10px;">
-            <div id="editor">SELECT * FROM <%= first_key(@schema) %> limit 10;</div>
-            <button class="btn btn-default" onclick="execute_query();return false;">Execute</button>
-            <div id="download" class="pull-right" style="display:none;">
-                <a id="dllink" href="">Download as CSV</a><br/>
-                <a id="sql-url" target="_blank" href="">Download as JSON</a>
-            </div>
-        </div>
-
-        <div id="error" class="alert alert-danger" style="display:none;"></div>
-        <div class="col-md-12">
-            <table id="queryresults" class="table table-striped" style="border-top: 20px;" width="100%">
-            </table>
-        </div>
+        <%= render "advanced.html", manifest: @manifest, theme: @theme,
+                                    schema: @schema, distincts: @distincts%>
     </div>
 </div>
 

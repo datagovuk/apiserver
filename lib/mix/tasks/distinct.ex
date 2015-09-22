@@ -65,7 +65,7 @@ defmodule Mix.Tasks.Distinct do
     defp process_table_settings(table_settings, theme_name, name) do
       table_settings
       |> Dict.get("choice_fields", [])
-      |>  process_choice_field(theme_name, name, %{})
+      |> process_choice_field(theme_name, name, %{})
     end
 
 

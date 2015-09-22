@@ -47,12 +47,16 @@ defmodule ApiServer.ApiController do
     host = "http://" <> (System.get_env("HOST") || "localhost:4000")
     manifest = Database.Lookups.find(:themes, theme)
     distincts = Database.Lookups.find(:distincts, theme)
+    filters = Manifest.filter_fields(manifest, theme)
+
+    IO.inspect filters
 
     conn
     |> assign(:theme, theme)
     |> assign(:schema, schemas)
     |> assign(:manifest, manifest)
     |> assign(:distincts, distincts)
+    |> assign(:filters, filters)
     |> assign(:host, host)
     |> render("theme.html")
   end
@@ -168,7 +172,7 @@ defmodule ApiServer.ApiController do
   defp service_direct_query(parameters, service) do
     qparams = parameters
     |> Enum.with_index
-    |> Enum.map(fn {{k, v}, pos} ->
+    |> Enum.map(fn {{k, _}, pos} ->
         "#{k}=$#{pos+1} "
     end)
     |> Enum.join( " AND ")
