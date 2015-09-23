@@ -2,18 +2,20 @@ defmodule ApiServer.ApiController do
   use ApiServer.Web, :controller
 
   @doc """
-  Returns all of the themes and their tables in one JSON response
+  Returns the manifest metadata for the specified theme.
   """
   def info(conn, %{"theme"=>theme}) do
     manifests = :themes
     |> Database.Lookups.find(theme)
     |> get_service_basics
 
-    IO.inspect manifests
     json conn, manifests
   end
 
 
+  @doc """
+  Returns the manifest metadata for all of the themes
+  """
   def info(conn, %{}) do
     manifests = :themes
     |> Database.Lookups.find_all
@@ -103,7 +105,7 @@ defmodule ApiServer.ApiController do
 
   @doc """
   Support for querying the endpoint directly by calling it with all of the
-  required filters in query params ....
+  required filters in query params, returned as CSV
   """
   def service_direct(conn, %{"_theme"=>theme, "_service"=>service, "_fmt"=>"csv"}=params) do
 
@@ -132,6 +134,10 @@ defmodule ApiServer.ApiController do
     |> render "csv.html"
   end
 
+  @doc """
+  Support for querying the endpoint directly by calling it with all of the
+  required filters in query params ....
+  """
   def service_direct(conn, %{"_theme"=>theme, "_service"=>service}=params) do
     # We want a params dict without theme and service in it ....
     parameters = params
@@ -173,11 +179,7 @@ defmodule ApiServer.ApiController do
 
 
   @doc false
-  defp process_api_call(_, nil) do
-    nil
-  end
-
-  @doc false
+  defp process_api_call(_, nil), do: nil
   defp process_api_call(%{"theme"=>theme}=params,
                        %{"query"=>query, "fields"=>fields}) do
 
