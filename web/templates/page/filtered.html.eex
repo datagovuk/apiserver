@@ -8,6 +8,7 @@
             <%= if Dict.get(@filters, name) do %>
                 <% distincts = Map.get(@distincts, name) %>
 
+                <%= if distincts do %>
                 <div class="service">
                     <h4><%= description %></h4>
 
@@ -47,6 +48,6 @@
 
 
                 </div>
-
+                <% end %>
             <% end %>
         <% end %>
