@@ -6,16 +6,16 @@
         <%= for {name, description, documentation} <- services @manifest do %>
 
             <%= if Dict.get(@filters, name) do %>
-                <% distincts = Dict.get(@distincts, name) %>
+                <% distincts = Map.get(@distincts, name) %>
 
-                <%= if @filters do %>
+                <%= if @filters and @distincts do %>
                 <div class="service">
                     <h4><%= description %></h4>
 
                     <%= for fieldname<- Dict.get(@filters, name) do %>
                     <div id="filters_<%= name %>">
                         <div class="col-md-4">
-                            <% values = Dict.get(distincts, fieldname) %>
+                            <% values = Map.get(distincts, fieldname) %>
 
                             <div class="col-md-6 dataelement" style="padding: 10px;"><%= fieldname %></div>
                             <div class="col-md-6 dataelement" style="padding: 10px;"><%= if values == nil do %>
