@@ -22,6 +22,7 @@ defmodule ApiServer.Router do
     get "/:theme/sql", ApiController, :theme_sql
     get "/:theme/:service/:method", ApiController, :service
     get "/:_theme/:_service", ApiController, :service_direct
+
   end
 
   scope "/", ApiServer do
@@ -30,10 +31,8 @@ defmodule ApiServer.Router do
     get "/", PageController, :index
     get "/about", PageController, :about
 
-    get "/:theme", ApiController, :theme
-    get "/:theme/:service/docs", ApiController, :service_docs
-
-    get "/:_theme/:_service", ApiController, :service_direct
+    get "/:theme", PageController, :theme
+    get "/:theme/:service/docs", PageController, :service_docs
   end
 
 end

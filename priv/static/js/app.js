@@ -1,53 +1,10 @@
 
-<ol class="breadcrumb">
-  <li><a href="/">Home</a>
-  <li class="active"><%= capitalize(@theme)%></li>
-</ol>
-
-
-<h3><%= capitalize(@theme)%> APIs</h3>
-
- <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#basic" aria-controls="home" role="tab" data-toggle="tab">Basic</a></li>
-    <li role="presentation"><a href="#filtered" aria-controls="profile" role="tab" data-toggle="tab">Filters</a></li>
-    <li role="presentation"><a href="#advanced" aria-controls="profile" role="tab" data-toggle="tab">Advanced</a></li>
-</ul>
-
-
-<div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="basic" style="margin-top: 20px;">
-        <%= render "basic.html", manifest: @manifest, theme: @theme,
-                                    schema: @schema, distincts: @distincts,
-                                    host: @host %>
-    </div>
-
-    <div role="tabpanel" class="tab-pane" id="filtered" style="margin-top: 20px;">
-        <%= render "filtered.html", manifest: @manifest, theme: @theme,
-                                    schema: @schema, distincts: @distincts,
-                                    filters: @filters %>
-    </div>
-
-
-    <div role="tabpanel" class="tab-pane" id="advanced"  style="margin-top: 20px;">
-        <%= render "advanced.html", manifest: @manifest, theme: @theme,
-                                    schema: @schema, distincts: @distincts%>
-    </div>
-</div>
-
-
-
-<script type="text/javascript">
-
-var editor = ace.edit("editor");
-editor.setTheme("ace/theme/monokai");
-editor.getSession().setMode("ace/mode/sql");
-
 function execute_query() {
     $("#error").empty();
     $("#error").hide();
     var val = editor.getValue();
     if (!val) return;
-    var url = "/api/<%= @theme %>/sql?query=" + encodeURIComponent(val);
+    var url = "/api/"+ theme + "/sql?query=" + encodeURIComponent(val);
     $.ajax({
         method: "GET",
         url: url,
@@ -61,10 +18,10 @@ function execute_query() {
             $("#error").show();
             editor.focus();
         } else {
-            $("#sql-url").attr('href', '<%= @host %>' + url);
+            $("#sql-url").attr('href', host + url);
             $("#sql-url").show();
 
-            $("#dllink").attr('href', '<%= @host %>' + url + '&format=csv')
+            $("#dllink").attr('href', host + url + '&format=csv')
             $("#download").show();
 
             var r = "<TH>" + object.columns.join("</TH><TH>") + "</TH>";
@@ -165,5 +122,3 @@ function request(id, fmt) {
     });
 }
 
-$('#schematabs a:first').tab('show')
-</script>

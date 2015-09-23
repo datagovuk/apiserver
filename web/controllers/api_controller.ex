@@ -37,31 +37,6 @@ defmodule ApiServer.ApiController do
   end
 
   @doc """
-  The theme homepage containing the API UI and information on usage
-  """
-  def theme(conn, %{"theme"=>theme}) do
-
-    # Get the schema for the theme, and assign it to the
-    # connection so we can render in template. We can optimize this...
-    schemas = Database.Schema.get_schemas(theme)
-    host = "http://" <> (System.get_env("HOST") || "localhost:4000")
-    manifest = Database.Lookups.find(:themes, theme)
-    distincts = Database.Lookups.find(:distincts, theme)
-    filters = Manifest.filter_fields(manifest, theme)
-
-    IO.inspect filters
-
-    conn
-    |> assign(:theme, theme)
-    |> assign(:schema, schemas)
-    |> assign(:manifest, manifest)
-    |> assign(:distincts, distincts)
-    |> assign(:filters, filters)
-    |> assign(:host, host)
-    |> render("theme.html")
-  end
-
-  @doc """
   A raw SQL endpoint for the specified theme. The schema should have been
   send as part of the theme action...
   """
