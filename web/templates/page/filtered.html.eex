@@ -6,9 +6,10 @@
         <%= for {name, description, documentation} <- services @manifest do %>
 
             <%= if Dict.get(@filters, name) do %>
+
+                <%= if @distincts do %>
                 <% distincts = Map.get(@distincts, name) %>
 
-                <%= if @filters and @distincts do %>
                 <div class="service">
                     <h4><%= description %></h4>
 
