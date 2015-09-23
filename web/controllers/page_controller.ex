@@ -6,7 +6,10 @@ defmodule ApiServer.PageController do
   end
 
   def about(conn, _params) do
-    render conn, "about.html"
+    host = "http://" <> (System.get_env("HOST") || "localhost:4000")
+    conn
+    |> assign(:host, host)
+    |> render "about.html"
   end
 
   @doc """

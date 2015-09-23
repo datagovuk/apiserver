@@ -4,10 +4,13 @@ host = '<%= @host %>';
 </script>
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
+<div class="container">
+
 <ol class="breadcrumb">
   <li><a href="/">Home</a>
   <li class="active"><%= capitalize(@theme)%></li>
 </ol>
+
 
 
 <h1><%= capitalize(@theme)%> APIs</h1>
@@ -39,7 +42,7 @@ host = '<%= @host %>';
     </div>
 </div>
 
-
+</div>
 
 <script type="text/javascript">
     var editor = ace.edit("editor");

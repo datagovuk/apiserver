@@ -7,16 +7,13 @@
                 <div class="api_desc">
                     <h4><%= description %></h4>
 
-                    <form action="" method="GET" style="display:inline;" onsubmit="">
-                        <span id="<%= name %>_<%= fname %>" class="url_label"><%= @host %>/api/<%= @theme %>/<%= name %>/<%= fname %></span>
-                    </form>
+                    <span id="<%= name %>_<%= fname %>" class="url_label"><%= @host %>/api/<%= @theme %>/<%= name %>/<%= fname %></span>
 
                     <script type="text/javascript">
                         var s = $("#<%= name %>_<%= fname %>");
                         var str = "";
 
                         <%= if fields do %>
-                            console.log("We have fields!")
                             <%= for field <- fields do %>
                                     if(str.length > 0 ) {
                                         str += "&"

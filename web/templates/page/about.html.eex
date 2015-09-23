@@ -1,13 +1,24 @@
 
-<ol class="breadcrumb">
-  <li class="active">About</li>
-</ol>
+<div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a>
+      <li class="active">About</li>
+    </ol>
 
-<!-- Main component for a primary marketing message or call to action -->
-<div class="jumbotron">
-    <h2>About Data.gov.uk APIs</h2>
-    <p>This site ....</p>
+    <h1>APIs</h1>
+    <p>This site provides curated APIs from datasets that from the National Information Infrastructure on <a href="https://data.gov.uk">data.gov.uk</a></p>
+
+    <p>APIs are grouped into themes, such as <a href="/health">Health</a>, or <a href="/transport">Transport</a> and provide endpoints for different NII datasets</p>
+
+
+    <h2>Using the APIs</h2>
+
+    <h3>Pre-defined queries</h3>
+    <p></p>
+
+    <h3>Filtered queries</h3>
+    <p></p>
+
+    <h3>Using SQL</h3>
+    <p></p>
 </div>
-
-</div>
-
