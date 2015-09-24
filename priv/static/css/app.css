@@ -35,8 +35,7 @@ p a{ font-weight: bold;}
 .table-results {
 }
 table {
-    table-layout: fixed;
-    word-wrap: break-word;
+    xtable-layout: fixed;
 }
 
 .breadcrumb { background-color: #fff;}
@@ -167,4 +166,14 @@ h4 {
     width: 100%;
     overflow-y: scroll;
     color: #333;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 4px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }

@@ -30,7 +30,7 @@
         <div class="row table-results-container">
             <div id="error" class="alert alert-danger" style="display:none;"></div>
             <div class="col-md-12 table-results">
-                <table id="queryresults" class="table table-striped" style="border-top: 20px;" >
+                <table id="queryresults" class="table table-striped" style="border-top: 20px;" width="100%">
                 </table>
             </div>
         </div>
