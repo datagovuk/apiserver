@@ -4,7 +4,8 @@ To start the server
 
   1. Install dependencies with `mix deps.get`
   2. export DGU_ETL_CONFIG="/path/to/apiserver/dgu-api-etl/config.ini"
-  3. Start Phoenix endpoint with `HOST="localhost:4000" MIX_ENV=dev mix phoenix.server`
+  3. For those themes that have them generate the distinct lookups with ```mix distinct.generate transport.anonymised_mot_tests```
+  4. Start server with `HOST="localhost:4000" MIX_ENV=dev mix phoenix.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
