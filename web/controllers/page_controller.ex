@@ -12,6 +12,10 @@ defmodule ApiServer.PageController do
     |> render "about.html"
   end
 
+  def info(conn, _) do
+    render conn, "info.html"
+  end
+
   @doc """
   The theme homepage containing the API UI and information on usage
   """

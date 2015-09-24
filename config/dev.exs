@@ -10,14 +10,16 @@ config :api_server, ApiServer.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
-  cache_static_lookup: false
+  cache_static_lookup: false,
+  watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]]
+
 
 
 # Watch static and templates for browser reloading.
-config :api_server, ApiServer.Endpoint,
+config :nnneee, ApiServer.Endpoint,
   live_reload: [
     patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif)$},
+      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{web/views/.*(ex)$},
       ~r{web/templates/.*(eex)$}
     ]

@@ -1,5 +1,6 @@
 defmodule ApiServer.ApiController do
   use ApiServer.Web, :controller
+  alias ApiServer.Endpoint, as: Endpoint
 
   @doc """
   Returns the manifest metadata for the specified theme.
@@ -45,6 +46,10 @@ defmodule ApiServer.ApiController do
   def theme_sql(conn, %{"theme"=>theme, "format"=>"csv"}=params) do
     res = Database.Schema.call_sql_api(theme, params["query"])
 
+    Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
+
+    ApiServer.Endpoint.broadcast! "info:api", "new:message", %{"theme"=>"environment", "query"=>"something of a long string but hopefully it will fit into the available space but if it doesnt then hopefully iy will wrap cleanly and not make a mess"}
+
     csv_stream = [res["columns"]|res["rows"]] |> CSV.encode
 
     conn
@@ -57,6 +62,7 @@ defmodule ApiServer.ApiController do
   end
 
   def theme_sql(conn, %{"theme"=>theme}=params) do
+    Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
     json conn, Database.Schema.call_sql_api(theme, params["query"])
   end
 
@@ -69,6 +75,7 @@ defmodule ApiServer.ApiController do
     # parameters to expect
     v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
+    Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
     res = process_api_call(params ,v)
 
     schema = Map.keys(Database.Schema.get_schema(theme, service))
@@ -94,6 +101,8 @@ defmodule ApiServer.ApiController do
     # Based on theme/service/method we want the sql query,
     # and the parameters to expect
     v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
+
+    Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
 
     case process_api_call(params, v) do
       nil ->
@@ -189,6 +198,7 @@ defmodule ApiServer.ApiController do
              Map.get(params, f)
            end)
     end
+
     Database.Schema.call_api(theme, query, parameters)
   end
 

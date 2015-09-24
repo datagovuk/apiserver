@@ -18,10 +18,9 @@ defmodule ApiServer do
     Database.Lookups.load_distincts
 
     children = [
-      # Start the endpoint when the application starts
       supervisor(ApiServer.Endpoint, []),
-      # Here you could define other workers and supervisors as children
-      worker(Database.Supervisor, []),
+      supervisor(Database.Supervisor, []),
+      worker(Stats, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
