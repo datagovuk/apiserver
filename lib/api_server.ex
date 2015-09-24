@@ -6,13 +6,6 @@ defmodule ApiServer do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    children = [
-      # Start the endpoint when the application starts
-      supervisor(ApiServer.Endpoint, []),
-      # Here you could define other workers and supervisors as children
-      # worker(ApiServer.Worker, [arg1, arg2, arg3]),
-    ]
-
     ini_path = System.get_env("DGU_ETL_CONFIG")
     if ini_path == nil do
       IO.puts "DGU_ETL_CONFIG is not defined"
@@ -20,9 +13,16 @@ defmodule ApiServer do
     end
     :ok = :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
 
-    # Load the manifests into ETS.
+    # Load the manifests into ETS before the supervisors start ...
     Database.Lookups.load_manifests
     Database.Lookups.load_distincts
+
+    children = [
+      # Start the endpoint when the application starts
+      supervisor(ApiServer.Endpoint, []),
+      # Here you could define other workers and supervisors as children
+      worker(Database.Supervisor, []),
+    ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
