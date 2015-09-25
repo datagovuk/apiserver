@@ -21,10 +21,10 @@ config :logger, :console,
   metadata: [:request_id]
 
 
-config :ex_statsd,
-       host: "statsd.hostedgraphite.com",
-       port: 8125,
-       namespace: System.get_env("STATSD_NAMESPACE")
+#config :ex_statsd,
+#       host: "statsd.hostedgraphite.com",
+#       port: 8125,
+#       namespace: System.get_env("STATSD_NAMESPACE")
 
 
 # Import environment specific config. This must remain at the bottom
