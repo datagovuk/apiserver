@@ -36,6 +36,11 @@ defmodule Database.Worker do
     {:ok, connection}
   end
 
+  def terminate(_reason, connection) do
+    :epgsql.close(connection)
+    :ok
+  end
+
   def handle_call({:rawquery, query, []}, _from, connection) do
     result = :epgsql.squery(connection, to_char_list(query))
     {:reply, result, connection}
