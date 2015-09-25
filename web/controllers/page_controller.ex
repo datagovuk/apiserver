@@ -38,6 +38,7 @@ defmodule ApiServer.PageController do
     |> assign(:distincts, distincts)
     |> assign(:filters, filters)
     |> assign(:host, host)
+    |> delete_resp_header("cache-control")
     |> render("theme.html")
   end
 

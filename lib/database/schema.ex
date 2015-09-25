@@ -14,8 +14,6 @@ defmodule Database.Schema do
     pool = String.to_atom(dbname)
 
     :poolboy.transaction(pool, fn(worker)->
-      IO.inspect "In a transaction!"
-      IO.inspect q
       {:ok, _, results} = Worker.query(worker, q)
 
       results

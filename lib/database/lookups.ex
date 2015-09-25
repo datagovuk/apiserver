@@ -43,7 +43,6 @@ defmodule Database.Lookups do
   end
 
   defp load_distinct(distincts_file) do
-    IO.puts "Loading #{distincts_file}"
     %{"theme"=> theme} = Regex.named_captures(
         ~r/.*\/(?<theme>\w+)\.json/, distincts_file)
 
