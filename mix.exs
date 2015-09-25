@@ -19,7 +19,8 @@ defmodule ApiServer.Mixfile do
     [
       mod: {ApiServer, []},
       applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                     :httpoison, :gproc, :econfig, :yaml_elixir]
+                     :httpoison, :gproc, :econfig, :yaml_elixir,
+                     :ex_statsd]
     ]
   end
 
@@ -45,7 +46,8 @@ defmodule ApiServer.Mixfile do
      { :econfig, github: "benoitc/econfig" },
      { :yaml_elixir, github: "KamilLelonek/yaml-elixir" },
      { :yamerl, github: "yakaz/yamerl" },
-     { :dogma,  github: "lpil/dogma", only: :dev}
+     { :dogma,  github: "lpil/dogma", only: :dev},
+     {:ex_statsd, ">= 0.5.0"}
   ]
   end
 end

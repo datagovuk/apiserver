@@ -50,6 +50,8 @@ defmodule Database.Schema do
 
  def call_api(dbname, query, arguments \\ []) do
 
+    ExStatsD.increment("query.#{dbname}.apicall")
+
     args = Enum.map(arguments, fn x -> to_char_list(x) end)
     pool = String.to_atom(dbname)
 
@@ -72,6 +74,8 @@ defmodule Database.Schema do
   end
 
  def call_sql_api(dbname, query) do
+
+    ExStatsD.increment("query.#{dbname}.sqlcall")
 
     pool = String.to_atom(dbname)
 
