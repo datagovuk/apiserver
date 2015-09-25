@@ -29,7 +29,7 @@ defmodule ApiServer.PageController do
     distincts = Database.Lookups.find(:distincts, theme)
     filters = Manifest.filter_fields(manifest, theme)
 
-    #ExStatsD.increment("theme.#{theme}.views")
+    ExStatsD.increment("theme.#{theme}.views")
 
     conn
     |> assign(:theme, theme)

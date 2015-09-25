@@ -57,7 +57,6 @@ defmodule ApiServer.ApiController do
     |> put_resp_content_type("text/csv")
     |> put_resp_header("content-disposition",
                        "attachment; filename=\"query.csv\";")
-    |> delete_resp_header("cache-control")
     |> assign(:csv_stream, csv_stream)
     |> render "csv.html"
   end
@@ -65,7 +64,6 @@ defmodule ApiServer.ApiController do
   def theme_sql(conn, %{"theme"=>theme}=params) do
     Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
     conn
-    |> delete_resp_header("cache-control")
     |> json Database.Schema.call_sql_api(theme, params["query"])
   end
 
@@ -94,7 +92,6 @@ defmodule ApiServer.ApiController do
     |> put_resp_content_type("text/csv; charset=utf-8")
     |> put_resp_header("content-disposition",
                        "attachment; filename=\"query.csv\";")
-    |> delete_resp_header("cache-control")
     |> assign(:csv_stream, csv_stream)
     |> render "csv.html"
 
@@ -110,10 +107,9 @@ defmodule ApiServer.ApiController do
 
     case process_api_call(params, v) do
       nil ->
-          conn |> delete_resp_header("cache-control") |> put_status(400)
+          conn |> put_status(400)
       res ->
           conn
-          |> delete_resp_header("cache-control")
           |> json res
     end
   end
@@ -145,7 +141,6 @@ defmodule ApiServer.ApiController do
     |> put_resp_content_type("text/csv; charset=utf-8")
     |> put_resp_header("content-disposition",
                        "attachment; filename=\"query.csv\";")
-    |> delete_resp_header("cache-control")
     |> assign(:csv_stream, csv_stream)
     |> render "csv.html"
   end
@@ -164,7 +159,6 @@ defmodule ApiServer.ApiController do
     {query, arguments} = service_direct_query(parameters, service)
 
     conn
-    |> delete_resp_header("cache-control")
     |>  json Database.Schema.call_api(theme, query, arguments)
   end
 
