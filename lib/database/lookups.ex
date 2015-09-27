@@ -7,7 +7,7 @@ defmodule Database.Lookups do
   alias Poison, as: JSON
 
   def load_distincts() do
-     :ets.new(:distincts, [:named_table])
+     :ets.new(:distincts, [:named_table, read_concurrency: true])
 
      "#{Mix.Project.app_path}/priv/static/distincts/*.json"
      |>  Path.wildcard
@@ -16,8 +16,8 @@ defmodule Database.Lookups do
   end
 
   def load_manifests() do
-     :ets.new(:services,  [:named_table])
-     :ets.new(:themes,    [:named_table])
+     :ets.new(:services,  [:named_table, read_concurrency: true])
+     :ets.new(:themes,    [:named_table, read_concurrency: true])
 
      path = ETLConfig.get_config("manifest", "location")
 

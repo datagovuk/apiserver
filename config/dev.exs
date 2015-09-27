@@ -16,7 +16,7 @@ config :api_server, ApiServer.Endpoint,
 
 
 # Watch static and templates for browser reloading.
-config :nnneee, ApiServer.Endpoint,
+config :api_server, ApiServer.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
