@@ -14,20 +14,6 @@ defmodule ApiServer.ApiController do
   end
 
   @doc """
-  Returns the distinct data for the specified theme
-  """
-  def distinct(conn, %{"theme"=>theme, "service"=>service}) do
-    d = :distincts |> Database.Lookups.find(theme) |> Dict.get(service)
-    json conn, d
-  end
-  def distinct(conn, %{"theme"=>theme}) do
-    d = :distincts |> Database.Lookups.find(theme)
-    json conn, d
-  end
-
-
-
-  @doc """
   Returns the manifest metadata for all of the themes
   """
   def info(conn, %{}) do
@@ -40,6 +26,31 @@ defmodule ApiServer.ApiController do
 
     json conn, manifests
   end
+
+  @doc """
+  Returns the distinct data for the specified theme
+  """
+  def distinct(conn, %{"theme"=>theme, "service"=>service}) do
+    d = :distincts |> Database.Lookups.find(theme)
+    case d do
+      nil ->
+        conn |> put_status(404) |> json %{}
+      _ ->
+        json conn, d |> Dict.get(service, %{})
+    end
+  end
+  def distinct(conn, %{"theme"=>theme}) do
+    d = :distincts |> Database.Lookups.find(theme)
+    case d do
+      nil ->
+        conn |> put_status(404) |> json %{}
+      _ ->
+        json conn, d
+    end
+  end
+
+
+
 
   defp get_service_basics(m) do
     m
