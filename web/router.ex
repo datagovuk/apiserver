@@ -20,6 +20,10 @@ defmodule ApiServer.Router do
 
     get "/", ApiController, :info
     get "/:theme", ApiController, :info
+
+    get "/:theme/distinct", ApiController, :distinct
+    get "/:theme/distinct/:service", ApiController, :distinct
+
     get "/:theme/sql", ApiController, :theme_sql
     get "/:theme/:service/:method", ApiController, :service
     get "/:_theme/:_service", ApiController, :service_direct

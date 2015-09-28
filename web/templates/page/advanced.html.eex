@@ -1,12 +1,15 @@
     <div id="schemas">
         <h3>Schemas</h3>
+
+        <p>The tabs below show the schema for each accessible table within this theme</p>
+
         <ul class="nav nav-pills nav-stacked col-md-3" id="schematabs">
             <%= for {key, v}<- @schema do %>
             <li><a href="#<%= key %>" data-toggle="tab"><%= capitalize(key) %></a></li>
             <% end %>
         </ul>
 
-        <div class="tab-content">
+        <div class="tab-content" style="height: 260px; overflow: scroll;">
             <%= for {key, v}<- @schema do %>
             <div role="tabpanel" class="tab-pane active" id="<%= key %>" style="margin-top: 20px;">
                 <div class="col-md-6">
@@ -30,20 +33,22 @@
         </div>
     </div>
 
+
     <br/><br/>
-    <div style="margin-top: 10px;">
+    <p>Within this editor you may perform SQL queries against the <%= @theme %> database, although queries
+    are currently limited to 5 seconds execution time.</p>
+
+    <div style="margin-top: 10px; margin-bottom: 40px;">
         <div id="editor">SELECT * FROM <%= first_key(@schema) %> limit 10;</div>
-        <button class="btn btn-default" onclick="execute_query();return false;">Execute</button>
+        <button class="btn btn-default" onclick="execute_query(this);return false;">Execute</button>
         <div id="download" class="pull-right" style="display:none;">
             <a id="dllink" href="">Download as CSV</a><br/>
             <a id="sql-url" target="_blank" href="">Download as JSON</a>
         </div>
     </div>
 
-    <div class="row table-results-container">
+    <div class="container table-results-container" style="display:none">
         <div id="error" class="alert alert-danger" style="display:none;"></div>
-        <div class="col-md-12 table-results">
-            <table id="queryresults" class="table table-striped" style="border-top: 20px;" width="100%">
-            </table>
-        </div>
+        <pre class="col-md-12 table-results">
+        </pre>
     </div>

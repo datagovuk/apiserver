@@ -94,9 +94,16 @@ defmodule Database.Schema do
             |> Enum.map(fn x -> elem(x, 1) end)
 
             results = data
-            |> Enum.map(fn r -> Tuple.to_list(r) end)
+            |> Enum.map(fn row ->
+              row
+              |> Tuple.to_list
+              |> Enum.map(fn cell-> clean(cell) end)
+              # Turn row into a list
+            end)
+            |> Enum.map(fn r -> Enum.zip(columns, r) end)
+            |> Enum.map(fn res -> Enum.into(res, %{}) end )
 
-            %{"columns"=>columns, "rows"=> results, "success" => true }
+            %{"success"=> true, "result" => results}
          {:error, {:error, :error, _, error, _}} ->
             %{"success"=> false, "error" => error}
          {:ok, 1} ->

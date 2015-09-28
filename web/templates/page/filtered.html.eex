@@ -35,9 +35,9 @@
 
                     <div class="clearfix"></div>
                     <div class="pull-right">
-                        <button class="toolow btn btn-sm btn-default" onclick="filter_request('filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
+                        <button class="toolow btn btn-sm btn-default" onclick="filter_request(this, 'filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
                 &nbsp;
-                        <button class="toolow btn btn-sm btn-default" onclick="filter_request('filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'csv');">Get CSV</button>
+                        <button class="toolow btn btn-sm btn-default" onclick="filter_request(this, 'filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'csv');">Get CSV</button>
                     </div>
                     <div class="clearfix"></div>
 

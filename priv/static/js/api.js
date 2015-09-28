@@ -1,18 +1,24 @@
 
 
 
-function execute_query() {
+function execute_query(btn) {
     $("#error").empty();
     $("#error").hide();
     var val = editor.getValue();
     if (!val) return;
+
+    $("#table-results").html("");
+
+    var b = $(btn);
+    b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
+
     var url = "/api/"+ theme + "/sql?query=" + encodeURIComponent(val);
     $.ajax({
         method: "GET",
         url: url,
         dataType: "json"
     }).done(function(object) {
-        $("#queryresults").empty();
+        $('#loading').remove();
 
         if (!object.success) {
             $("#download").hide();
@@ -26,18 +32,10 @@ function execute_query() {
             $("#dllink").attr('href', host + url + '&format=csv')
             $("#download").show();
 
-            var r = "<TH>" + object.columns.join("</TH><TH>") + "</TH>";
-            $("#queryresults").append("<THEAD>");
-            $("#queryresults").append("<TR>" + r + "</TR>");
-            $("#queryresults").append("</THEAD>");
-            $("#queryresults").append("<TBODY>");
-            var len = object.rows.length;
-            for( var i =0; i< len; i++) {
-                var row = object.rows[i];
-                var line = "<TD>" + row.join("</TD><TD>") + "</TD>";
-                $("#queryresults").append("<TR>" + line + "</TR>");
-            }
-            $("#queryresults").append("<TBODY>");
+            var text = JSON.stringify(object.result, undefined, 2);
+            console.log(text);
+            $('.table-results').html(text);
+            $('.table-results-container').show();
         }
     });
 }
@@ -54,7 +52,7 @@ function get_content(id) {
     return url;
 }
 
-function filter_request(id, theme, name, fmt) {
+function filter_request(btn,id, theme, name, fmt) {
     var items = [];
 
     $("#" + id + " .dataelement").each(function(idx, elem){
@@ -89,19 +87,31 @@ function filter_request(id, theme, name, fmt) {
         return;
     }
 
+    var b = $(btn);
+    b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
+
 
     $.ajax({
         url: url,
         dataType: "json"
     }) .done(function( obj ) {
-        var text = JSON.stringify(obj, undefined, 2);
-        console.log(text);
+        var text = "";
+
+        if (obj.success) {
+            text = JSON.stringify(obj.result, undefined, 2);
+        } else {
+            text = "ERROR: " + obj.error;
+        }
         $("#" + id + "_output").html( text );
         $("#" + id + "_container").slideDown();
+
+        $('#loading').remove();
     }).error(function(){
         var text = "API call to " + url + " failed";
         $("#" + id + "_output").html( text );
         $("#" + id + "_container").slideDown();
+
+        $('#loading').remove();
     });
 
 }

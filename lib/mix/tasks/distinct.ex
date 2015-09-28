@@ -81,7 +81,7 @@ defmodule Mix.Tasks.Distinct do
         [{:database, to_char_list(theme_name)}, {:port, port}])
 
       {:ok, _, results} = connection
-      |> :epgsql.squery(to_char_list("select distinct(#{h}) from #{name};"))
+      |> :epgsql.squery(to_char_list("select distinct(#{h}) from #{name} order by #{h};"))
 
       sorted = results
       |> Enum.map(&extract_val/1)

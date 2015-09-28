@@ -13,6 +13,19 @@ defmodule ApiServer.ApiController do
     json conn, manifests
   end
 
+  @doc """
+  Returns the distinct data for the specified theme
+  """
+  def distinct(conn, %{"theme"=>theme, "service"=>service}) do
+    d = :distincts |> Database.Lookups.find(theme) |> Dict.get(service)
+    json conn, d
+  end
+  def distinct(conn, %{"theme"=>theme}) do
+    d = :distincts |> Database.Lookups.find(theme)
+    json conn, d
+  end
+
+
 
   @doc """
   Returns the manifest metadata for all of the themes
@@ -158,10 +171,26 @@ defmodule ApiServer.ApiController do
     |> Enum.filter(fn {_, v}-> String.length(v) > 0  end)
     |> Enum.into %{}
 
+    service_direct_process(conn, theme, parameters, service)
+  end
+
+  defp service_direct_process(conn, theme, m, service) when map_size(m) == 0 do
+    conn
+    |> json %{"success"=> false, "error"=> "No filters were supplied"}
+  end
+  defp service_direct_process(conn, theme, parameters, service) do
+
     {query, arguments} = service_direct_query(parameters, service)
 
-    conn
-    |>  json Database.Schema.call_api(theme, query, arguments)
+    res = Database.Schema.call_api(theme, query, arguments)
+    case res do
+      {:error, {:error, :error, _, error, _}} ->
+          conn
+          |> json %{"success"=> false, "error"=> error}
+      res ->
+          conn
+          |> json %{"success"=>true, "result"=>res}
+    end
   end
 
 
