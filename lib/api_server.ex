@@ -14,8 +14,7 @@ defmodule ApiServer do
     :ok = :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
 
     # Load the manifests into ETS before the supervisors start ...
-    Database.Lookups.load_manifests
-    Database.Lookups.load_distincts
+    Database.Lookups.load
 
     children = [
       supervisor(ApiServer.Endpoint, []),

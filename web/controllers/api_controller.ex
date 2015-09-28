@@ -72,9 +72,6 @@ defmodule ApiServer.ApiController do
     res = Database.Schema.call_sql_api(theme, params["query"])
 
     Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
-
-    ApiServer.Endpoint.broadcast! "info:api", "new:message", %{"theme"=>"environment", "query"=>"something of a long string but hopefully it will fit into the available space but if it doesnt then hopefully iy will wrap cleanly and not make a mess"}
-
     csv_stream = [res["columns"]|res["rows"]] |> CSV.encode
 
     conn

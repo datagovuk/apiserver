@@ -6,6 +6,18 @@ defmodule Database.Lookups do
   """
   alias Poison, as: JSON
 
+  def load do
+    load_manifests
+    load_distincts
+    load_general
+  end
+
+  def load_general() do
+    :ets.new(:general, [:named_table, read_concurrency: true])
+    host = "http://" <> (System.get_env("HOST") || "localhost:4000")
+    :ets.insert(:general, {:host, host})
+  end
+
   def load_distincts() do
      :ets.new(:distincts, [:named_table, read_concurrency: true])
 

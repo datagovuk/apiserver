@@ -6,7 +6,8 @@ defmodule ApiServer.PageController do
   end
 
   def about(conn, _params) do
-    host = "http://" <> (System.get_env("HOST") || "localhost:4000")
+    host = Database.Lookups.find(:general, :host)
+
     conn
     |> assign(:host, host)
     |> render "about.html"
@@ -20,24 +21,22 @@ defmodule ApiServer.PageController do
   The theme homepage containing the API UI and information on usage
   """
   def theme(conn, %{"theme"=>theme}) do
+    ExStatsD.increment("theme.#{theme}.views")
 
-    # Get the schema for the theme, and assign it to the
-    # connection so we can render in template. We can optimize this...
-    schemas = Database.Schema.get_schemas(theme)
-    host = "http://" <> (System.get_env("HOST") || "localhost:4000")
+    schema_task = Task.async(fn ()-> Database.Schema.get_schemas(theme) end)
+
+    host = Database.Lookups.find(:general, :host)
     manifest = Database.Lookups.find(:themes, theme)
     distincts = Database.Lookups.find(:distincts, theme)
     filters = Manifest.filter_fields(manifest, theme)
 
-    ExStatsD.increment("theme.#{theme}.views")
-
     conn
     |> assign(:theme, theme)
-    |> assign(:schema, schemas)
     |> assign(:manifest, manifest)
     |> assign(:distincts, distincts)
     |> assign(:filters, filters)
     |> assign(:host, host)
+    |> assign(:schema, Task.await(schema_task))
     |> delete_resp_header("cache-control")
     |> render("theme.html")
   end
