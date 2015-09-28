@@ -106,13 +106,17 @@ function filter_request(id, theme, name, fmt) {
 
 }
 
-function request(id, fmt) {
+function request(btn, id, fmt) {
     var c = get_content(id);
 
     if (fmt == 'csv') {
         window.location.href = c + "&format=csv";
         return;
     }
+
+    var b = $(btn);
+    b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
+
 
     $.ajax({
         url: c,
@@ -121,6 +125,8 @@ function request(id, fmt) {
         var text = JSON.stringify(obj, undefined, 2);
         $("#" + id + "_output").html( text );
         $("#" + id + "_container").slideDown();
+
+        $('#loading').remove();
     });
 }
 

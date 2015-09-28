@@ -33,6 +33,7 @@ defmodule Database.Worker do
   ######################################################################
   def init(connection) do
     # Create a connection to the database ...
+    :epgsql.squery(connection, 'set statement_timeout to 3000;')
     {:ok, connection}
   end
 

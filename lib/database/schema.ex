@@ -13,21 +13,22 @@ defmodule Database.Schema do
     """
     pool = String.to_atom(dbname)
 
-    :poolboy.transaction(pool, fn(worker)->
-      {:ok, _, results} = Worker.query(worker, q)
-
-      results
-      |> Enum.group_by(fn x->
-          elem(x, 0)
-         end)
-      |> Enum.map( fn {k, v} ->
-          cells = Enum.map(v, fn x-> {elem(x, 1), elem(x, 2)} end)
-          |> Enum.into(%{})
-          {k, cells}
-         end)
-      |> Enum.into(%{})
-
+    {:ok, _, results} = :poolboy.transaction(pool, fn(worker)->
+      Worker.query(worker, q)
     end)
+
+    results
+    |> Enum.group_by(fn x->
+        elem(x, 0)
+       end)
+    |> Enum.map( fn {k, v} ->
+        cells = Enum.map(v, fn x-> {elem(x, 1), elem(x, 2)} end)
+        |> Enum.into(%{})
+        {k, cells}
+       end)
+    |> Enum.into(%{})
+
+
   end
 
   def get_schema(dbname, table) do
@@ -39,10 +40,12 @@ defmodule Database.Schema do
     """
     pool = String.to_atom(dbname)
 
-    :poolboy.transaction(pool, fn(worker)->
-      {:ok, _, results} = Worker.query(worker, q)
-      Enum.into(results, %{})
+    {:ok, _, results} = :poolboy.transaction(pool, fn(worker)->
+       Worker.query(worker, q)
     end)
+
+
+    results |> Enum.into(%{})
 
   end
 
@@ -53,22 +56,23 @@ defmodule Database.Schema do
     args = Enum.map(arguments, fn x -> to_char_list(x) end)
     pool = String.to_atom(dbname)
 
-    :poolboy.transaction(pool, fn(worker)->
-      {:ok, fields, data} = Worker.query(worker, query, args)
-
-      columns = fields
-      |> Enum.map(fn x -> elem(x, 1) end)
-
-      results = data
-      |> Enum.map(fn row ->
-        row
-        |> Tuple.to_list
-        |> Enum.map(fn cell-> clean(cell) end)
-        # Turn row into a list
-      end)
-      |> Enum.map(fn r -> Enum.zip(columns, r) end)
-      |> Enum.map(fn res -> Enum.into(res, %{}) end )
+    {:ok, fields, data} = :poolboy.transaction(pool, fn(worker)->
+       Worker.query(worker, query, args)
     end)
+
+    columns = fields
+    |> Enum.map(fn x -> elem(x, 1) end)
+
+    results = data
+    |> Enum.map(fn row ->
+      row
+      |> Tuple.to_list
+      |> Enum.map(fn cell-> clean(cell) end)
+      # Turn row into a list
+    end)
+    |> Enum.map(fn r -> Enum.zip(columns, r) end)
+    |> Enum.map(fn res -> Enum.into(res, %{}) end )
+
   end
 
  def call_sql_api(dbname, query) do
@@ -79,6 +83,7 @@ defmodule Database.Schema do
 
     :poolboy.transaction(pool, fn(worker)->
       {:ok, _, _} = Worker.query(worker, 'set statement_timeout to 3000;')
+
       resp = case Worker.raw_query(worker, query)  do
           {:ok, fields, data} ->
             columns = fields
