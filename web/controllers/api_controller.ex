@@ -47,7 +47,8 @@ defmodule ApiServer.ApiController do
     |> Enum.map(fn x->
        %{
           "name"=> Map.get(x, "name"),
-          "description"=> Map.get(x, "description")
+          "description"=> Map.get(x, "description"),
+          "dataset" => Map.get(x, "dataset", "")
         }
     end)
   end

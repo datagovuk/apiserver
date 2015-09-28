@@ -3,7 +3,7 @@
             <p>You can query the database by selecting or entering values for specific fields</p>
         </div>
 
-        <%= for {name, description, documentation} <- services @manifest do %>
+        <%= for {name, description, documentation, dataset} <- services @manifest do %>
 
             <%= if Dict.get(@filters, name) do %>
 
@@ -11,7 +11,12 @@
                 <% distincts = Map.get(@distincts, name) %>
 
                 <div class="service">
-                    <h4><%= description %></h4>
+                    <h4>
+            <%= if dataset do %>
+                <a class="label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
+            <% end %>
+<%= description %>
+                    </h4>
 
                     <%= for fieldname<- Dict.get(@filters, name) do %>
                     <div id="filters_<%= name %>">

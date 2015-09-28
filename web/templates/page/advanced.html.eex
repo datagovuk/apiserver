@@ -5,7 +5,7 @@
 
         <ul class="nav nav-pills nav-stacked col-md-3" id="schematabs">
             <%= for {key, v}<- @schema do %>
-            <li><a href="#<%= key %>" data-toggle="tab"><%= capitalize(key) %></a></li>
+            <li><a href="#<%= key %>" data-toggle="tab"><%= key %></a></li>
             <% end %>
         </ul>
 

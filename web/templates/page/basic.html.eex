@@ -1,12 +1,15 @@
-    <%= for {name, description, documentation} <- services @manifest do %>
+    <%= for {name, description, documentation, dataset} <- services @manifest do %>
         <div class="service">
-            <h3><%= description %></h3>
+            <h3>
+            <%= if dataset do %>
+                <small><a class="label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a></small>
+            <% end %>
+            <%= description %>
+            </h3>
             <p><%= documentation %></p>
-
             <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
                 <div class="api_desc">
                     <h4><%= description %></h4>
-
                     <span id="<%= name %>_<%= fname %>" class="url_label"><%= @host %>/api/<%= @theme %>/<%= name %>/<%= fname %></span>
 
                     <script type="text/javascript">

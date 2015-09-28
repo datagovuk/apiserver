@@ -17,7 +17,8 @@ defmodule ApiServer.PageView do
     |> Dict.get("services")
     |> Enum.map(fn s -> {Dict.get(s, "name"),
                          Dict.get(s, "description"),
-                         Dict.get(s,"documentation")} end)
+                         Dict.get(s,"documentation"),
+                         Dict.get(s, "dataset", "")} end)
     |> Enum.sort
   end
 
