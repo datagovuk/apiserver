@@ -117,15 +117,22 @@ function request(btn, id, fmt) {
     var b = $(btn);
     b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
 
+    $("#" + id + "_container").slideUp();
 
     $.ajax({
         url: c,
         dataType: "json"
     }) .done(function( obj ) {
-        var text = JSON.stringify(obj, undefined, 2);
+        var text = "";
+
+        if (obj.success) {
+            text = JSON.stringify(obj.result, undefined, 2);
+        } else {
+            text = "ERROR: " + obj.error;
+        }
+
         $("#" + id + "_output").html( text );
         $("#" + id + "_container").slideDown();
-
         $('#loading').remove();
     });
 }

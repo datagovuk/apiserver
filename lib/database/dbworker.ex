@@ -33,7 +33,7 @@ defmodule Database.Worker do
   ######################################################################
   def init(connection) do
     # Create a connection to the database ...
-    :epgsql.squery(connection, 'set statement_timeout to 3000;')
+    :epgsql.squery(connection, 'set statement_timeout to 5000;')
     {:ok, connection}
   end
 
@@ -57,16 +57,16 @@ defmodule Database.Worker do
 
 
   def handle_call({:query, query, []}, _from, connection) do
-    {:ok, fields, data} = :epgsql.squery(connection, to_char_list(query))
-    {:reply, {:ok, fields, data}, connection}
+    results = :epgsql.squery(connection, to_char_list(query))
+    {:reply, results, connection}
   end
 
   def handle_call({:query, query, arguments}, _from, connection) do
-    {:ok, fields, data} = :epgsql.equery(connection, to_char_list(query),
+    results = :epgsql.equery(connection, to_char_list(query),
                                          Enum.map(arguments,
                                             fn x -> to_char_list(x) end))
 
-    {:reply, {:ok, fields, data}, connection}
+    {:reply, results, connection}
   end
 
 end

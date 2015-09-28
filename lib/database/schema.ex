@@ -56,23 +56,27 @@ defmodule Database.Schema do
     args = Enum.map(arguments, fn x -> to_char_list(x) end)
     pool = String.to_atom(dbname)
 
-    {:ok, fields, data} = :poolboy.transaction(pool, fn(worker)->
+    results = :poolboy.transaction(pool, fn(worker)->
        Worker.query(worker, query, args)
     end)
 
-    columns = fields
-    |> Enum.map(fn x -> elem(x, 1) end)
+    case results do
+      {:ok, fields, data} ->
+          columns = fields
+          |> Enum.map(fn x -> elem(x, 1) end)
 
-    results = data
-    |> Enum.map(fn row ->
-      row
-      |> Tuple.to_list
-      |> Enum.map(fn cell-> clean(cell) end)
-      # Turn row into a list
-    end)
-    |> Enum.map(fn r -> Enum.zip(columns, r) end)
-    |> Enum.map(fn res -> Enum.into(res, %{}) end )
-
+          results = data
+          |> Enum.map(fn row ->
+            row
+            |> Tuple.to_list
+            |> Enum.map(fn cell-> clean(cell) end)
+            # Turn row into a list
+          end)
+          |> Enum.map(fn r -> Enum.zip(columns, r) end)
+          |> Enum.map(fn res -> Enum.into(res, %{}) end )
+      _ ->
+        results
+    end
   end
 
  def call_sql_api(dbname, query) do
@@ -82,7 +86,7 @@ defmodule Database.Schema do
     pool = String.to_atom(dbname)
 
     :poolboy.transaction(pool, fn(worker)->
-      {:ok, _, _} = Worker.query(worker, 'set statement_timeout to 3000;')
+      {:ok, _, _} = Worker.query(worker, 'set statement_timeout to 5000;')
 
       resp = case Worker.raw_query(worker, query)  do
           {:ok, fields, data} ->

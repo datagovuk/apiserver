@@ -78,7 +78,6 @@ defmodule ApiServer.ApiController do
 
     Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
     res = process_api_call(params ,v)
-
     schema = Map.keys(Database.Schema.get_schema(theme, service))
 
     rows = Enum.map(res, fn m ->
@@ -106,11 +105,14 @@ defmodule ApiServer.ApiController do
     Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
 
     case process_api_call(params, v) do
+      {:error, {:error, :error, _, error, _}} ->
+          conn
+          |> json %{"success"=> false, "error"=> error}
       nil ->
           conn |> put_status(400)
       res ->
           conn
-          |> json res
+          |> json %{"success"=>true, "result"=>res}
     end
   end
 
