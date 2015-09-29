@@ -43,11 +43,12 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
           </ul>
+          <div class="nav navbar-nav pull-right" style="padding-top: 24px;">
+            <div class="beta">BETA</div>
+          </div>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-
-
 
     <div class="container-fluid" role="main">
       <!--

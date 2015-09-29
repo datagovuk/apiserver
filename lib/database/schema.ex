@@ -6,6 +6,8 @@ defmodule Database.Schema do
   alias Database.Worker
 
   def get_schemas(dbname) do
+    # TODO: Cache this ...
+
     q = """
       SELECT table_name, column_name, data_type
       FROM information_schema.columns
@@ -27,11 +29,11 @@ defmodule Database.Schema do
         {k, cells}
        end)
     |> Enum.into(%{})
-
-
   end
 
   def get_schema(dbname, table) do
+    # TODO: Cache this ...
+
     q = """
       SELECT column_name, data_type
       FROM information_schema.columns
@@ -44,9 +46,7 @@ defmodule Database.Schema do
        Worker.query(worker, q)
     end)
 
-
     results |> Enum.into(%{})
-
   end
 
  def call_api(dbname, query, arguments \\ []) do

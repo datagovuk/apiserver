@@ -29,7 +29,7 @@ p a{ font-weight: bold;}
     width: 100%;
 
     height: 600px !important;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .table-results {
@@ -168,11 +168,11 @@ h4 {
     color: #333;
 }
 
-::-webkit-scrollbar {
+.table-results-container ::-webkit-scrollbar {
     -webkit-appearance: none;
-    width: 4px;
+    width: 2px;
 }
-::-webkit-scrollbar-thumb {
+.table-results-container ::-webkit-scrollbar-thumb {
     border-radius: 2px;
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
@@ -195,4 +195,29 @@ h4 {
 
 .glyphicon-refresh.spinning {
   transform-origin: 48% 50%;
+}
+
+.about .special {
+    border: solid 1px #ddd;
+    padding: 1px;
+    background-color: #eee;
+    border-radius: 1px;
+}
+
+.about .special-lg {
+    border: solid 2px #ddd;
+    padding: 8px;
+    background-color: #eee;
+    border-radius: 4px;
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.beta {
+    background-color: #f47738;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 600;
+    display: inline;
+    padding: 6px;
 }
