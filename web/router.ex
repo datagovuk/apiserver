@@ -35,6 +35,7 @@ defmodule ApiServer.Router do
 
     get "/", PageController, :index
     get "/about", PageController, :about
+    get "/documentation", PageController, :docs
     get "/stream", PageController, :info
 
     get "/:theme", PageController, :theme

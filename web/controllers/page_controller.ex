@@ -17,6 +17,14 @@ defmodule ApiServer.PageController do
     render conn, "info.html"
   end
 
+  def docs(conn, _) do
+    host = Database.Lookups.find(:general, :host)
+    conn
+    |> assign(:host, host)
+    |> render "docs.html"
+  end
+
+
   @doc """
   The theme homepage containing the API UI and information on usage
   """

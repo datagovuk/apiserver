@@ -1,29 +1,37 @@
 
 <div class="row header_section">
-    <div class="container">
+    <div class="container" style="margin-top: 20px;">
         <h1>Data.gov.uk APIs</h1>
         <p>This site provides APIs for a curated list of datasets from <a href="http://data.gov.uk">data.gov.uk</a></p>
     </div>
 </div>
 
-<div class="row-fluid">
-    <div class="col-md-4 centered">
-        <a href="/health">
-        <h3>Health-related APIs</h3>
-        <img src="/images/theme_health.jpg" width="300" height="180">
-        </a>
-    </div>
-    <div class="col-md-4 centered">
-        <a href="/transport">
-        <h3>Transport APIs</h3>
-        <img src="/images/theme_transport.jpg" width="300" height="180">
-        </a>
-    </div>
-    <div class="col-md-4 centered">
-        <a href="/environment">
-        <h3>Environment APIs</h3>
-        <img src="/images/theme_environment.jpg" width="300" height="180">
-        </a>
-    </div>
-</div>
+<div class="container" style="margin-top: 10px">
 
+    <hr/>
+    <h3>Choose a theme below to explore the different APIs</h3>
+    <hr/>
+    <div class="row-fluid">
+        <div class="col-md-4 centered">
+            <a href="/health">
+            <img src="/images/theme_health.jpg" width="300" height="180">
+            <h3>Health-related APIs</h3>
+
+            </a>
+        </div>
+        <div class="col-md-4 centered">
+            <a href="/transport">
+            <img src="/images/theme_transport.jpg" width="300" height="180">
+            <h3>Transport APIs</h3>
+            </a>
+        </div>
+        <div class="col-md-4 centered">
+            <a href="/environment">
+            <img src="/images/theme_environment.jpg" width="300" height="180">
+            <h3>Environment APIs</h3>
+            </a>
+        </div>
+    </div>
+
+
+</div>
