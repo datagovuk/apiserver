@@ -1,5 +1,4 @@
         <div class="service">
-            <h3>Filters</h3>
             <p>You can query the database by selecting or entering values for specific fields</p>
         </div>
 
@@ -11,12 +10,12 @@
                 <% distincts = Map.get(@distincts, name) %>
 
                 <div class="service">
-                    <h4>
+                    <h3>
             <%= if dataset do %>
-                <a class="label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
+                <a class="dataset label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
             <% end %>
 <%= description %>
-                    </h4>
+                    </h3>
 
                     <%= for fieldname<- Dict.get(@filters, name) do %>
                     <div id="filters_<%= name %>">

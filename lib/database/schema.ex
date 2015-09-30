@@ -6,7 +6,7 @@ defmodule Database.Schema do
   alias Database.Worker
 
   def get_schemas(dbname) do
-    # TODO: Cache this ...
+    # TODO: Cache this in :schema_cache ...
 
     q = """
       SELECT table_name, column_name, data_type
@@ -32,7 +32,7 @@ defmodule Database.Schema do
   end
 
   def get_schema(dbname, table) do
-    # TODO: Cache this ...
+    # TODO: Cache this in :schema_cache ...
 
     q = """
       SELECT column_name, data_type

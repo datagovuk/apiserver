@@ -1,8 +1,9 @@
+
     <%= for {name, description, documentation, dataset} <- services @manifest do %>
         <div class="service">
             <h3>
             <%= if dataset do %>
-                <small><a class="label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a></small>
+                <a class="dataset label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
             <% end %>
             <%= description %>
             </h3>

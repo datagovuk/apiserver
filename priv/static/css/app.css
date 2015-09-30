@@ -98,17 +98,6 @@ a:hover { color: #005ea5;}
     height: 180px;
 }
 
-.nav-tabs {
-    border-bottom: solid 4px #ddd;
-}
-.nav-tabs li.active a, .nav-tabs li.active a:hover {
-    background-color: #0B0C0C;
-    color:white;
-}
-.nav-tabs li a, .nav-tabs li a:hover {
-    background-color: #999;
-    color: white;
-}
 
 .theme-box {
     border: solid 3px #ddd;
@@ -221,3 +210,45 @@ h4 {
     display: inline;
     padding: 6px;
 }
+
+h3 { line-height: 18px;}
+.dataset {
+    line-height: 18px;
+    font-size: 14px;
+    position: relative;
+    margin-top: -10;
+    padding-top: 0px;
+    vertical-align: top;
+}
+
+/* Tabs */
+
+.nav-tabs {
+    border: none;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+{ border: transparent; color: #333;}
+
+.nav-tabs>li>a, .nav-tabs>li>a:hover, .nav-tabs>li>a:focus
+{ background: none; border: none; color: #aaa;}
+
+.dgu-tab  {
+    border: none !important;
+    background-color: none;
+    font-size: 19px;
+    height: 49px;
+    line-height: 27px;
+    padding-top: 6px;
+    color: #ddd;
+}
+
+.dgu-tab.active {
+    border: none !important;
+    background-color: none !important;
+    font-size: 25px;
+    height: 50px;
+    line-height: 35px;
+    padding-top: 0;
+}
+

@@ -30,6 +30,9 @@ defmodule ApiServer.PageController do
     distincts = Database.Lookups.find(:distincts, theme)
     filters = Manifest.filter_fields(manifest, theme)
 
+    # TODO: Get distincts, filters and schema from the JSON endpoint
+    # as and when required.  Want to only really send theme, manifest and
+    # host here.
     conn
     |> assign(:theme, theme)
     |> assign(:manifest, manifest)

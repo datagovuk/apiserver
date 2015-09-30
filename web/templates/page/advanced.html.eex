@@ -1,6 +1,4 @@
     <div id="schemas">
-        <h3>Schemas</h3>
-
         <p>The tabs below show the schema for each accessible table within this theme</p>
 
         <ul class="nav nav-pills nav-stacked col-md-3" id="schematabs">
