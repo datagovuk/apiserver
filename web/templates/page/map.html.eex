@@ -1,5 +1,6 @@
-
-
-<div class="alert alert-info">
-This theme has no maps
+<div class="map">
+    <div class="alert alert-info">
+        This theme has no maps
+    </div>
 </div>
+

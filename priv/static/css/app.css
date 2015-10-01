@@ -221,6 +221,11 @@ h3 { line-height: 18px;}
     vertical-align: top;
 }
 
+/*  Maps */
+.map {
+    min-height: 600px;
+}
+
 /* Tabs */
 
 .nav-tabs {
@@ -241,6 +246,7 @@ h3 { line-height: 18px;}
     line-height: 27px;
     padding-top: 6px;
     color: #ddd;
+    width: 100px;
 }
 
 .dgu-tab.active {
