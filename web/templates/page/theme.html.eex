@@ -12,7 +12,7 @@ host = '<%= @host %>';
  <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="dgu-tab active"><a href="#basic" aria-controls="home" role="tab" data-toggle="tab">Basic</a></li>
     <li class="dgu-tab" role="presentation"><a href="#filtered" aria-controls="profile" role="tab" data-toggle="tab">Filters</a></li>
-    <li class="dgu-tab" role="presentation"><a href="#advanced" aria-controls="profile" role="tab" data-toggle="tab">Advanced</a></li>
+    <li class="dgu-tab" role="presentation"><a href="#advanced" aria-controls="profile" role="tab" data-toggle="tab">SQL</a></li>
     <li class="dgu-tab" role="presentation"><a href="#map" aria-controls="profile" role="tab" data-toggle="tab">Maps</a></li>
 </ul>
 <hr/>
