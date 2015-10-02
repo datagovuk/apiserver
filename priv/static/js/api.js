@@ -32,7 +32,6 @@ function make_call(url, form, btn) {
     });
 }
 
-
 function execute_query(btn) {
     $("#error").empty();
     $("#error").hide();
@@ -46,6 +45,7 @@ function execute_query(btn) {
 
     var url = "/api/"+ theme + "/sql?query=" + encodeURIComponent(val);
 
+    // TODO: Change so it behaves like the other calls
     $.ajax({
         method: "GET",
         url: url,

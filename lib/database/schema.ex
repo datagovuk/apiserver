@@ -5,6 +5,8 @@ defmodule Database.Schema do
   """
   alias Database.Worker
 
+  @timeout 6000
+
   def get_schemas(dbname) do
     # TODO: Cache this in :schema_cache ...
 
@@ -17,7 +19,7 @@ defmodule Database.Schema do
 
     {:ok, _, results} = :poolboy.transaction(pool, fn(worker)->
       Worker.query(worker, q)
-    end)
+    end, @timeout)
 
     results
     |> Enum.group_by(fn x->
@@ -44,7 +46,7 @@ defmodule Database.Schema do
 
     {:ok, _, results} = :poolboy.transaction(pool, fn(worker)->
        Worker.query(worker, q)
-    end)
+    end, @timeout)
 
     results |> Enum.into(%{})
   end
@@ -58,7 +60,7 @@ defmodule Database.Schema do
 
     results = :poolboy.transaction(pool, fn(worker)->
        Worker.query(worker, query, args)
-    end)
+    end, @timeout)
 
     case results do
       {:ok, fields, data} ->
@@ -109,7 +111,7 @@ defmodule Database.Schema do
          {:ok, 1} ->
             %{"success"=> false, "error" => "This is bad"}
         end
-    end)
+    end, @timeout)
    end
 
   defp clean({{year, month, day}, {hr, mn, sec}}) do

@@ -20,12 +20,12 @@ defmodule Database.Worker do
   end
 
   def raw_query(pid, query, args \\ []) do
-    GenServer.call(pid, {:rawquery, to_char_list(query), args})
+    GenServer.call(pid, {:rawquery, to_char_list(query), args}, 10000)
   end
 
 
   def query(pid, query, args \\ []) do
-    GenServer.call(pid, {:query, to_char_list(query), args})
+    GenServer.call(pid, {:query, to_char_list(query), args}, 10000)
   end
 
   ######################################################################
