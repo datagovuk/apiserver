@@ -25,7 +25,7 @@ defmodule ApiServer.PageView do
     |> Dict.get("services")
     |> Enum.filter(fn f-> Dict.get(f, "name") == service end)
 
-    if svc do
+    if length(svc) > 0 do
       svc
       |> hd
       |> Dict.get("large_dataset", false)
