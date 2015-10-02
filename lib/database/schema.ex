@@ -126,15 +126,24 @@ defmodule Database.Schema do
   def check_query_limit(theme, query) do
     q = "EXPLAIN (format json) #{query}"
     pool = String.to_atom(theme)
-    {:ok, _, [{plan}]} = :poolboy.transaction(pool, fn(worker)->
-       Worker.raw_query(worker, q)
+    plan = :poolboy.transaction(pool, fn(worker)->
+       case Worker.raw_query(worker, q) do
+        {:error, _} -> nil
+        {:ok, _, [{plan}]} -> plan
+      end
     end)
 
-    [data] = JSON.decode! plan
-    node_type = MapTraversal.find_value("Plan.Node Type", data) |> String.downcase
-    plan_rows = MapTraversal.find_value("Plan.Plan Rows", data)
+    case plan do
+      nil ->
+        # This will fail further one
+        {true, 0}
+      _ ->
+        [data] = JSON.decode! plan
+        node_type = MapTraversal.find_value("Plan.Node Type", data) |> String.downcase
+        plan_rows = MapTraversal.find_value("Plan.Plan Rows", data)
 
-    {node_type=="limit", plan_rows}
+        {node_type=="limit", plan_rows}
+    end
  end
 
   defp clean({{year, month, day}, {hr, mn, sec}}) do
