@@ -109,27 +109,22 @@ function filter_request(btn,id, theme, name, fmt) {
 
     $("#" + id + " .dataelement").each(function(idx, elem){
         _.each($(elem).contents(), function(element){
-            if (element.nodeName == "#text") {
-                items.push(element.data.trim());
-            } else {
+            if (element.nodeName == "LABEL") {
+                items.push($(element).attr('for'));
+            } else if (element.nodeName == "SELECT"){
                 items.push(element.value);
             }
         });
     });
+    console.log(items);
 
     // There are so many #text elements in the HTML, we're ending up with too
     // many elements.  We want to remove the even ones ....
-    var even = true;
-    var data_items = _.filter(items, function(element){
-        even = !even; // flip toggle
-        return !even; // return old result of toggle
-    });
-
     var url = "/api/" + theme + "/" + name + "?";
-    for (var i= 0; i < data_items.length; i+=2 ){
-        url += data_items[i];
-        url += "=" + data_items[i+1];
-        if ( i < data_items.length - 2) {
+    for (var i= 0; i < items.length; i+=2 ){
+        url += items[i];
+        url += "=" + items[i+1];
+        if ( i < items.length - 2) {
             url += "&";
         }
     }

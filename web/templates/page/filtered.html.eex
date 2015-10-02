@@ -22,11 +22,12 @@
                         <div class="col-md-4">
                             <% values = Map.get(distincts, fieldname) %>
 
-                            <div class="col-md-6 dataelement" style="padding: 10px;"><%= fieldname %></div>
+                            <div class="col-md-6 dataelement" style="padding: 10px;">
+                            <label for="<%= fieldname %>"><%= prettify(fieldname) %></label></div>
                             <div class="col-md-6 dataelement" style="padding: 10px;"><%= if values == nil do %>
                                     <input class="form-control" type="text" name="<%= fieldname %>">
                                 <% else %>
-                                    <select class="form-control" name="<%= fieldname %>">
+                                    <select class="form-control input-sm" name="<%= fieldname %>">
                                     <option value=""></option>
                                     <%= for value <- values do %>
                                         <option value="<%= value %>"><%= value %></option>

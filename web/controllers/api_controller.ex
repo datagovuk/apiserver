@@ -230,6 +230,8 @@ defmodule ApiServer.ApiController do
   defp service_direct_process(conn, theme, parameters, service) do
 
     {query, arguments} = service_direct_query(parameters, service)
+    IO.inspect query
+
 
     res = Database.Schema.call_api(theme, query, arguments)
     case res do
