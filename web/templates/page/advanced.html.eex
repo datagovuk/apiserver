@@ -33,21 +33,21 @@
 
 
     <br/><br/>
-    <p>Within this editor you may perform SQL queries against the <%= @theme %> database, although queries
+    <p>Within this editor you may perform SQL queries against the <%= @theme %> database - queries
     are currently limited to 5 seconds execution time.</p>
 
     <div style="margin-top: 10px; margin-bottom: 40px;">
         <div id="editor">SELECT * FROM <%= first_key(@schema) %> limit 10;</div>
         <button class="btn btn-default" onclick="execute_query(this);return false;">Execute</button>
 
-        <div class="btn-group" id="download" style="display:none">
+        <div class="btn-group pull-right" id="download" style="display:none">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Download as <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
             <li><a id="csvlink" href="">CSV</a></li>
             <li><a id="ttllink" href="">TTL</a></li>
-            <li><a id="jsonlink" href="">JSON</a></li>
+            <li><a id="jsonlink" target="_blank" href="">JSON</a></li>
           </ul>
         </div>
     </div>

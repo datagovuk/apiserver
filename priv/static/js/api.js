@@ -45,6 +45,7 @@ function execute_query(btn) {
     b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
 
     var url = "/api/"+ theme + "/sql?query=" + encodeURIComponent(val);
+
     $.ajax({
         method: "GET",
         url: url,
@@ -69,18 +70,6 @@ function execute_query(btn) {
             $('.table-results-container').show();
         }
     });
-}
-
-function get_content(id) {
-    var url = "";
-    _.each($("#" + id).contents(), function(element){
-        if (element.nodeName == "#text") {
-            url += element.data;
-        } else {
-            url += element.value;
-        }
-    });
-    return url;
 }
 
 function form_request(btn, form, fmt) {
@@ -116,10 +105,7 @@ function filter_request(btn,id, theme, name, fmt) {
             }
         });
     });
-    console.log(items);
 
-    // There are so many #text elements in the HTML, we're ending up with too
-    // many elements.  We want to remove the even ones ....
     var url = "/api/" + theme + "/" + name + "?";
     for (var i= 0; i < items.length; i+=2 ){
         url += items[i];
@@ -134,64 +120,6 @@ function filter_request(btn,id, theme, name, fmt) {
         return;
     }
 
-    var b = $(btn);
-    b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
-
-
-    $.ajax({
-        url: url,
-        dataType: "json"
-    }) .done(function( obj ) {
-        var text = "";
-
-        if (obj.success) {
-            text = JSON.stringify(obj.result, undefined, 2);
-        } else {
-            text = "ERROR: " + obj.error;
-        }
-        $("#" + id + "_output").html( text );
-        $("#" + id + "_container").slideDown();
-
-        $('#loading').remove();
-    }).error(function(){
-        var text = "API call to " + url + " failed";
-        $("#" + id + "_output").html( text );
-        $("#" + id + "_container").slideDown();
-
-        $('#loading').remove();
-    });
-
+    make_call(url, "#" + id, btn);
 }
-
-/*
-function request(btn, id, fmt) {
-    var c = get_content(id);
-
-    if (fmt == 'csv') {
-        window.location.href = c + "&format=csv";
-        return;
-    }
-
-    var b = $(btn);
-    b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
-
-    $("#" + id + "_container").slideUp();
-
-    $.ajax({
-        url: c,
-        dataType: "json"
-    }) .done(function( obj ) {
-        var text = "";
-
-        if (obj.success) {
-            text = JSON.stringify(obj.result, undefined, 2);
-        } else {
-            text = "ERROR: " + obj.error;
-        }
-
-        $("#" + id + "_output").html( text );
-        $("#" + id + "_container").slideDown();
-        $('#loading').remove();
-    });
-}*/
 
