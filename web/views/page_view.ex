@@ -21,12 +21,17 @@ defmodule ApiServer.PageView do
   end
 
   def is_dangerous(manifest, service) do
-    manifest
+    svc = manifest
     |> Dict.get("services")
     |> Enum.filter(fn f-> Dict.get(f, "name") == service end)
-    |> hd
-    |> Dict.get("large_dataset", false)
 
+    if svc do
+      svc
+      |> hd
+      |> Dict.get("large_dataset", false)
+    else
+      false
+    end
   end
 
 
