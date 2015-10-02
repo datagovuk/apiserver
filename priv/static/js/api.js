@@ -1,5 +1,37 @@
 
 
+function make_call(url, form, btn) {
+    var b = $(btn);
+    b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
+
+    $.ajax({
+        url: url,
+        dataType: "json"
+    }) .done(function( obj ) {
+        var text = "";
+
+        if (obj.success) {
+            text = JSON.stringify(obj.result, undefined, 2);
+            $(form + "_link").attr("href", url);
+            $(form + "_link").show();
+        } else {
+            text = "ERROR: " + obj.error;
+            $(form + "_link").attr("href", "");
+            $(form + "_link").hide();
+        }
+        $(form + "_output").html( text );
+        $(form + "_container").slideDown();
+
+        $('#loading').remove();
+    }).error(function(){
+        var text = "API call to " + url + " failed";
+        $(form + "_output").html( text );
+        $(form + "_container").slideDown();
+
+        $('#loading').remove();
+    });
+}
+
 
 function execute_query(btn) {
     $("#error").empty();
@@ -26,10 +58,9 @@ function execute_query(btn) {
             $("#error").show();
             editor.focus();
         } else {
-            $("#sql-url").attr('href', host + url);
-            $("#sql-url").show();
-
-            $("#dllink").attr('href', host + url + '&format=csv')
+            $("#csvlink").attr('href', host + url + '&_format=csv')
+            $("#ttllink").attr('href', host + url + '&_format=ttl')
+            $("#jsonlink").attr('href', host + url)
             $("#download").show();
 
             var text = JSON.stringify(object.result, undefined, 2);
@@ -50,6 +81,27 @@ function get_content(id) {
         }
     });
     return url;
+}
+
+function form_request(btn, form, fmt) {
+    var params = "";
+    var f = $(form);
+    var url = f.attr('action') + "?";
+
+    var elements = f.find("input");
+    for(var i =0; i < elements.length; i++) {
+        url += $(elements[i]).attr('name') + "=" + $(elements[i]).val();
+        if ( i < elements.length - 1) {
+            url += "&";
+        }
+    }
+
+    if (fmt && fmt.length > 0) {
+        window.location.href = url + "&_format=" + fmt;
+        return;
+    }
+
+    make_call(url, form, btn)
 }
 
 function filter_request(btn,id, theme, name, fmt) {
@@ -82,8 +134,8 @@ function filter_request(btn,id, theme, name, fmt) {
         }
     }
 
-    if (fmt == 'csv') {
-        window.location.href = url + "&_fmt=csv";
+    if (fmt && fmt.length > 0) {
+        window.location.href = url + "&_format=" + fmt;
         return;
     }
 
@@ -116,6 +168,7 @@ function filter_request(btn,id, theme, name, fmt) {
 
 }
 
+/*
 function request(btn, id, fmt) {
     var c = get_content(id);
 
@@ -145,5 +198,5 @@ function request(btn, id, fmt) {
         $("#" + id + "_container").slideDown();
         $('#loading').remove();
     });
-}
+}*/
 

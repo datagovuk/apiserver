@@ -10,7 +10,7 @@ defmodule ApiServer.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["", "json", "application/json"]
+    plug :accepts, ["", "json", "application/json", "ttl", "application/x-turtle", "csv"]
     plug Corsica
     plug :allow_jsonp
   end

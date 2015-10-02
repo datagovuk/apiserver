@@ -1,5 +1,6 @@
 defmodule ApiServer.ApiController do
   use ApiServer.Web, :controller
+  alias ApiServer.TTL
   alias ApiServer.Endpoint, as: Endpoint
 
   @doc """
@@ -49,9 +50,7 @@ defmodule ApiServer.ApiController do
     end
   end
 
-
-
-
+  defp get_service_basics(nil), do: %{}
   defp get_service_basics(m) do
     m
     |> Dict.get("services")
@@ -64,23 +63,41 @@ defmodule ApiServer.ApiController do
     end)
   end
 
+
   @doc """
   A raw SQL endpoint for the specified theme. The schema should have been
   send as part of the theme action...
   """
-  def theme_sql(conn, %{"theme"=>theme, "format"=>"csv"}=params) do
+  def theme_sql(conn, %{"theme"=>theme, "_format"=>format}=params) do
     res = Database.Schema.call_sql_api(theme, params["query"])
 
     Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
-    csv_stream = [res["columns"]|res["rows"]] |> CSV.encode
 
-    conn
-    |> put_layout(false)
-    |> put_resp_content_type("text/csv")
-    |> put_resp_header("content-disposition",
-                       "attachment; filename=\"query.csv\";")
-    |> assign(:csv_stream, csv_stream)
-    |> render "csv.html"
+    case format do
+      "csv" ->
+        results = Map.get(res, "result" )
+        rows = Enum.map(results, fn m ->
+          Map.values(m)
+        end)
+        schema = case hd(results) do
+          m when is_map(m) ->
+            Map.keys(m)
+          _ -> []
+        end
+        conn
+        |> write_csv schema, rows
+      "ttl" ->
+        conn
+        |> put_layout(false)
+        |> put_resp_content_type("application/x-turtle; charset=utf-8")
+        |> put_resp_header("content-disposition",
+                           "attachment; filename=\"query.ttl\";")
+        |> assign(:objects, Map.get(res, "result"))
+        |> assign(:base, url_for_ttl_base(theme, ""))
+        |> render "ttl.html"
+      _ ->
+        conn |> put_status(400)
+    end
   end
 
   def theme_sql(conn, %{"theme"=>theme}=params) do
@@ -89,11 +106,23 @@ defmodule ApiServer.ApiController do
     |> json Database.Schema.call_sql_api(theme, params["query"])
   end
 
+  defp write_csv(conn, schema, data) do
+      csv_stream = [schema|data] |> CSV.encode
+
+      conn
+      |> put_layout(false)
+      |> put_resp_content_type("text/csv; charset=utf-8")
+      |> put_resp_header("content-disposition",
+                         "attachment; filename=\"query.csv\";")
+      |> assign(:csv_stream, csv_stream)
+      |> render "csv.html"
+  end
+
   @doc """
   Calls the actual API endpoint within a theme
   """
   def service(conn, %{"theme"=>theme, "service"=>service,
-                      "method"=>method, "format"=>"csv"}=params) do
+                      "method"=>method, "_format"=>format}=params) do
     # Based on theme/service/method we want the sql query, and the
     # parameters to expect
     v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
@@ -102,20 +131,26 @@ defmodule ApiServer.ApiController do
     res = process_api_call(params ,v)
     schema = Map.keys(Database.Schema.get_schema(theme, service))
 
-    rows = Enum.map(res, fn m ->
-      Map.values(m)
-    end)
+    case format do
+      "csv" ->
+        rows = Enum.map(res, fn m ->
+          Map.values(m)
+        end)
 
-    csv_stream = [schema|rows] |> CSV.encode
-
-    conn
-    |> put_layout(false)
-    |> put_resp_content_type("text/csv; charset=utf-8")
-    |> put_resp_header("content-disposition",
-                       "attachment; filename=\"query.csv\";")
-    |> assign(:csv_stream, csv_stream)
-    |> render "csv.html"
-
+        conn
+        |> write_csv schema, rows
+      "ttl" ->
+        conn
+        |> put_layout(false)
+        |> put_resp_content_type("application/x-turtle; charset=utf-8")
+        |> put_resp_header("content-disposition",
+                           "attachment; filename=\"query.ttl\";")
+        |> assign(:objects, res)
+        |> assign(:base, url_for_ttl_base(theme, service))
+        |> render "ttl.html"
+      _ ->
+        conn |> put_status(400)
+    end
   end
 
   def service(conn, %{"theme"=>theme, "service"=>service,
@@ -142,7 +177,7 @@ defmodule ApiServer.ApiController do
   Support for querying the endpoint directly by calling it with all of the
   required filters in query params, returned as CSV
   """
-  def service_direct(conn, %{"_theme"=>theme, "_service"=>service, "_fmt"=>"csv"}=params) do
+  def service_direct(conn, %{"_theme"=>theme, "_service"=>service, "_format"=>format}=params) do
 
     parameters = params
     |> Enum.filter(fn {k, _}-> !String.starts_with?(k, "_")  end)
@@ -154,19 +189,24 @@ defmodule ApiServer.ApiController do
 
     schema = Map.keys(Database.Schema.get_schema(theme, service))
 
-    rows = Enum.map(res, fn m ->
-      Map.values(m)
-    end)
+    case format do
+      "csv" ->
+        rows = Enum.map(res, fn m ->
+          Map.values(m)
+        end)
 
-    csv_stream = [schema|rows] |> CSV.encode
-
-    conn
-    |> put_layout(false)
-    |> put_resp_content_type("text/csv; charset=utf-8")
-    |> put_resp_header("content-disposition",
-                       "attachment; filename=\"query.csv\";")
-    |> assign(:csv_stream, csv_stream)
-    |> render "csv.html"
+        conn
+        |> write_csv schema, rows
+      "ttl" ->
+        conn
+        |> put_layout(false)
+        |> put_resp_content_type("application/x-turtle; charset=utf-8")
+        |> put_resp_header("content-disposition",
+                           "attachment; filename=\"query.ttl\";")
+        |> assign(:objects, res)
+        |> assign(:base, url_for_ttl_base(theme, service))
+        |> render "ttl.html"
+      end
   end
 
   @doc """
@@ -244,6 +284,11 @@ defmodule ApiServer.ApiController do
     end
 
     Database.Schema.call_api(theme, query, parameters)
+  end
+
+  defp url_for_ttl_base(theme, service) do
+      host = Database.Lookups.find(:general, :host)
+      "#{host}/#{theme}/#{service}"
   end
 
 

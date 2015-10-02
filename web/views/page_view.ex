@@ -1,6 +1,16 @@
 defmodule ApiServer.PageView do
   use ApiServer.Web, :view
 
+  def prettify(word) do
+    IO.inspect word
+    word
+    |> String.replace("_", " ")
+    |> String.replace("-", " ")
+    |> String.split(" ")
+    |> Enum.map(fn w-> capitalize(w) end)
+    |> Enum.join(" ")
+  end
+
   def capitalize(string) do
     string
     |>  String.capitalize

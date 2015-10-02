@@ -10,12 +10,12 @@
                 <% distincts = Map.get(@distincts, name) %>
 
                 <div class="service">
-                    <h3>
+                    <h4>
             <%= if dataset do %>
                 <a class="dataset label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
             <% end %>
-<%= description %>
-                    </h3>
+            <%= description %>
+                    </h4>
 
                     <%= for fieldname<- Dict.get(@filters, name) do %>
                     <div id="filters_<%= name %>">
@@ -41,14 +41,23 @@
                     <div class="pull-right">
                         <button class="toolow btn btn-sm btn-default" onclick="filter_request(this, 'filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
                 &nbsp;
-                        <button class="toolow btn btn-sm btn-default" onclick="filter_request(this, 'filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'csv');">Get CSV</button>
+                        <div class="btn-group">
+                          <button type="button" class="toolow btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Download as <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a href="javascript:filter_request(this, 'filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'csv');">CSV</a></li>
+                            <li><a href="javascript:filter_request(this, 'filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'ttl');">TTL</a></li>
+                          </ul>
+                        </div>
+
                     </div>
                     <div class="clearfix"></div>
 
                     <div id="filters_<%= name %>_container" style="display:none;">
                         <pre class="output" id="filters_<%= name %>_output" >
                         </pre>
-                        <a href="javascript:$('#<%= name %>_container').hide();">Hide</a>
+                        <a href="javascript:$('#filters_<%= name %>_container').hide();">Hide</a>
                     </div>
                 </div>
                 <% end %>

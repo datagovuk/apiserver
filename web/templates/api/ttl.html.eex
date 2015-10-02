@@ -1,0 +1,5 @@
+@base <%= @base %>
+<%= for object<- @objects do %>
+_: uuid<%= for {k, v} <- object do %>
+   <#<%= k %>> "<%= v %>"<% end %>
+<% end %>

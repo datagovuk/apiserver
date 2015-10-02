@@ -29,12 +29,23 @@ defmodule ApiServer.PageController do
   The theme homepage containing the API UI and information on usage
   """
   def theme(conn, %{"theme"=>theme}) do
+    manifest = Database.Lookups.find(:themes, theme)
+    case manifest do
+      nil ->
+        conn
+        |> put_status(404)
+        |> render "404.html"
+      _ ->
+        theme_inner(conn, theme, manifest)
+    end
+  end
+
+  defp theme_inner(conn, theme, manifest) do
     ExStatsD.increment("theme.#{theme}.views")
 
     schema_task = Task.async(fn ()-> Database.Schema.get_schemas(theme) end)
 
     host = Database.Lookups.find(:general, :host)
-    manifest = Database.Lookups.find(:themes, theme)
     distincts = Database.Lookups.find(:distincts, theme)
     filters = Manifest.filter_fields(manifest, theme)
 

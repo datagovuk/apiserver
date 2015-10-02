@@ -1,17 +1,20 @@
 
     <%= for {name, description, documentation, dataset} <- services @manifest do %>
         <div class="service">
-            <h3>
+            <h4 style='line-height: 20px'>
             <%= if dataset do %>
                 <a class="dataset label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
             <% end %>
             <%= description %>
-            </h3>
+            </h4>
             <p><%= documentation %></p>
+            <hr/>
             <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
                 <div class="api_desc">
-                    <h4><%= description %></h4>
-                    <span id="<%= name %>_<%= fname %>" class="url_label"><%= @host %>/api/<%= @theme %>/<%= name %>/<%= fname %></span>
+                    <strong><%= description %></strong>
+                    <br/>
+                    <form style="margin-top: 10px" id="<%= name %>_<%= fname %>" class="form" action="<%= @host %>/api/<%= @theme %>/<%= name %>/<%= fname %>">
+                    </form>
 
                     <script type="text/javascript">
                         var s = $("#<%= name %>_<%= fname %>");
@@ -19,32 +22,38 @@
 
                         <%= if fields do %>
                             <%= for field <- fields do %>
-                                    if(str.length > 0 ) {
-                                        str += "&"
-                                    }
-                                    str += "<%= field %>=";
-                                    str += '<input id="<%= name %>_<%= fname %>_<%= field %>" name="<%= field %>" class="input_bottom" type="text" placeholder="<%= field %>">';
+                                str += "<div class='form-group'>"
+                                str += "<label for='<%= field %>'><%= prettify(field) %></lable>&nbsp;&nbsp;";
+                                str += '<input id="<%= name %>_<%= fname %>_<%= field %>" name="<%= field %>" class="input_bottom" type="text" placeholder="<%= field %>">';
+                                str += "</div>"
                             <% end %>
-                            str = "?" + str;
                         <% end %>
                         s.html( s.html() + str );
                     </script>
 
                     <div class="pull-right">
-                        <button class="toolow btn btn-sm btn-default" onclick="request(this, '<%= name %>_<%= fname %>');">
+                        <button class="toolow btn btn-sm btn-default" onclick="form_request(this, '#<%= name %>_<%= fname %>');">
                         Make request</button>
                         &nbsp;
-                        <button class="toolow btn btn-sm btn-default" onclick="request(this, '<%= name %>_<%= fname %>', 'csv');">Get CSV</button>
+                        <div class="btn-group">
+                          <button type="button" class="toolow btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Download as <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a href="javascript:form_request(this, '#<%= name %>_<%= fname %>', 'csv');">CSV</a></li>
+                            <li><a href="javascript:form_request(this, '#<%= name %>_<%= fname %>', 'ttl');">TTL</a></li>
+                          </ul>
+                        </div>
                     </div>
                 </div>
 
+                <div class="clearfix"></div>
                 <div id="<%= name %>_<%= fname %>_container" style="display:none;">
                     <pre class="output" id="<%= name %>_<%= fname %>_output" >
                     </pre>
                     <a href="javascript:$('#<%= name %>_<%= fname %>_container').hide();">Hide</a>
+                    <a id="<%= name %>_<%= fname %>_link" class="pull-right" href="">Link</a>
                 </div>
-
-                <hr/>
             <% end %>
         </div>
     <% end %>
