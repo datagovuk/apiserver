@@ -8,4 +8,14 @@ defmodule ApiServer.ApiView do
     |> Base.encode16(case: :lower)
   end
 
+  def ttl_terminator({k, v}, object) do
+    vals = object |> Enum.into([])
+    pos = length(Dict.keys(object)) - 1
+
+    if pos == Enum.find_index(vals, fn({x,y}) -> x == k end) do
+      "."
+    else
+      ";"
+    end
+  end
 end

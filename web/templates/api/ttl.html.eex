@@ -1,5 +1,5 @@
-@base <%= @base %>
+@base <<%= @base %>> .
 <%= for object<- @objects do %>
 _:<%=hash_for_map(object)%><%= for {k, v} <- object do %>
-   <#<%= k %>> "<%= v %>";<% end %>
+   <#<%= k %>> "<%= v %>" <%= ttl_terminator({k,v}, object) %><% end %>
 <% end %>
