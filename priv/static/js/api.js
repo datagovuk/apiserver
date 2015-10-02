@@ -52,11 +52,11 @@ function execute_query(btn) {
         dataType: "json"
     }).done(function(object) {
         $('#loading').remove();
-
         if (!object.success) {
             $("#download").hide();
             $("#error").html(object.error);
             $("#error").show();
+            $('.table-results').html("");
             editor.focus();
         } else {
             $("#csvlink").attr('href', host + url + '&_format=csv')
@@ -65,7 +65,6 @@ function execute_query(btn) {
             $("#download").show();
 
             var text = JSON.stringify(object.result, undefined, 2);
-            console.log(text);
             $('.table-results').html(text);
             $('.table-results-container').show();
         }

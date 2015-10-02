@@ -58,7 +58,8 @@ defmodule ApiServer.ApiController do
        %{
           "name"=> Map.get(x, "name"),
           "description"=> Map.get(x, "description"),
-          "dataset" => Map.get(x, "dataset", "")
+          "dataset" => Map.get(x, "dataset", ""),
+          "large_dataset" => Map.get(x, "large_dataset", false)
         }
     end)
   end
@@ -69,6 +70,8 @@ defmodule ApiServer.ApiController do
   send as part of the theme action...
   """
   def theme_sql(conn, %{"theme"=>theme, "_format"=>format}=params) do
+
+
     res = Database.Schema.call_sql_api(theme, params["query"])
 
     Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
@@ -101,9 +104,42 @@ defmodule ApiServer.ApiController do
   end
 
   def theme_sql(conn, %{"theme"=>theme}=params) do
-    Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
-    conn
-    |> json Database.Schema.call_sql_api(theme, params["query"])
+    # How do we get the service? Check table name and then presence of LIMIT <500
+    %{"table"=>service_name} = Regex.named_captures(~r/.*from (?<table>\w+).*/iu, params["query"])
+    [service] = :themes
+    |> Database.Lookups.find(theme)
+    |> get_service_basics
+    |> Enum.filter(fn x-> Dict.get(x, "name", "") == service_name end)
+
+    {valid_query, errors} = validate_query(theme, service, params["query"])
+    case valid_query do
+      false ->
+        conn |>  json %{"success"=>false, "error"=>errors}
+      true ->
+        Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
+
+        conn
+        |> json Database.Schema.call_sql_api(theme, params["query"])
+    end
+  end
+
+  defp validate_query(theme, service, query) do
+    large = Dict.get(service, "large_dataset", false)
+    validate_query_large_dataset(theme, query, large)
+  end
+
+  defp validate_query_large_dataset(_, _, false), do: {true, nil}
+  defp validate_query_large_dataset(theme, query, true) do
+    { limited, count } = Database.Schema.check_query_limit(theme, query)
+    process_validation_matches limited, count
+  end
+
+  defp process_validation_matches(false, _), do: {false, "A limit is required on large datasets"}
+  defp process_validation_matches(true, size) when size > 500 do
+    {false, "Limits must be 500 or less"}
+  end
+  defp process_validation_matches(true, size) do
+    {true, nil}
   end
 
   defp write_csv(conn, schema, data) do
@@ -230,8 +266,6 @@ defmodule ApiServer.ApiController do
   defp service_direct_process(conn, theme, parameters, service) do
 
     {query, arguments} = service_direct_query(parameters, service)
-    IO.inspect query
-
 
     res = Database.Schema.call_api(theme, query, arguments)
     case res do

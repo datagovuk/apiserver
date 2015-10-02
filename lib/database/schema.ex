@@ -4,6 +4,7 @@ defmodule Database.Schema do
   database for performing queries, and also fetching schema of tables.
   """
   alias Database.Worker
+  alias Poison, as: JSON
 
   @timeout 6000
 
@@ -90,7 +91,7 @@ defmodule Database.Schema do
     :poolboy.transaction(pool, fn(worker)->
       {:ok, _, _} = Worker.query(worker, 'set statement_timeout to 5000;')
 
-      resp = case Worker.raw_query(worker, query)  do
+     resp = case Worker.raw_query(worker, query)  do
           {:ok, fields, data} ->
             columns = fields
             |> Enum.map(fn x -> elem(x, 1) end)
@@ -113,6 +114,28 @@ defmodule Database.Schema do
         end
     end, @timeout)
    end
+
+
+  @doc """
+  For a given query, will check whether it is limited and whether
+  it is less than 500 rows.  Returns
+  { true, 500 } - Limit of 500
+  { true, 1000 } - Limit of 1000
+  { false, 0 } - No limit
+  """
+  def check_query_limit(theme, query) do
+    q = "EXPLAIN (format json) #{query}"
+    pool = String.to_atom(theme)
+    {:ok, _, [{plan}]} = :poolboy.transaction(pool, fn(worker)->
+       Worker.raw_query(worker, q)
+    end)
+
+    [data] = JSON.decode! plan
+    node_type = MapTraversal.find_value("Plan.Node Type", data) |> String.downcase
+    plan_rows = MapTraversal.find_value("Plan.Plan Rows", data)
+
+    {node_type=="limit", plan_rows}
+ end
 
   defp clean({{year, month, day}, {hr, mn, sec}}) do
     "#{day}/#{month}/#{year} #{filled_int(hr)}:#{filled_int(mn)}:#{filled_int(sec)}"

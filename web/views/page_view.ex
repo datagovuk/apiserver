@@ -2,7 +2,6 @@ defmodule ApiServer.PageView do
   use ApiServer.Web, :view
 
   def prettify(word) do
-    IO.inspect word
     word
     |> String.replace("_", " ")
     |> String.replace("-", " ")
@@ -20,6 +19,16 @@ defmodule ApiServer.PageView do
     k = hd(Map.keys(m))
     String.downcase(k)
   end
+
+  def is_dangerous(manifest, service) do
+    manifest
+    |> Dict.get("services")
+    |> Enum.filter(fn f-> Dict.get(f, "name") == service end)
+    |> hd
+    |> Dict.get("large_dataset", false)
+
+  end
+
 
   # Helpers for working with manifest ....
   def services(manifest) do

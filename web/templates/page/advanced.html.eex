@@ -9,7 +9,20 @@
 
         <div class="tab-content" style="height: 260px; overflow: scroll;">
             <%= for {key, v}<- @schema do %>
+
             <div role="tabpanel" class="tab-pane active" id="<%= key %>" style="margin-top: 20px;">
+
+            <%= if is_dangerous(@manifest, key) do %>
+            <div class="col-md-3">
+                <span style="font-size: 1.1em" class="label label-danger">Large dataset</span>
+            </div>
+            <div class="col-md-9">
+                Queries to this dataset <strong>must</strong> use a LIMIT of at most 500 rows.
+            </div>
+            <% end %>
+
+
+
                 <div class="col-md-6">
                 <table class="table table-striped">
                     <thead>

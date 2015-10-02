@@ -73,7 +73,8 @@ defmodule Database.Lookups do
       sname = s["name"]
       {"#{service_name}/#{sname}", %{"query"=> s["query"],
                                      "name"=>s["name"],
-                                     "fields"=>s["fields"]} }
+                                     "fields"=>s["fields"],
+                                     "large_dataset"=>Map.get(s,"large_dataset", false)} }
     end)
   end
 
