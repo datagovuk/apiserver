@@ -6,6 +6,11 @@ host = '<%= @host %>';
 
 <div class="container">
 
+<ol class="breadcrumb pull-left">
+  <li><a href="/">Home</a></li>
+  <li class="active"><%= capitalize(@theme) %></li>
+</ol>
+
 <h2 class='pull-right'><%= capitalize(@theme)%></h2>
 <div class="clearfix"></div>
 

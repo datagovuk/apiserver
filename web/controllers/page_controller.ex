@@ -63,4 +63,14 @@ defmodule ApiServer.PageController do
     |> render("theme.html")
   end
 
+  def service(conn, %{"theme"=>theme, "service"=>service}) do
+    host = Database.Lookups.find(:general, :host)
+
+    conn
+    |> assign(:theme, theme)
+    |> assign(:service_name, service)
+    |> assign(:host, host)
+    |> render("service.html")
+  end
+
 end

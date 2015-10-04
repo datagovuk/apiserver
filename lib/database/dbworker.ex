@@ -8,15 +8,7 @@ defmodule Database.Worker do
 
   def start_link(args\\[]) do
     arguments = args |> Enum.into %{}
-
-    {:ok, connection} = :epgsql.connect(arguments.host,
-                                        to_char_list(arguments.dbuser),
-                                        to_char_list(arguments.dbpass),
-      [{:database, to_char_list(arguments.database)},
-       {:port, arguments.port}
-      ])
-
-    GenServer.start_link(__MODULE__, connection)
+    GenServer.start_link(__MODULE__, arguments)
   end
 
   def raw_query(pid, query, args \\ []) do
@@ -31,8 +23,16 @@ defmodule Database.Worker do
   ######################################################################
   # Genserver callbacks ..
   ######################################################################
-  def init(connection) do
+  def init(arguments) do
     # Create a connection to the database ...
+    {:ok, connection} = :epgsql.connect(arguments.host,
+                                        to_char_list(arguments.dbuser),
+                                        to_char_list(arguments.dbpass),
+      [{:database, to_char_list(arguments.database)},
+       {:port, arguments.port}
+      ])
+
+
     :epgsql.squery(connection, 'set statement_timeout to 5000;')
     {:ok, connection}
   end

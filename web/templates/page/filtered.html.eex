@@ -1,66 +1,66 @@
-        <div class="service">
-            <p>You can query the database by selecting or entering values for specific fields</p>
-        </div>
+    <div class="service">
+        <p>You can query the database by selecting or entering values for specific fields</p>
+    </div>
 
-        <%= for {name, description, documentation, dataset} <- services @manifest do %>
+    <%= for {name, description, documentation, dataset} <- services @manifest do %>
 
-            <%= if Dict.get(@filters, name) do %>
+        <%= if Dict.get(@filters, name) do %>
 
-                <%= if @distincts do %>
-                <% distincts = Map.get(@distincts, name) %>
+            <%= if @distincts do %>
+            <% distincts = Map.get(@distincts, name) %>
 
-                <div class="service">
-                    <h4>
-            <%= if dataset do %>
-                <a class="dataset label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
-            <% end %>
-            <%= description %>
-                    </h4>
+            <div class="service">
+                <h4>
+        <%= if dataset do %>
+            <a class="dataset label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
+        <% end %>
+        <%= description %>
+                </h4>
 
-                    <%= for fieldname<- Dict.get(@filters, name) do %>
-                    <div id="filters_<%= name %>">
-                        <div class="col-md-4">
-                            <% values = Map.get(distincts, fieldname) %>
+                <%= for fieldname<- Dict.get(@filters, name) do %>
+                <div id="filters_<%= name %>">
+                    <div class="col-md-4">
+                        <% values = Map.get(distincts, fieldname) %>
 
-                            <div class="col-md-6 dataelement" style="padding: 10px;">
-                            <label for="<%= fieldname %>"><%= prettify(fieldname) %></label></div>
-                            <div class="col-md-6 dataelement" style="padding: 10px;"><%= if values == nil do %>
-                                    <input class="form-control" type="text" name="<%= fieldname %>">
-                                <% else %>
-                                    <select class="form-control input-sm" name="<%= fieldname %>">
-                                    <option value=""></option>
-                                    <%= for value <- values do %>
-                                        <option value="<%= value %>"><%= value %></option>
-                                    <% end %>
-                                    </select>
-                                <% end %></div>
-                        </div>
-                    </div>
-                    <% end %>
-
-                    <div class="clearfix"></div>
-                    <div class="pull-right">
-                        <button class="toolow btn btn-sm btn-default" onclick="filter_request(this, 'filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
-                &nbsp;
-                        <div class="btn-group">
-                          <button type="button" class="toolow btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Download as <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li><a href="javascript:filter_request(this, 'filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'csv');">CSV</a></li>
-                            <li><a href="javascript:filter_request(this, 'filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'ttl');">TTL</a></li>
-                          </ul>
-                        </div>
-
-                    </div>
-                    <div class="clearfix"></div>
-
-                    <div id="filters_<%= name %>_container" style="display:none;">
-                        <pre class="output" id="filters_<%= name %>_output" >
-                        </pre>
-                        <a href="javascript:$('#filters_<%= name %>_container').hide();">Hide</a>
+                        <div class="col-md-6 dataelement" style="padding: 10px;">
+                        <label for="<%= fieldname %>"><%= prettify(fieldname) %></label></div>
+                        <div class="col-md-6 dataelement" style="padding: 10px;"><%= if values == nil do %>
+                                <input class="form-control" type="text" name="<%= fieldname %>">
+                            <% else %>
+                                <select class="form-control input-sm" name="<%= fieldname %>">
+                                <option value=""></option>
+                                <%= for value <- values do %>
+                                    <option value="<%= value %>"><%= value %></option>
+                                <% end %>
+                                </select>
+                            <% end %></div>
                     </div>
                 </div>
                 <% end %>
+
+                <div class="clearfix"></div>
+                <div class="pull-right">
+                    <button class="toolow btn btn-sm btn-default" onclick="filter_request(this, 'filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
+            &nbsp;
+                    <div class="btn-group">
+                      <button type="button" class="toolow btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Download as <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a href="javascript:filter_request(this, 'filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'csv');">CSV</a></li>
+                        <li><a href="javascript:filter_request(this, 'filters_<%= name %>',  '<%= @theme %>', '<%= name %>', 'ttl');">TTL</a></li>
+                      </ul>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+
+                <div id="filters_<%= name %>_container" style="display:none;">
+                    <pre class="output" id="filters_<%= name %>_output" >
+                    </pre>
+                    <a href="javascript:$('#filters_<%= name %>_container').hide();">Hide</a>
+                </div>
+            </div>
             <% end %>
         <% end %>
+    <% end %>
