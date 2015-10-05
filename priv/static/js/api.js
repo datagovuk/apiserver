@@ -1,4 +1,39 @@
+function reset_selects(theme, children_of) {
+    var parent = $(children_of);
+    var selects = $(parent).find("select");
+    var table = $(parent).attr('id').substring("filter_".length);
 
+    for(var i= 0; i < selects.length; i++) {
+        var name = $(selects[i]).attr('name');
+        var query  = "select distinct(" + name + ") from " + table + " order by " + name;
+        $.ajax({
+            url: "/api/" + theme + "/sql?query=" + query,
+            dataType: "json",
+            context: {name: name}
+        }) .done(function( obj ) {
+            if (obj.success ) {
+                var slt = $("#filter_" + table);
+                var selec = slt.find("[name='" + this.name + "']")
+                selec.empty();
+
+                console.log("Processing select ...." + this.name)
+                var contains_blank = false;
+                for (var ix =0; ix < obj.result.length; ix++) {
+                    var d = obj.result[ix][this.name];
+                    if ( d == "") { contains_blank = true;}
+                    var opt = $("<option value='" + d + "'>" + d + "</option>");
+                    selec.append(opt);
+                }
+
+                if (!contains_blank) {
+                    selec.prepend($("<option value=''></option>"));
+                }
+
+            }
+        });
+
+    }
+}
 
 function make_call(url, form, btn) {
     var b = $(btn);

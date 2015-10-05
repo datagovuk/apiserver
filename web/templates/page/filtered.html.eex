@@ -9,7 +9,7 @@
             <%= if @distincts do %>
             <% distincts = Map.get(@distincts, name) %>
 
-            <div class="service">
+            <div class="service" id="filter_<%= name %>">
                 <h4>
         <%= if dataset do %>
             <a class="dataset label label-info" href="https://data.gov.uk/dataset/<%= dataset %>">Dataset</a>
@@ -40,6 +40,8 @@
 
                 <div class="clearfix"></div>
                 <div class="pull-right">
+                    <a href="javascript:0" onclick="reset_selects('<%= @theme %>','#filter_<%= name %>');return false;">reset</a>
+                    &nbsp;
                     <button class="toolow btn btn-sm btn-default" onclick="filter_request(this, 'filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
             &nbsp;
                     <div class="btn-group">
@@ -64,3 +66,58 @@
             <% end %>
         <% end %>
     <% end %>
+
+<script type="text/javascript">
+
+$('select').on('change', function(){
+    var select = $(this);
+    var parent = select.parents(".service")[0];
+    var selects = $(parent).find("select");
+
+    var table = $(parent).attr('id').substring("filter_".length);
+    var to_filter = [];
+    var inc_filter = [];
+
+    for (var i = 0; i < selects.length; i++ ) {
+        var s = selects[i];
+
+        if ($(s).val() != "") {
+            inc_filter.push($(s).attr('name') + "='" + $(s).val() + "' ")
+            continue;
+        }
+
+        to_filter.push($(s).attr('name'))
+    }
+
+    for( var i = 0; i < to_filter.length; i++ ) {
+        var n = to_filter[i];
+        var query = "select distinct(" + n + ") from " + table + " where " + inc_filter.join("AND") + " ORDER BY " + n;
+        $.ajax({
+            url: "/api/<%= @theme %>/sql?query=" + query,
+            dataType: "json"
+        }) .done(function( obj ) {
+            if (obj.success ) {
+                var slt = $("#filter_" + table);
+                var selec = slt.find("[name='" + n + "']")
+                selec.empty();
+
+                var contains_blank = false;
+                for (var ix =0; ix < obj.result.length; ix++) {
+                    var d = obj.result[ix][n];
+                    if ( d == "") { contains_blank = true;}
+                    var opt = $("<option value='" + d + "'>" + d + "</option>");
+                    selec.append(opt);
+                }
+
+                if (!contains_blank) {
+                    var opt = $("<option value=''></option>");
+                    selec.prepend(opt);
+                }
+            }
+        }).error(function(){
+        });
+
+    }
+
+});
+</script>
