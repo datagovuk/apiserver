@@ -15,32 +15,32 @@ host = '<%= @host %>';
 <div class="clearfix"></div>
 
  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="dgu-tab active"><a href="#basic" aria-controls="home" role="tab" data-toggle="tab">Basic</a></li>
-    <li class="dgu-tab" role="presentation"><a href="#filtered" aria-controls="profile" role="tab" data-toggle="tab">Filters</a></li>
-    <li class="dgu-tab" role="presentation"><a href="#advanced" aria-controls="profile" role="tab" data-toggle="tab">SQL</a></li>
-    <li class="dgu-tab" role="presentation"><a href="#map" aria-controls="profile" role="tab" data-toggle="tab">Maps</a></li>
+    <li role="presentation" class="dgu-tab active"><a id='basic_tab' href="#_basic" aria-controls="home" role="tab" data-toggle="tab">Basic</a></li>
+    <li class="dgu-tab" role="presentation"><a id='filtered_tab' href="#_filtered" aria-controls="profile" role="tab" data-toggle="tab">Filters</a></li>
+    <li class="dgu-tab" role="presentation"><a  id='sql_tab'href="#_advanced" aria-controls="profile" role="tab" data-toggle="tab">SQL</a></li>
+    <li class="dgu-tab" role="presentation"><a  id='map_tab' href="#_map" aria-controls="profile" role="tab" data-toggle="tab">Maps</a></li>
 </ul>
 <hr/>
 
 <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="basic" style="margin-top: 20px;">
+    <div role="tabpanel" class="tab-pane active" id="_basic" style="margin-top: 20px;">
         <%= render "basic.html", manifest: @manifest, theme: @theme,
                                     schema: @schema, distincts: @distincts,
                                     host: @host %>
     </div>
 
-    <div role="tabpanel" class="tab-pane" id="filtered" style="margin-top: 20px;">
+    <div role="tabpanel" class="tab-pane" id="_filtered" style="margin-top: 20px;">
         <%= render "filtered.html", manifest: @manifest, theme: @theme,
                                     schema: @schema, distincts: @distincts,
                                     filters: @filters %>
     </div>
 
 
-    <div role="tabpanel" class="tab-pane" id="advanced"  style="margin-top: 20px;">
+    <div role="tabpanel" class="tab-pane" id="_advanced"  style="margin-top: 20px;">
         <%= render "advanced.html", manifest: @manifest, theme: @theme,
                                     schema: @schema, distincts: @distincts%>
     </div>
-    <div role="tabpanel" class="tab-pane" id="map"  style="margin-top: 20px;">
+    <div role="tabpanel" class="tab-pane" id="_map"  style="margin-top: 20px;">
         <%= render "map.html", manifest: @manifest, theme: @theme,
                                     schema: @schema, distincts: @distincts%>
     </div>
@@ -52,19 +52,31 @@ host = '<%= @host %>';
     var editor = null;
     var editor_loaded = false;
 
+    function setup_editor() {
+        editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/sql");
+        editor_loaded = true;
+        $('#schematabs a:first').tab('show');
+    }
+
     $('.dgu-tab a').click(function (e) {
         e.preventDefault();
 
-        if (e.target.hash == "#advanced" && !editor_loaded) {
-            editor = ace.edit("editor");
-            editor.setTheme("ace/theme/monokai");
-            editor.getSession().setMode("ace/mode/sql");
-            editor_loaded = true;
-        }
+        if (e.target.hash == "#_advanced" && !editor_loaded) { setup_editor(); }
     });
 
-    $('#schematabs a:first').tab('show')
+    if (window.location.hash != undefined) {
+        var hash = window.location.hash.substring(1);
+        if ( hash == 'sql') { setup_editor(); }
+        $('#' + hash + '_tab').tab('show');
+    }
 
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var t = $(e.target).attr('id');
+        var fragment = t.substring(0, t.indexOf('_'));
+        window.location.hash = fragment;
+    })
 </script>
 
 
