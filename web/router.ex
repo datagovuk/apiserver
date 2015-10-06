@@ -38,6 +38,9 @@ defmodule ApiServer.Router do
     get "/documentation", PageController, :docs
     get "/stream", PageController, :info
 
+    get "/odata", ODataController, :index
+    get "/odata/:theme", ODataController, :root
+
     get "/:theme", PageController, :theme
     get "/:theme/:service", PageController, :service
     get "/:theme/:service/docs", PageController, :service_docs
