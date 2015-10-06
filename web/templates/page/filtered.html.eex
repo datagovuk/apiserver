@@ -40,7 +40,7 @@
 
                 <div class="clearfix"></div>
                 <div class="pull-right">
-                    <a href="javascript:0" onclick="reset_selects('<%= @theme %>','#filter_<%= name %>');return false;">reset</a>
+                    <a href="javascript:0" onclick="reset_selects('<%= @theme %>','#filter_<%= name %>', false);return false;">reset</a>
                     &nbsp;
                     <button class="toolow btn btn-sm btn-default" onclick="filter_request(this, 'filters_<%= name %>', '<%= @theme %>', '<%= name %>');">Make request</button>
             &nbsp;
@@ -78,14 +78,16 @@ $('select').on('change', function(){
     var to_filter = [];
     var inc_filter = [];
 
+    if (select.val() == "") {
+        reset_selects('<%= @theme %>', parent, true);
+        return;
+    }
+
+    selects = _.filter(selects, function(item){ return $(item).attr('name') != select.attr('name') });
+    inc_filter.push(select.attr('name') + "='" + select.val() + "' ")
+
     for (var i = 0; i < selects.length; i++ ) {
         var s = selects[i];
-
-        if ($(s).val() != "") {
-            inc_filter.push($(s).attr('name') + "='" + $(s).val() + "' ")
-            continue;
-        }
-
         to_filter.push($(s).attr('name'))
     }
 
@@ -99,11 +101,12 @@ $('select').on('change', function(){
             if (obj.success ) {
                 var slt = $("#filter_" + table);
                 var selec = slt.find("[name='" + n + "']")
+                var previous = selec.val() || "";
                 selec.empty();
 
                 var contains_blank = false;
                 for (var ix =0; ix < obj.result.length; ix++) {
-                    var d = obj.result[ix][n];
+                    var d = obj.result[ix][n].trim();
                     if ( d == "") { contains_blank = true;}
                     var opt = $("<option value='" + d + "'>" + d + "</option>");
                     selec.append(opt);
@@ -113,6 +116,8 @@ $('select').on('change', function(){
                     var opt = $("<option value=''></option>");
                     selec.prepend(opt);
                 }
+
+                selec.val(previous);
             }
         }).error(function(){
         });

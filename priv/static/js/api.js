@@ -1,4 +1,4 @@
-function reset_selects(theme, children_of) {
+function reset_selects(theme, children_of, remember) {
     var parent = $(children_of);
     var selects = $(parent).find("select");
     var table = $(parent).attr('id').substring("filter_".length);
@@ -9,17 +9,21 @@ function reset_selects(theme, children_of) {
         $.ajax({
             url: "/api/" + theme + "/sql?query=" + query,
             dataType: "json",
-            context: {name: name}
+            context: {name: name, remember: remember}
         }) .done(function( obj ) {
             if (obj.success ) {
                 var slt = $("#filter_" + table);
                 var selec = slt.find("[name='" + this.name + "']")
+                var previous = "";
+                if ( this.remember ) {
+                    previous = selec.val();
+                }
                 selec.empty();
 
                 console.log("Processing select ...." + this.name)
                 var contains_blank = false;
                 for (var ix =0; ix < obj.result.length; ix++) {
-                    var d = obj.result[ix][this.name];
+                    var d = obj.result[ix][this.name].trim();
                     if ( d == "") { contains_blank = true;}
                     var opt = $("<option value='" + d + "'>" + d + "</option>");
                     selec.append(opt);
@@ -28,6 +32,8 @@ function reset_selects(theme, children_of) {
                 if (!contains_blank) {
                     selec.prepend($("<option value=''></option>"));
                 }
+
+                selec.val(previous);
 
             }
         });
