@@ -25,7 +25,7 @@ function reset_selects(theme, children_of, remember) {
                 for (var ix =0; ix < obj.result.length; ix++) {
                     var d = obj.result[ix][this.name].trim();
                     if ( d == "") { contains_blank = true;}
-                    var opt = $("<option value='" + d + "'>" + d + "</option>");
+                    var opt = $('<option value="' + d + '">' + d + '</option>');
                     selec.append(opt);
                 }
 
@@ -149,7 +149,7 @@ function filter_request(btn,id, theme, name, fmt) {
     var url = "/api/" + theme + "/" + name + "?";
     for (var i= 0; i < items.length; i+=2 ){
         url += items[i];
-        url += "=" + items[i+1];
+        url += "=" + escape(items[i+1]);
         if ( i < items.length - 2) {
             url += "&";
         }

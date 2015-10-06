@@ -84,7 +84,7 @@ $('select').on('change', function(){
     }
 
     selects = _.filter(selects, function(item){ return $(item).attr('name') != select.attr('name') });
-    inc_filter.push(select.attr('name') + "='" + select.val() + "' ")
+    inc_filter.push(select.attr('name') + "='" + escape(select.val()) + "' ")
 
     for (var i = 0; i < selects.length; i++ ) {
         var s = selects[i];
@@ -108,7 +108,7 @@ $('select').on('change', function(){
                 for (var ix =0; ix < obj.result.length; ix++) {
                     var d = obj.result[ix][n].trim();
                     if ( d == "") { contains_blank = true;}
-                    var opt = $("<option value='" + d + "'>" + d + "</option>");
+                    var opt = $('<option value="' + d + '">' + d + '</option>');
                     selec.append(opt);
                 }
 
@@ -125,4 +125,7 @@ $('select').on('change', function(){
     }
 
 });
+    function clean(n) {
+        return n.replace("'", "\'")
+    }
 </script>
