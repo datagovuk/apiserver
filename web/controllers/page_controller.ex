@@ -41,7 +41,7 @@ defmodule ApiServer.PageController do
   end
 
   defp theme_inner(conn, theme, manifest) do
-    ExStatsD.increment("theme.#{theme}.views")
+    # ExStatsD.increment("theme.#{theme}.views")
 
     schema_task = Task.async(fn ()-> Database.Schema.get_schemas(theme) end)
 

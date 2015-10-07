@@ -19,8 +19,7 @@ defmodule ApiServer.Mixfile do
     [
       mod: {ApiServer, []},
       applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                     :httpoison, :gproc, :econfig, :yaml_elixir,
-                     :ex_statsd]
+                     :httpoison, :gproc, :econfig, :yaml_elixir]
     ]
   end
 
