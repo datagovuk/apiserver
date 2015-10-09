@@ -30,7 +30,9 @@
                                 <select class="form-control input-sm" name="<%= fieldname %>">
                                 <option value=""></option>
                                 <%= for value <- values do %>
+                                    <%= if value != "" do %>
                                     <option value="<%= value %>"><%= value %></option>
+                                    <% end %>
                                 <% end %>
                                 </select>
                             <% end %></div>
@@ -96,28 +98,32 @@ $('select').on('change', function(){
         var query = "select distinct(" + n + ") from " + table + " where " + inc_filter.join("AND") + " ORDER BY " + n;
         $.ajax({
             url: "/api/<%= @theme %>/sql?query=" + query,
-            dataType: "json"
+            dataType: "json",
+            context: {table: table, n: n}
         }) .done(function( obj ) {
             if (obj.success ) {
-                var slt = $("#filter_" + table);
-                var selec = slt.find("[name='" + n + "']")
+                var slt = $("#filter_" + this.table);
+                var selec = slt.find("[name='" + this.n + "']")
                 var previous = selec.val() || "";
                 selec.empty();
 
                 var contains_blank = false;
                 for (var ix =0; ix < obj.result.length; ix++) {
-                    var d = obj.result[ix][n].trim();
-                    if ( d == "") { contains_blank = true;}
+                    var d = obj.result[ix][this.n].trim();
+                    if ( d == "") continue;
                     var opt = $('<option value="' + d + '">' + d + '</option>');
                     selec.append(opt);
                 }
 
-                if (!contains_blank) {
-                    var opt = $("<option value=''></option>");
-                    selec.prepend(opt);
-                }
+                var opt = $("<option value=''></option>");
+                selec.prepend(opt);
 
-                selec.val(previous);
+                if (obj.result.length == 1 ) {
+                    selec.prop('disabled', true);
+                } else {
+                    selec.prop('disabled', false);
+                    selec.val(previous);
+                }
             }
         }).error(function(){
         });

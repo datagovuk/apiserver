@@ -20,21 +20,16 @@ function reset_selects(theme, children_of, remember) {
                 }
                 selec.empty();
 
-                console.log("Processing select ...." + this.name)
                 var contains_blank = false;
                 for (var ix =0; ix < obj.result.length; ix++) {
                     var d = obj.result[ix][this.name].trim();
-                    if ( d == "") { contains_blank = true;}
+                    if ( d == "") { continue; }
                     var opt = $('<option value="' + d + '">' + d + '</option>');
                     selec.append(opt);
                 }
 
-                if (!contains_blank) {
-                    selec.prepend($("<option value=''></option>"));
-                }
-
+                selec.prepend($("<option value=''></option>"));
                 selec.val(previous);
-
             }
         });
 

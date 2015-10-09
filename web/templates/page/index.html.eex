@@ -9,7 +9,7 @@
 
     <hr/>
     <p>This site is a proof-of-concept providing APIs for datasets curated from the <a href="https://data.gov.uk/data/search?core_dataset=true">National Information Infrastructure</a>.
-    If you have feedback please <a style="text-decoration: underline;" href="mailto:team@data.gov.uk">let us know</a>. Any issues can be reported <a style="text-decoration: underline;" href="https://github.com/datagovuk/apiserver/issues">on Github</a></p>
+    If you have feedback or suggestions please <a style="text-decoration: underline;" href="mailto:team@data.gov.uk?subject=API Feedback">let us know</a>. Any issues can be reported <a style="text-decoration: underline;" href="https://github.com/datagovuk/apiserver/issues">on Github</a></p>
     <p>Choose a theme below to explore the different APIs</p>
     <hr/>
     <div class="row-fluid">
