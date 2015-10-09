@@ -1,4 +1,4 @@
-<div class="row header_section" style="height: 10px"></div>
+<%= render "banner.html" %>
 
 <div class="container about">
 
