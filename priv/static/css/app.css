@@ -1,5 +1,4 @@
 body {
-  xmin-height: 2000px;
   background-color: #fff;
   font-family: arial;
   -webkit-font-smoothing: antialiased;
@@ -63,7 +62,8 @@ box-shadow: rgb(0, 53, 24) 0px 2px 0px 0px;
 a { color: #005ea5;}
 a:hover { color: #005ea5;}
 
-.header_section a { color: #fff;  text-decoration: underline;}
+.
+.header_section a { color: #fff;  text-decoration: underline; }
 .header_section a:hover { color: #fff;}
 
 .navbar-brand { height: 73px; padding-top: 28px;}
@@ -76,13 +76,13 @@ a:hover { color: #005ea5;}
     padding-right: 10px;
 }
 
-.tabcontainer {
-    border-right: solid 2px red;
-}
+p { font-size:14pt}
 
 .navbar-nav, .navbar-nav li, .navbar-nav li a {
     height: 73px;
     padding-top:9px;
+    font-size: 14pt;
+    xfont-weight: bold;
 }
 .navbar-nav li a:hover { color: #fff;}
 .navbar-static-top {
@@ -95,7 +95,7 @@ a:hover { color: #005ea5;}
 .header_section {
     background-color: #8DC55E;
     color: #fff;
-    height: 180px;
+    height: 120px;
 }
 
 
@@ -231,7 +231,7 @@ h3 { line-height: 18px;}
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
-{ border: transparent; color: #333;}
+{ border: transparent; color: #222;}
 
 .nav-tabs>li>a, .nav-tabs>li>a:hover, .nav-tabs>li>a:focus
 { background: none; border: none; color: #aaa;}
