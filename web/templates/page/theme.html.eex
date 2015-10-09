@@ -8,8 +8,7 @@ host = '<%= @host %>';
 
 <div class="container">
 
-<ol class="breadcrumb pull-left">
-  </ol>
+<ol class="breadcrumb pull-left"></ol>
 
 <h2 class='pull-right'><%= capitalize(@theme)%></h2>
 <div class="clearfix"></div>
