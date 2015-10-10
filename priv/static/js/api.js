@@ -48,7 +48,7 @@ function make_call(url, output, link, btn) {
 
         if (obj.success) {
             text = JSON.stringify(obj.result, undefined, 2);
-            $(link).attr("href", url);
+            $("#link-modal").val(url)
             $(link + "-csv").attr("href", url + "&_format=csv");
             $(link + "-ttl").attr("href",  url + "&_format=ttl");
 
@@ -56,7 +56,7 @@ function make_call(url, output, link, btn) {
             $(link + "-downloads").removeAttr('disabled');
         } else {
             text = "ERROR: " + obj.error;
-            $(link).attr("href", "");
+            $("#link-modal").val("");
             $(link + "-csv").attr("href", "");
             $(link + "-ttl").attr("href", "");
 

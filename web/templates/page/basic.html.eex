@@ -31,7 +31,7 @@
                     <% end %> <!-- for searchable -->
                     <div style="margin-top: 10px; text-align: center;">
                         <div class="dropdown" style="display:inline;" >
-                            <a class="basic btn btn-lg dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" disabled="disabled" id="basic-<%= name %>-link-downloads">
+                            <a class="basic btn btn-lg dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" disabled="disabled" id="basic-<%= name %>-link-downloads" >
                                 <i class="glyphicon glyphicon-download-alt"> </i> Download
                             </a>
 
@@ -40,7 +40,7 @@
                                 <li><a id="basic-<%= name %>-link-ttl" href="#">TTL</a></li>
                               </ul>
                         </div>
-                        <a class="basic btn btn-lg" id="basic-<%= name %>-link"  disabled="disabled">
+                        <a class="basic btn btn-lg" id="basic-<%= name %>-link"  disabled="disabled" data-toggle="modal" data-target=".bs-example-modal-lg">
                             <i class="glyphicon glyphicon-share"></i> Get Link
                         </a>
                     </div>
