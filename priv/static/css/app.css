@@ -1,6 +1,6 @@
 body {
   background-color: #EFEFEF;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -8,9 +8,10 @@ h1 {
     padding-bottom: 4px;
     font-weight: bold;
     border-bottom: solid 3px #BFBFBF;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
 }
-h2 {}
-h3 { margin: 0;}
+h2 { font-family: 'Roboto', Helvetica, Arial, sans-serif !important;}
+h3 { margin: 0; font-family: 'Roboto', Helvetica, Arial, sans-serif !important;}
 hr {     border-bottom: solid 3px #BFBFBF; }
 p { font-size: 1.1em;}
 

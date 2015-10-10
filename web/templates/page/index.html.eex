@@ -2,6 +2,7 @@
 <%= render "banner.html" %>
 <div class="container" style="margin-top: 10px">
 
+<div class="col-md-9">
     <h1>Data APIs project</h1>
 
     <p>
@@ -23,14 +24,14 @@
     <h2>Choose a theme below to explore the different APIs</h2>
 
     <div class="row" style="margin-top: 20px;">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <a href="/health" style="text-decoration:none;">
                 <div class="dataset-theme theme-health">
                     <div>Health</div>
                 </div>
             </a>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <a href="/transport" style="text-decoration:none;">
                 <div class="dataset-theme theme-transport">
                     <div>Transport</div>
@@ -38,7 +39,6 @@
             </a>
         </div>
     </div>
-    <div class="clearfix"></div>
-
-
+</div>
+<div class="clearfix"></div>
 </div>
