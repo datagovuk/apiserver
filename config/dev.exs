@@ -13,17 +13,5 @@ config :api_server, ApiServer.Endpoint,
   cache_static_lookup: false,
   watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]]
 
-
-
-# Watch static and templates for browser reloading.
-config :api_server, ApiServer.Endpoint,
-  live_reload: [
-    patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{web/views/.*(ex)$},
-      ~r{web/templates/.*(eex)$}
-    ]
-  ]
-
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

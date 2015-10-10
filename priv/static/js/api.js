@@ -36,7 +36,7 @@ function reset_selects(theme, children_of, remember) {
     }
 }
 
-function make_call(url, form, btn) {
+function make_call(url, output, link, btn) {
     var b = $(btn);
     b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
 
@@ -48,22 +48,27 @@ function make_call(url, form, btn) {
 
         if (obj.success) {
             text = JSON.stringify(obj.result, undefined, 2);
-            $(form + "_link").attr("href", url);
-            $(form + "_link").show();
+            $(link).attr("href", url);
+            $(link + "-csv").attr("href", url + "&_format=csv");
+            $(link + "-ttl").attr("href",  url + "&_format=ttl");
+
+            $(link).removeAttr('disabled');
+            $(link + "-downloads").removeAttr('disabled');
         } else {
             text = "ERROR: " + obj.error;
-            $(form + "_link").attr("href", "");
-            $(form + "_link").hide();
-        }
-        $(form + "_output").html( text );
-        $(form + "_container").slideDown();
+            $(link).attr("href", "");
+            $(link + "-csv").attr("href", "");
+            $(link + "-ttl").attr("href", "");
 
+            $(link).attr('disabled', 'disabled');
+            $(link + "-downloads").attr('disabled', 'disabled');
+        }
+
+        $(output).html( text );
         $('#loading').remove();
     }).error(function(){
         var text = "API call to " + url + " failed";
-        $(form + "_output").html( text );
-        $(form + "_container").slideDown();
-
+        $(output).html( text );
         $('#loading').remove();
     });
 }
@@ -107,9 +112,10 @@ function execute_query(btn) {
     });
 }
 
-function form_request(btn, form, fmt) {
+function form_request(btn, name, fname) {
+
     var params = "";
-    var f = $(form);
+    var f = $("#form-" + name + "-" + fname);
     var url = f.attr('action') + "?";
 
     var elements = f.find("input");
@@ -120,12 +126,9 @@ function form_request(btn, form, fmt) {
         }
     }
 
-    if (fmt && fmt.length > 0) {
-        window.location.href = url + "&_format=" + fmt;
-        return;
-    }
-
-    make_call(url, form, btn)
+    var output = "#basic-" + name + "-output";
+    var link = "#basic-" + name + "-link";
+    make_call(url, output, link, btn)
 }
 
 function filter_request(btn,id, theme, name, fmt) {

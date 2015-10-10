@@ -3,8 +3,7 @@
     </div>
 
     <%= for {name, description, documentation, dataset} <- services @manifest do %>
-
-        <%= if Dict.get(@filters, name) do %>
+            <%= if Dict.get(@filters, name) do %>
 
             <%= if @distincts do %>
             <% distincts = Map.get(@distincts, name) %>
