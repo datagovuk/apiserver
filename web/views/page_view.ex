@@ -1,5 +1,11 @@
 defmodule ApiServer.PageView do
   use ApiServer.Web, :view
+  alias Poison, as: JSON
+
+  def to_js_list(items) do
+    JSON.encode!(items)
+  end
+
 
   def prettify(word) do
     word

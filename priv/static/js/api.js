@@ -1,40 +1,18 @@
-function reset_selects(theme, children_of, remember) {
-    var parent = $(children_of);
-    var selects = $(parent).find("select");
-    var table = $(parent).attr('id').substring("filter_".length);
+function submit_distinct(service, field, btn) {
+    var url = $("#form-" + service + "-" + field).attr('action');
+    var select = $("#filter-" + service + "-" + field);
 
-    for(var i= 0; i < selects.length; i++) {
-        var name = $(selects[i]).attr('name');
-        var query  = "select distinct(" + name + ") from " + table + " order by " + name;
-        $.ajax({
-            url: "/api/" + theme + "/sql?query=" + query,
-            dataType: "json",
-            context: {name: name, remember: remember}
-        }) .done(function( obj ) {
-            if (obj.success ) {
-                var slt = $("#filter_" + table);
-                var selec = slt.find("[name='" + this.name + "']")
-                var previous = "";
-                if ( this.remember ) {
-                    previous = selec.val();
-                }
-                selec.empty();
-
-                var contains_blank = false;
-                for (var ix =0; ix < obj.result.length; ix++) {
-                    var d = obj.result[ix][this.name].trim();
-                    if ( d == "") { continue; }
-                    var opt = $('<option value="' + d + '">' + d + '</option>');
-                    selec.append(opt);
-                }
-
-                selec.prepend($("<option value=''></option>"));
-                selec.val(previous);
-            }
-        });
-
+    if ( select.val() == "" ) {
+        return;
     }
+    url = url + "?" + escape(field) + "=" + escape(select.val());
+
+    var output = "#basic-" + service + "-output";
+    var link = "#basic-" + service + "-link";
+    make_call(url, output, link, btn)
 }
+
+
 
 function make_call(url, output, link, btn) {
     var b = $(btn);
@@ -129,35 +107,5 @@ function form_request(btn, name, fname) {
     var output = "#basic-" + name + "-output";
     var link = "#basic-" + name + "-link";
     make_call(url, output, link, btn)
-}
-
-function filter_request(btn,id, theme, name, fmt) {
-    var items = [];
-
-    $("#" + id + " .dataelement").each(function(idx, elem){
-        _.each($(elem).contents(), function(element){
-            if (element.nodeName == "LABEL") {
-                items.push($(element).attr('for'));
-            } else if (element.nodeName == "SELECT"){
-                items.push(element.value);
-            }
-        });
-    });
-
-    var url = "/api/" + theme + "/" + name + "?";
-    for (var i= 0; i < items.length; i+=2 ){
-        url += items[i];
-        url += "=" + escape(items[i+1]);
-        if ( i < items.length - 2) {
-            url += "&";
-        }
-    }
-
-    if (fmt && fmt.length > 0) {
-        window.location.href = url + "&_format=" + fmt;
-        return;
-    }
-
-    make_call(url, "#" + id, btn);
 }
 

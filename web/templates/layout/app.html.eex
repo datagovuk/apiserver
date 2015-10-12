@@ -8,27 +8,40 @@
     <meta name="author" content="">
 
     <title>Data.gov.uk - API Server</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
+
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/bootstrap.min.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/bootstrap-select.min.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/style.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
     <script src="<%= static_path(@conn, "/js/jquery-1.11.3.min.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/bootstrap.min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js//bootstrap.min.js") %>"></script>
+
+    <script src="<%= static_path(@conn, "/js/bootstrap-select.min.js") %>"></script>
 
     <script src="<%= static_path(@conn, "/js/jquery.slideto.min.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/jquery.wiggle.min.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/underscore-min.js") %>"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/snippets/sql.js"></script>
+    <script src="<%= static_path(@conn, "/js/underscore-min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/underscore-min.js") %>"></script>
+
+    <script src="<%= static_path(@conn, "/js/ace.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/sql.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/theme-monokai.js") %>"></script>
 
   </head>
 
   <body>
-<nav class="navbar navbar-default navbar-static-top">
-      <div class="container-fluid">
+<nav class="navbar navbar-inverse navbar-static-top">
+          <div class="pull-right" style="padding-top: 26px; margin-right: 20px;">
+            <div class="beta">ALPHA</div>
+          </div>
+
+      <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -37,22 +50,20 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/" style="padding: 16px;">
-              <img src="<%= static_path(@conn, "/images/dgu-header-white.png") %>" height="40px">
+              <img src="<%= static_path(@conn, "/images/dgu-header-white.png") %>" height="39px">
           </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse pull-right">
           <ul class="nav navbar-nav">
-            <li><a style='font-size: smaller;' href="http://data.gov.uk">Back to data.gov.uk</a></li>
+            <li><a style='font-size: 13px;' href="http://data.gov.uk">Back to data.gov.uk</a></li>
             <li><a href="/">API Home</a></li>
             <li><a href="/documentation">Documentation</a></li>
             <li><a href="/about">About</a></li>
           </ul>
-          <div class="nav navbar-nav pull-right" style="padding-top: 24px;">
-            <div class="beta">ALPHA</div>
-          </div>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
+
 
     <div class="container-fluid" role="main">
       <!--

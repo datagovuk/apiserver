@@ -1,3 +1,8 @@
+html, body,div[class^="container"] ,.column {
+    height: 100%;
+}
+
+
 body {
   background-color: #EFEFEF;
   font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
@@ -38,28 +43,36 @@ a:hover {
 }
 
 /* Nav bar */
-.navbar-brand { height: 73px; padding-top: 28px;}
+.navbar-brand {
+ height: 73px; padding-top: 28px;
+}
+.navbar-brand img {
+    margin-left: 30px;
+}
 .navbar-nav, .navbar-nav li, .navbar-nav li a {
     height: 73px;
     padding-top:9px;
-    font-size: 14pt;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: 300;
     text-decoration: none;
+    margin-bottom: 0;
 }
-.navbar-nav li a:hover { color: #28BB9C;}
+.navbar-nav li a:hover { color: #fff;}
 .navbar-static-top {
   margin-bottom: 0px;
   background-color: #0B0C0C;
   height: 73px;
   vertical-align: center;
 }
+
+
 .beta {
     background-color: #f47738;
     color: #fff;
-    font-size: 1.1em;
+    font-size: 1.0em;
     font-weight: 600;
     display: inline;
-    padding: 6px;
+    padding: 8px;
 }
 
 
@@ -179,25 +192,7 @@ table {
 
 .breadcrumb { background-color: #fff;}
 
-.btn-default { background-color: #0B6831;
-border-bottom-color: rgb(255, 255, 255);
-border-bottom-left-radius: 0px;
-border-bottom-right-radius: 0px;
-border-bottom-style: none;
-border-bottom-width: 0px;
-border-left-color: rgb(255, 255, 255);
-border-left-style: none;
-border-left-width: 0px;
-border-right-color: rgb(255, 255, 255);
-border-right-style: none;
-border-right-width: 0px;
-border-top-color: rgb(255, 255, 255);
-border-top-left-radius: 0px;
-border-top-right-radius: 0px;
-border-top-style: none;
-border-top-width: 0px;
-box-shadow: rgb(0, 53, 24) 0px 2px 0px 0px;
-}
+
 
 a { color: #005ea5;}
 a:hover { color: #005ea5;}
@@ -303,6 +298,17 @@ h3 { line-height: 18px;}
     padding-right: 10px;
 }
 
+.navbar-nav>li>a, .navbar->li>a:hover, .navbar->li>a:focus
+{
+    color: white !important;
+}
+.navbar-nav>li>a:hover, .navbar-nav>li>a:focus {
+
+    text-decoration: underline !important;
+}
+.navbar-nav>li.active>a, .navbar-nav>li.active>a:hover, .navbar-nav>li.active>a:focus,
+{
+}
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
 { border: transparent; color: #222; background-color: transparent; text-decoration: none;}

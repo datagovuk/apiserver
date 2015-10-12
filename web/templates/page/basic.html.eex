@@ -3,7 +3,8 @@
 
     <%= for {name, service_description, documentation, dataset} <- services @manifest do %>
         <div class="row">
-                <div class="col-md-6 service basic-<%=name%>-details">
+                <div class="col-lg-6">
+                    <div id="basic-<%=name%>-details" class="service" style="margin-right:10px;">
                     <h3><%= service_description %></h3>
                     <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
 
@@ -16,7 +17,6 @@
 
                         <%= if fields do %>
                             <%= for field <- fields do %>
-                                //str += "<label for='<%= field %>'><%= prettify(field) %></lable>&nbsp;&nbsp;";
                                 str += "<label><%= description %> </label>";
                                 str += "<div class='input-group'>"
                                 str += '<input id="<%= name %>_<%= fname %>_<%= field %>" name="<%= field %>" class="form-control" type="text" placeholder="<%= prettify(field) %>">';
@@ -29,6 +29,43 @@
                         s.html( s.html() + str );
                     </script>
                     <% end %> <!-- for searchable -->
+
+                    <!-- Filters -->
+                    <%= if Dict.get(@filters, name) do %>
+                    <%= if @distincts do %>
+                        <% distincts = Map.get(@distincts, name) %>
+
+                            <%= for fieldname<- Dict.get(@filters, name) do %>
+                            <div id="filters_<%= name %>">
+                                <form style="margin-top: 10px" id="form-<%= name %>-<%= fieldname %>" class="form " action="<%= @host %>/api/<%= @theme %>/<%= name %>" >
+
+                                    <% values = Map.get(distincts, fieldname) %>
+
+
+                                        <label for="<%= fieldname %>"><%= prettify(fieldname) %></label>
+
+                                            <div class="input-group">
+                                                <select class="form-control  selectpicker" name="filter-<%= name%>-<%= fieldname %>" data-live-search="true" id="filter-<%= name%>-<%= fieldname %>">
+                                                <option value=""></option>
+                                                <%= for value <- values do %>
+                                                    <%= if value != "" do %>
+                                                    <option value="<%= value %>"><%= value %></option>
+                                                    <% end %>
+                                                <% end %>
+                                                </select>
+
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-success" type="button" onclick='submit_distinct("<%= name %>", "<%= fieldname %>", this); return false;' style='margin-left: -2px;'>OK</button>
+                                                </span>
+                                            </div>
+                                    </div>
+                                </form>
+                            <% end %>
+
+                    <% end %>
+                    <% end %>
+                    <! -- end filters -->
+
                     <div style="margin-top: 10px; text-align: center;">
                         <div class="dropdown" style="display:inline;" >
                             <a class="basic btn btn-lg dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" disabled="disabled" id="basic-<%= name %>-link-downloads" >
@@ -45,8 +82,8 @@
                         </a>
                     </div>
                 </div>
-
-                <div id="basic-<%= name %>-container" class="col-md-6 service">
+                </div>
+                <div id="basic-<%= name %>-container" class="col-lg-6 service">
                     <script>
                             var h = $('.basic-<%=name%>-details').css('height');
                             $('#basic-<%= name %>-container').css('height', h);
@@ -58,3 +95,17 @@
     <% end %>
 
 <div style="margin-bottom: 20px;"></div>
+
+<script>
+
+    $(document).ready(function(){
+        $('.selectpicker').selectpicker();
+    <%= for {name, _, _, _} <- services @manifest do %>
+        var h = $('#basic-<%= name %>-details').first().css('height');
+        if ( h != undefined ){
+            $('#basic-<%= name %>-container').css('height', h);
+        }
+    <% end %>
+    })
+
+</script>

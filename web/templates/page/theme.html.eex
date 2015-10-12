@@ -29,7 +29,6 @@ host = '<%= @host %>';
 
  <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="dgu-tab active"><a id='basic_tab' href="#_basic" aria-controls="home" role="tab" data-toggle="tab">Basic</a></li>
-    <li class="dgu-tab" role="presentation"><a id='filtered_tab' href="#_filtered" aria-controls="profile" role="tab" data-toggle="tab">Filters</a></li>
     <li class="dgu-tab" role="presentation"><a  id='sql_tab'href="#_advanced" aria-controls="profile" role="tab" data-toggle="tab">SQL</a></li>
     <li class="dgu-tab" role="presentation"><a  id='map_tab' href="#_map" aria-controls="profile" role="tab" data-toggle="tab">Maps</a></li>
 </ul>
@@ -39,15 +38,8 @@ host = '<%= @host %>';
     <div role="tabpanel" class="tab-pane active" id="_basic" style="margin-top: 20px;">
         <%= render "basic.html", manifest: @manifest, theme: @theme,
                                     schema: @schema, distincts: @distincts,
-                                    host: @host %>
+                                    host: @host, filters: @filters %>
     </div>
-
-    <div role="tabpanel" class="tab-pane" id="_filtered" style="margin-top: 20px;">
-        <%= render "filtered.html", manifest: @manifest, theme: @theme,
-                                    schema: @schema, distincts: @distincts,
-                                    filters: @filters %>
-    </div>
-
 
     <div role="tabpanel" class="tab-pane" id="_advanced"  style="margin-top: 20px;">
         <%= render "advanced.html", manifest: @manifest, theme: @theme,
