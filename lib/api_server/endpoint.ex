@@ -3,9 +3,16 @@ defmodule ApiServer.Endpoint do
 
   socket "/socket", ApiServer.UserSocket
 
+  plug ApiServer.HostPlug
+
+  plug Plug.Static,
+    at: "/data/api/", from: :api_server, gzip: false,
+    only: ~w(css fonts images js favicon.ico robots.txt distincts)
+
   plug Plug.Static,
     at: "/", from: :api_server, gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt distincts)
+
 
   plug Plug.RequestId
   plug Plug.Logger

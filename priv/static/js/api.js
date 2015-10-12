@@ -51,18 +51,18 @@ function make_call(url, output, link, btn) {
     });
 }
 
-function execute_query(btn) {
+function execute_query(btn, partial_url) {
     $("#error").empty();
     $("#error").hide();
     var val = editor.getValue();
     if (!val) return;
 
-    $("#table-results").html("");
+    $("#sql-results").html("");
 
     var b = $(btn);
     b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
 
-    var url = "/api/"+ theme + "/sql?query=" + encodeURIComponent(val);
+    var url = partial_url  +"?query=" + encodeURIComponent(val);
 
     // TODO: Change so it behaves like the other calls
     $.ajax({
@@ -75,7 +75,7 @@ function execute_query(btn) {
             $("#download").hide();
             $("#error").html(object.error);
             $("#error").show();
-            $('.table-results').html("");
+            $('.sql-results').html("");
             editor.focus();
         } else {
             $("#csvlink").attr('href', host + url + '&_format=csv')
@@ -84,8 +84,8 @@ function execute_query(btn) {
             $("#download").show();
 
             var text = JSON.stringify(object.result, undefined, 2);
-            $('.table-results').html(text);
-            $('.table-results-container').show();
+            $('.sql-results').html(text);
+            $('.sql-results-container').show();
         }
     });
 }

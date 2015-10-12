@@ -15,7 +15,7 @@ defmodule ApiServer.Router do
     plug :allow_jsonp
   end
 
-  scope "/api", ApiServer do
+  scope "/service", ApiServer do
     pipe_through :api
 
     get "/", ApiController, :info
