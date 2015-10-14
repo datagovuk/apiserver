@@ -24,14 +24,14 @@
 
     <div class="row" style="margin-top: 20px;">
         <div class="col-md-3">
-            <a href='/data/api/health' style="text-decoration:none;">
+            <a href='/health' style="text-decoration:none;">
                 <div class="dataset-theme theme-health">
                     <div>Health</div>
                 </div>
             </a>
         </div>
         <div class="col-md-3">
-            <a href="/data/api/transport" style="text-decoration:none;">
+            <a href="/transport" style="text-decoration:none;">
                 <div class="dataset-theme theme-transport">
                     <div>Transport</div>
                 </div>

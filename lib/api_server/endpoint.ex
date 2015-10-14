@@ -6,7 +6,7 @@ defmodule ApiServer.Endpoint do
   plug ApiServer.HostPlug
 
   plug Plug.Static,
-    at: "/data/api/", from: :api_server, gzip: false,
+    at: "/", from: :api_server, gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt distincts)
 
   plug Plug.Static,

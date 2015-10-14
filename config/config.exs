@@ -7,7 +7,7 @@ use Mix.Config
 
 # Configures the endpoint
 config :api_server, ApiServer.Endpoint,
-  url: [host: "localhost", path: "/data/api"],
+  url: [host: "localhost", path: "/"],
   root: Path.dirname(__DIR__),
   secret_key_base:
     "p8zwrvtQEunaM7uXr0ngEjqahd9kSrGmAKxhL+y4ipG5A4DXAYbaBg/gQy6nB1xG",
