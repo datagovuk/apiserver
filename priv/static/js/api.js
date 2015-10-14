@@ -54,6 +54,7 @@ function make_call(url, output, link, btn) {
 function execute_query(btn, partial_url) {
     $("#error").empty();
     $("#error").hide();
+
     var val = editor.getValue();
     if (!val) return;
 
@@ -61,10 +62,8 @@ function execute_query(btn, partial_url) {
 
     var b = $(btn);
     b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
-
     var url = partial_url  +"?query=" + encodeURIComponent(val);
 
-    // TODO: Change so it behaves like the other calls
     $.ajax({
         method: "GET",
         url: url,
@@ -76,7 +75,10 @@ function execute_query(btn, partial_url) {
             $("#error").html(object.error);
             $("#error").show();
             $('.sql-results').html("");
+            $('.sql-results-container').hide();
             editor.focus();
+
+            $("#results").slideto();
         } else {
             $("#csvlink").attr('href', host + url + '&_format=csv')
             $("#ttllink").attr('href', host + url + '&_format=ttl')

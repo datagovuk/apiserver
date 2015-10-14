@@ -111,6 +111,8 @@ defmodule Database.Schema do
             %{"success"=> false, "error" => error}
          {:ok, 1} ->
             %{"success"=> false, "error" => "This is bad"}
+          x when is_list(x) ->
+            %{"success"=> false, "error" => "Please only send one query at a time"}
         end
     end, @timeout)
    end
@@ -130,12 +132,13 @@ defmodule Database.Schema do
        case Worker.raw_query(worker, q) do
         {:error, _} -> nil
         {:ok, _, [{plan}]} -> plan
+        _ -> nil
       end
     end)
 
     case plan do
       nil ->
-        # This will fail further one
+        # This will fail further on
         {true, 0}
       _ ->
         [data] = JSON.decode! plan

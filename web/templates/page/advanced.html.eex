@@ -3,7 +3,7 @@
 
         <ul class="nav nav-pills nav-stacked col-md-3" id="schematabs">
             <%= for {key, v}<- @schema do %>
-            <li><a href="#<%= key %>" data-toggle="tab"><%= key %></a></li>
+            <li><a href="#<%= key %>" data-toggle="tab"><%= prettify(key) %></a></li>
             <% end %>
         </ul>
 
@@ -11,35 +11,38 @@
             <%= for {key, v}<- @schema do %>
 
             <div role="tabpanel" class="tab-pane active" id="<%= key %>" style="margin-top: 20px;">
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-4">
+                        <h4 style="margin-top: 0;"><%= prettify(key) %></h4>
+                        <h5>Table Name: <%= key %></h5>
+                    </div>
 
-            <%= if is_dangerous(@manifest, key) do %>
-            <div class="col-md-3">
-                <span style="font-size: 1.1em" class="label label-danger">Large dataset</span>
-            </div>
-            <div class="col-md-9">
-                Queries to this dataset <strong>must</strong> use a LIMIT of at most 500 rows.
-            </div>
-            <% end %>
-
-
-
-                <div class="col-md-6">
-                <table class="table table-striped">
-                    <thead>
-                        <th>Field</th>
-                        <th>Type</th>
-                    </thead>
-                    <tbody>
-                    <%= for {name, type}<- v do %>
-                        <tr>
-                            <td><%= name %></td>
-                            <td><%= type %></td>
-                        </tr>
+                    <%= if is_dangerous(@manifest, key) do %>
+                    <div class="col-md-8">
+                        <div style="font-size: 1.1em" class="label label-danger">Large dataset</div>
+                        Queries to this dataset <strong>must</strong> use a LIMIT of at most 500 rows.
+                    </div>
                     <% end %>
-                    </tbody>
-                </table>
                 </div>
-            </div>
+                    <div class="col-md-12 table-container">
+                        <table class="table table-condensed">
+                            <thead>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </thead>
+                            <tbody>
+                            <%= for {name, type}<- v do %>
+                                <tr>
+                                    <td><%= name %></td>
+                                    <td><%= type %></td>
+                                    <td></td>
+                                </tr>
+                            <% end %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             <% end %>
         </div>
     </div>
@@ -49,7 +52,7 @@
     <p>Within this editor you may perform SQL queries against the <%= @theme %> database - queries
     are currently limited to 5 seconds execution time.</p>
 
-    <div style="margin-top: 10px; margin-bottom: 40px;">
+    <div style="margin-top: 0px; margin-bottom: 60px;">
         <div id="editor">SELECT * FROM <%= first_key(@schema) %> limit 10;</div>
         <button class="btn btn-default" onclick="execute_query(this, '/data/api/service/<%= @theme %>/sql');return false;">Execute</button>
 
@@ -65,8 +68,9 @@
         </div>
     </div>
 
+    <span id="results"></span>
+    <div id="error" class="alert alert-danger" style="display:none;"></div>
     <div class="container sql-results-container" style="display:none; margin-bottom: 40px;">
-        <div id="error" class="alert alert-danger" style="display:none;"></div>
         <pre class="col-md-12 sql-results">
         </pre>
     </div>
