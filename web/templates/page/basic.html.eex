@@ -8,7 +8,7 @@
                     <h3><%= service_description %></h3>
                     <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
 
-                    <form style="margin-top: 10px" id="form-<%= name %>-<%= fname %>" class="form " action="<%= @host %>/service/<%= @theme %>/<%= name %>/<%= fname %>">
+                    <form style="margin-top: 10px" id="form-<%= name %>-<%= fname %>" class="form " action="<%= @host %>/data/api/service/<%= @theme %>/<%= name %>/<%= fname %>">
                     </form>
 
                     <script type="text/javascript">
@@ -37,7 +37,7 @@
 
                             <%= for fieldname<- Dict.get(@filters, name) do %>
                             <div id="filters_<%= name %>">
-                                <form style="margin-top: 10px" id="form-<%= name %>-<%= fieldname %>" class="form " action="<%= @host %>/service/<%= @theme %>/<%= name %>" >
+                                <form style="margin-top: 10px" id="form-<%= name %>-<%= fieldname %>" class="form " action="<%= @host %>/data/api/service/<%= @theme %>/<%= name %>" >
 
                                     <% values = Map.get(distincts, fieldname) %>
 
