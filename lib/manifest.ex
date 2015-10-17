@@ -1,5 +1,9 @@
-defmodule Manifest do
 
+defmodule Manifest do
+  @moduledoc """
+  Models a manifest that is loaded from a manifest JSON file.
+  """
+  defstruct dbname: "", tablename: "", fields: [], choice_fields: [], searchables: []
 
 
   def filter_fields(manifest, theme) do

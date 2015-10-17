@@ -93,6 +93,8 @@ defmodule Database.Schema do
 
      resp = case Worker.raw_query(worker, query)  do
           {:ok, fields, data} ->
+            IO.inspect fields
+            IO.inspect data
             columns = fields
             |> Enum.map(fn x -> elem(x, 1) end)
 
@@ -152,10 +154,7 @@ defmodule Database.Schema do
   defp clean({{year, month, day}, {hr, mn, sec}}) do
     "#{day}/#{month}/#{year} #{filled_int(hr)}:#{filled_int(mn)}:#{filled_int(sec)}"
   end
-
-  defp clean(val) do
-     val
-  end
+  defp clean(val), do: val
 
   defp filled_int(i) when i < 10 do
     "0#{i}"
