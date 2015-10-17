@@ -1,5 +1,5 @@
 
-defmodule Manifest do
+defmodule ApiServer.Manifest do
   @moduledoc """
   Models a manifest that is loaded from a manifest JSON file.
   """
