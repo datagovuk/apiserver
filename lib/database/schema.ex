@@ -14,24 +14,28 @@ defmodule Database.Schema do
     q = """
       SELECT table_name, column_name, data_type
       FROM information_schema.columns
-      WHERE table_schema = 'public';
+      WHERE table_schema = 'public' AND
+      table_name NOT in (    'geography_columns',
+            'geometry_columns',
+            'raster_columns',
+            'raster_overviews',
+            'spatial_ref_sys')
     """
     pool = String.to_atom(dbname)
 
-    {:ok, _, results} = :poolboy.transaction(pool, fn(worker)->
+    {:ok, result} = :poolboy.transaction(pool, fn(worker)->
       Worker.query(worker, q)
     end, @timeout)
 
-    results
+    result.rows
     |> Enum.group_by(fn x->
-        elem(x, 0)
-       end)
+          hd(x)
+        end)
     |> Enum.map( fn {k, v} ->
-        cells = Enum.map(v, fn x-> {elem(x, 1), elem(x, 2)} end)
-        |> Enum.into(%{})
-        {k, cells}
-       end)
-    |> Enum.into(%{})
+        vals = Enum.map(v, fn val-> tl(val) end)
+        {k, vals}
+        end)
+    |> Enum.into %{}
   end
 
   def get_schema(dbname, table) do
@@ -45,76 +49,56 @@ defmodule Database.Schema do
     """
     pool = String.to_atom(dbname)
 
-    {:ok, _, results} = :poolboy.transaction(pool, fn(worker)->
+    {:ok, results} = :poolboy.transaction(pool, fn(worker)->
        Worker.query(worker, q)
     end, @timeout)
 
-    results |> Enum.into(%{})
+    results.rows |> Enum.into(%{})
   end
 
  def call_api(dbname, query, arguments \\ []) do
 
-    # ExStatsD.increment("query.#{dbname}.apicall")
-
-    args = Enum.map(arguments, fn x -> to_char_list(x) end)
     pool = String.to_atom(dbname)
 
     results = :poolboy.transaction(pool, fn(worker)->
-       Worker.query(worker, query, args)
+       Worker.query(worker, query, arguments)
     end, @timeout)
 
     case results do
-      {:ok, fields, data} ->
-          columns = fields
-          |> Enum.map(fn x -> elem(x, 1) end)
-
-          results = data
+      {:ok, result} ->
+          columns = result.columns
+          results = result.rows
           |> Enum.map(fn row ->
             row
-            |> Tuple.to_list
             |> Enum.map(fn cell-> clean(cell) end)
-            # Turn row into a list
           end)
           |> Enum.map(fn r -> Enum.zip(columns, r) end)
           |> Enum.map(fn res -> Enum.into(res, %{}) end )
-      _ ->
-        results
+      {:error, error} ->
+          error
     end
   end
 
  def call_sql_api(dbname, query) do
 
-    # ExStatsD.increment("query.#{dbname}.sqlcall")
-
     pool = String.to_atom(dbname)
 
     :poolboy.transaction(pool, fn(worker)->
-      {:ok, _, _} = Worker.query(worker, 'set statement_timeout to 5000;')
+      {:ok, _} = Worker.query(worker, 'set statement_timeout to 5000;')
 
-     resp = case Worker.raw_query(worker, query)  do
-          {:ok, fields, data} ->
-            IO.inspect fields
-            IO.inspect data
-            columns = fields
-            |> Enum.map(fn x -> elem(x, 1) end)
-
-            results = data
+     resp = case Worker.query(worker, query)  do
+          {:ok, result} ->
+            results = result.rows
             |> Enum.map(fn row ->
               row
-              |> Tuple.to_list
               |> Enum.map(fn cell-> clean(cell) end)
-              # Turn row into a list
             end)
-            |> Enum.map(fn r -> Enum.zip(columns, r) end)
+            |> Enum.map(fn r -> Enum.zip(result.columns, r) end)
             |> Enum.map(fn res -> Enum.into(res, %{}) end )
 
             %{"success"=> true, "result" => results}
-         {:error, {:error, :error, _, error, _}} ->
-            %{"success"=> false, "error" => error}
-         {:ok, 1} ->
-            %{"success"=> false, "error" => "This is bad"}
-          x when is_list(x) ->
-            %{"success"=> false, "error" => "Please only send one query at a time"}
+          {:error, error} ->
+            %{"success"=> false, "error" => Postgrex.Error.message(error)}
         end
     end, @timeout)
    end
@@ -131,28 +115,27 @@ defmodule Database.Schema do
     q = "EXPLAIN (format json) #{query}"
     pool = String.to_atom(theme)
     plan = :poolboy.transaction(pool, fn(worker)->
-       case Worker.raw_query(worker, q) do
-        {:error, _} -> nil
-        {:ok, _, [{plan}]} -> plan
-        _ -> nil
-      end
+      Worker.query(worker, q)
     end)
 
     case plan do
-      nil ->
-        # This will fail further on
-        {true, 0}
-      _ ->
-        [data] = JSON.decode! plan
+      {:ok, results} ->
+        data = results.rows
+        |> List.flatten
+        |> hd
+
         node_type = MapTraversal.find_value("Plan.Node Type", data) |> String.downcase
         plan_rows = MapTraversal.find_value("Plan.Plan Rows", data)
 
         {node_type=="limit", plan_rows}
+      {:error, _} ->
+        # This will fail further on
+        {true, 0}
     end
  end
 
-  defp clean({{year, month, day}, {hr, mn, sec}}) do
-    "#{day}/#{month}/#{year} #{filled_int(hr)}:#{filled_int(mn)}:#{filled_int(sec)}"
+  defp clean(%Postgrex.Timestamp{}=ts) do
+    "#{ts.day}/#{ts.month}/#{ts.year} #{filled_int(ts.hour)}:#{filled_int(ts.min)}:#{filled_int(ts.sec)}"
   end
   defp clean(val), do: val
 

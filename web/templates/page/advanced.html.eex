@@ -32,7 +32,7 @@
                                 <th>Description</th>
                             </thead>
                             <tbody>
-                            <%= for {name, type}<- v do %>
+                            <%= for [name, type] <- v do %>
                                 <tr>
                                     <td><%= name %></td>
                                     <td><%= type %></td>

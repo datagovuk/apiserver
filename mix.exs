@@ -19,7 +19,7 @@ defmodule ApiServer.Mixfile do
     [
       mod: {ApiServer, []},
       applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                     :httpoison, :gproc, :econfig, :yaml_elixir]
+                     :httpoison, :gproc, :econfig, :yaml_elixir, :postgrex]
     ]
   end
 
@@ -40,13 +40,12 @@ defmodule ApiServer.Mixfile do
      {:corsica, "~> 0.3"},
      {:httpoison, "~> 0.7.2"},
      {:csv, "~> 1.1.0"},
-     { :epgsql, github: "epgsql/epgsql"},
-     { :poolboy, github: "devinus/poolboy" },
+     {:postgrex, "~> 0.9.1"},
+     {:geo, "~> 0.17.0"},
      { :econfig, github: "benoitc/econfig" },
      { :yaml_elixir, github: "KamilLelonek/yaml-elixir" },
      { :yamerl, github: "yakaz/yamerl" },
-     { :dogma,  github: "lpil/dogma", only: :dev},
-     {:ex_statsd, ">= 0.5.0"}
+     { :dogma,  github: "lpil/dogma", only: :dev}
   ]
   end
 end
