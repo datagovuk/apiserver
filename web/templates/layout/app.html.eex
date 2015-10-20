@@ -11,27 +11,22 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
 
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/bootstrap.min.css") %>">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/bootstrap-select.min.css") %>">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/style.css") %>">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/bootstrap.min.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/bootstrap-select.min.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/style.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/app.css") %>">
 
-    <script src="<%= static_path(@conn, "/js/jquery-1.11.3.min.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js//bootstrap.min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/data/api/js/jquery-1.11.3.min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/data/api/js/app.js") %>"></script>
+    <script src="<%= static_path(@conn, "/data/api/js//bootstrap.min.js") %>"></script>
 
-    <script src="<%= static_path(@conn, "/js/bootstrap-select.min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/data/api/js/bootstrap-select.min.js") %>"></script>
 
-    <script src="<%= static_path(@conn, "/js/jquery.slideto.min.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/jquery.wiggle.min.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/underscore-min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/data/api/js/underscore-min.js") %>"></script>
 
-    <script src="<%= static_path(@conn, "/js/underscore-min.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/underscore-min.js") %>"></script>
-
-    <script src="<%= static_path(@conn, "/js/ace.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/sql.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/theme-monokai.js") %>"></script>
+    <script src="<%= static_path(@conn, "/data/api/js/ace.js") %>"></script>
+    <script src="<%= static_path(@conn, "/data/api/js/sql.js") %>"></script>
+    <script src="<%= static_path(@conn, "/data/api/js/theme-monokai.js") %>"></script>
 
   </head>
 
