@@ -17,7 +17,7 @@
 
                         <%= if fields do %>
                             <%= for field <- fields do %>
-                                str += "<label><%= description %> </label>";
+                                str += "<%= description %>";
                                 str += "<div class='input-group'>"
                                 str += '<input id="<%= name %>_<%= fname %>_<%= field %>" name="<%= field %>" class="form-control" type="text" placeholder="<%= prettify(field) %>">';
                                 str += "<span class='input-group-btn'>";
@@ -42,10 +42,10 @@
                                     <% values = Map.get(distincts, fieldname) %>
 
 
-                                        <label for="<%= fieldname %>"><%= prettify(fieldname) %></label>
+                                        <%= prettify(fieldname) %>
 
                                             <div class="input-group">
-                                                <select class="form-control  selectpicker" name="filter-<%= name%>-<%= fieldname %>" data-live-search="true" id="filter-<%= name%>-<%= fieldname %>">
+                                                <select class="form-control  selectpicker" name="filter-<%= name%>-<%= fieldname %>" data-live-search="true" id="filter-<%= name%>-<%= fieldname %>" data-size="10">
                                                 <option value=""></option>
                                                 <%= for value <- values do %>
                                                     <%= if value != "" do %>
@@ -99,7 +99,7 @@
 <script>
 
     $(document).ready(function(){
-        $('.selectpicker').selectpicker();
+        $('.selectpicker').selectpicker({dropupAuto:false});
     <%= for {name, _, _, _} <- services @manifest do %>
         var h = $('#basic-<%= name %>-details').first().css('height');
         if ( h != undefined ){
