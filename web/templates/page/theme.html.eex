@@ -69,6 +69,14 @@ host = '<%= @host %>';
         e.preventDefault();
 
         if (e.target.hash == "#_advanced" && !editor_loaded) { setup_editor(); }
+        if (e.target.hash == "#_basic" ){
+            <%= for {name, _, _, _} <- services @manifest do %>
+                var h = $('#basic-<%= name %>-details').first().css('height');
+                if ( h != undefined ){
+                    $('#basic-<%= name %>-container').css('height', h);
+                }
+            <% end %>
+        };
     });
 
     if (window.location.hash != undefined) {
@@ -81,6 +89,15 @@ host = '<%= @host %>';
         var t = $(e.target).attr('id');
         var fragment = t.substring(0, t.indexOf('_'));
         window.location.hash = fragment;
+
+        if ( t == 'basic_tab') {
+            <%= for {name, _, _, _} <- services @manifest do %>
+                var h = $('#basic-<%= name %>-details').first().css('height');
+                if ( h != undefined ){
+                    $('#basic-<%= name %>-container').css('height', h);
+                }
+            <% end %>
+        }
     })
 </script>
 

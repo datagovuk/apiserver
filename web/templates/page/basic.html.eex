@@ -100,12 +100,12 @@
 
     $(document).ready(function(){
         $('.selectpicker').selectpicker({dropupAuto:false});
-    <%= for {name, _, _, _} <- services @manifest do %>
-        var h = $('#basic-<%= name %>-details').first().css('height');
-        if ( h != undefined ){
-            $('#basic-<%= name %>-container').css('height', h);
-        }
-    <% end %>
+        <%= for {name, _, _, _} <- services @manifest do %>
+            var h = $('#basic-<%= name %>-details').first().css('height');
+            if ( h != undefined ){
+                $('#basic-<%= name %>-container').css('height', h);
+            }
+        <% end %>
     })
 
 </script>
