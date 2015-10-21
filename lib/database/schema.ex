@@ -139,6 +139,9 @@ defmodule Database.Schema do
   defp clean(%Postgrex.Timestamp{}=ts) do
     "#{ts.day}/#{ts.month}/#{ts.year} #{filled_int(ts.hour)}:#{filled_int(ts.min)}:#{filled_int(ts.sec)}"
   end
+  defp clean(%Geo.Point{}=point) do
+    Geo.JSON.encode(point)
+  end
   defp clean(val), do: val
 
   defp filled_int(i) when i < 10 do
