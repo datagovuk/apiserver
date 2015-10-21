@@ -9,27 +9,17 @@
                     <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
 
                     <form style="margin-top: 10px" id="form-<%= name %>-<%= fname %>" class="form " action="<%= @host %>/data/api/service/<%= @theme %>/<%= name %>/<%= fname %>">
-                    </form>
-
-                    <script type="text/javascript">
-                        var s = $("#form-<%= name %>-<%= fname %>");
-                        var str = "";
 
                         <%= if fields do %>
-                            <%= for field <- fields do %>
-                                <% field_name = Map.get(field, "name") %>
-                                str += "<%= description %>";
-                                str += "<div class='input-group'>"
-                                str += '<input id="<%= name %>_<%= fname %>_<%= field_name %>" name="<%= field_name %>" class="form-control" type="text" placeholder="<%= prettify(field_name) %>">';
-                                str += "<span class='input-group-btn'>";
-                                str += "<button class='btn  btn-success' onclick='form_request(this, &apos;<%= name%>&apos;, &apos;<%= fname %>&apos;);return false;'>OK</button>";
-                                str += "</span>";
-                                str += "</div>";
+                            <%= if length(fields) == 1 do %>
+                                <% field_name = Map.get(hd(fields), "name") %>
+                                <%= render "basic_single_field.html", name: name, field_name: field_name, func_name: fname, description: description  %>
+                            <% else %>
+                                <%= render "basic_multi_fields.html", fields: fields, name: name, func_name: fname, description: description  %>
                             <% end %>
                         <% end %>
-                        console.log(str)
-                        s.html( s.html() + str );
-                    </script>
+                    </form>
+
                     <% end %> <!-- for searchable -->
 
                     <!-- Filters -->

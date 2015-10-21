@@ -316,8 +316,6 @@ defmodule ApiServer.ApiController do
       nil -> []
       _ -> Enum.map(fields, fn f ->
              %{"name"=>name, "type"=>type} =  f
-             IO.inspect name
-             IO.inspect type
              convert( Map.get(params, name), type )
            end)
     end

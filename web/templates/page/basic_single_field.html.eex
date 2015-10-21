@@ -1,0 +1,9 @@
+<%= @description %>
+<div class='input-group'>
+    <input id='<%= @name %>_<%= @func_name %>_<%= @field_name %>' name='<%= @field_name %>'
+    class='form-control' type='text' placeholder='<%= prettify(@field_name) %>'>
+    <span class='input-group-btn'>
+        <button class='btn  btn-success'
+          onclick="form_request(this, '<%= @name %>', '<%= @func_name %>');return false;">OK</button>
+    </span>
+</div>
