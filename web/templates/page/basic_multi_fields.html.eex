@@ -1,4 +1,4 @@
-<%= @description %>
+<h4><%= @description %></h4>
 
 <%= for field <- @fields do %>
     <% field_name = Map.get(field, "name") %>
@@ -13,3 +13,4 @@
       onclick="form_request(this, '<%= @name %>', '<%= @func_name %>');return false;">OK</button>
 </div>
 <div class="clearfix"></div>
+<hr style="border: solid 1px #eee">

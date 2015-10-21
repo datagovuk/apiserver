@@ -34,7 +34,7 @@
                                     <% values = Map.get(distincts, fieldname) %>
 
 
-                                        <%= prettify(fieldname) %>
+                                            <h4>Find by <%= prettify(fieldname) %></h4>
 
                                             <div class="input-group">
                                                 <select class="form-control  selectpicker" name="filter-<%= name%>-<%= fieldname %>" data-live-search="true" id="filter-<%= name%>-<%= fieldname %>" data-size="10">
@@ -50,6 +50,7 @@
                                                     <button class="btn btn-success" type="button" onclick='submit_distinct("<%= name %>", "<%= fieldname %>", this); return false;' style='margin-left: -2px;'>OK</button>
                                                 </span>
                                             </div>
+                                            <hr style="border: solid 1px #eee;">
                                     </div>
                                 </form>
                             <% end %>

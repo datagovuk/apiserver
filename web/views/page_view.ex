@@ -7,10 +7,14 @@ defmodule ApiServer.PageView do
   end
 
 
+  def prettify("lat"), do: "Latitude"
+  def prettify("lon"), do: "Longitude"
   def prettify(word) do
     word
     |> String.replace("_", " ")
     |> String.replace("-", " ")
+    |> String.replace("lat", "latitude")
+    |> String.replace("lon", "longitude")
     |> String.split(" ")
     |> Enum.map(fn w-> capitalize(w) end)
     |> Enum.join(" ")

@@ -1,4 +1,4 @@
-<%= @description %>
+<h4><%= @description %></h4>
 <div class='input-group'>
     <input id='<%= @name %>_<%= @func_name %>_<%= @field_name %>' name='<%= @field_name %>'
     class='form-control' type='text' placeholder='<%= prettify(@field_name) %>'>
@@ -7,3 +7,4 @@
           onclick="form_request(this, '<%= @name %>', '<%= @func_name %>');return false;">OK</button>
     </span>
 </div>
+<hr style="border: solid 1px #eee">
