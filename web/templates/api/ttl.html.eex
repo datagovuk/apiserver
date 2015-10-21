@@ -1,5 +1,5 @@
 @base <<%= @base %>> .
 <%= for object<- @objects do %>
 _:<%=hash_for_map(object)%><%= for {k, v} <- object do %>
-   <#<%= k %>> "<%= v %>" <%= ttl_terminator({k,v}, object) %><% end %>
+   <#<%= k %>> "<%= decode_possible_point(v) %>" <%= ttl_terminator({k,v}, object) %><% end %>
 <% end %>

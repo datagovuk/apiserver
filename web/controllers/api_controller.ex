@@ -71,7 +71,6 @@ defmodule ApiServer.ApiController do
   """
   def theme_sql(conn, %{"theme"=>theme, "_format"=>format}=params) do
 
-
     res = Database.Schema.call_sql_api(theme, params["query"])
 
     Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
@@ -143,7 +142,8 @@ defmodule ApiServer.ApiController do
   end
 
   defp write_csv(conn, schema, data) do
-      csv_stream = [schema|data] |> CSV.encode
+      decoded  = data |> Enum.map(fn x-> Enum.map(x, &flatten_tabular/1) end)
+      csv_stream = [schema|decoded] |> CSV.encode
 
       conn
       |> put_layout(false)
@@ -335,5 +335,10 @@ defmodule ApiServer.ApiController do
       "#{host}/#{theme}/#{service}"
   end
 
+
+  def flatten_tabular(m) when is_map(m) do
+    Poison.encode!(m)
+  end
+  def flatten_tabular(v), do: v
 
 end

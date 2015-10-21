@@ -2,7 +2,14 @@ defmodule ApiServer.ApiView do
   use ApiServer.Web, :view
   alias Poison, as: JSON
 
-    def hash_for_map(m) do
+  def decode_possible_point(%{"coordinates"=>coord}) do
+    coord
+    |> Enum.reverse
+    |> Enum.join(",")
+  end
+  def decode_possible_point(p), do: p
+
+  def hash_for_map(m) do
     JSON.encode!(m)
     |> :erlang.md5
     |> Base.encode16(case: :lower)

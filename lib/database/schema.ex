@@ -53,9 +53,7 @@ defmodule Database.Schema do
        Worker.query(worker, q)
     end, @timeout)
 
-    x  = results.rows |> Enum.map(fn [k,v] ->  {k, v} end) |>Enum.into(%{})
-    IO.inspect x
-    x
+    results.rows |> Enum.map(fn [k,v] ->  {k, v} end) |>Enum.into(%{})
   end
 
  def call_api(dbname, query, arguments \\ []) do
