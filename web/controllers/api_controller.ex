@@ -315,12 +315,22 @@ defmodule ApiServer.ApiController do
     parameters = case fields do
       nil -> []
       _ -> Enum.map(fields, fn f ->
-             Map.get(params, f)
+             %{"name"=>name, "type"=>type} =  f
+             IO.inspect name
+             IO.inspect type
+             convert( Map.get(params, name), type )
            end)
     end
 
     Database.Schema.call_api(theme, query, parameters)
   end
+
+  defp convert(field, "float") do
+      {val, _} = Float.parse(field)
+      val
+  end
+  defp convert(field, "string"), do: field
+
 
   defp url_for_ttl_base(theme, service) do
       host = Database.Lookups.find(:general, :host)
