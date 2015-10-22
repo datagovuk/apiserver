@@ -45,7 +45,7 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/" style="padding: 16px;">
-              <img src="<%= static_path(@conn, "/images/dgu-header-white.png") %>" height="39px">
+              <img src="<%= static_path(@conn, "/data/api/images/dgu-header-white.png") %>" height="39px">
           </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse pull-right">
