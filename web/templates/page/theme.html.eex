@@ -4,7 +4,7 @@
 theme = '<%= @theme %>';
 host = '<%= @host %>';
 </script>
-<script src="<%= static_path(@conn, "/js/api.js") %>"></script>
+<script src="<%= static_path(@conn, "/data/api/js/api.js") %>"></script>
 
 <div class="container">
 

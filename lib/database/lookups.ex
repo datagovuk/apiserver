@@ -15,7 +15,7 @@ defmodule Database.Lookups do
   def load_general() do
     :ets.new(:schema_cache, [:named_table, read_concurrency: true])
     :ets.new(:general, [:named_table, read_concurrency: true])
-    host = "http://" <> (System.get_env("HOST") || "localhost:4000")
+    host = "//" <> (System.get_env("HOST") || "localhost:4000")
     :ets.insert(:general, {:host, host})
   end
 
