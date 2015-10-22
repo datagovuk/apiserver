@@ -10,8 +10,8 @@
         <h3><%= prettify(theme) %></h3>
 
         <div style="margin-top: 20px;">
-            <label>Endpoint <a href="<%= @host %>/odata/<%= theme %>">view &#187;</a></label>
-            <input type="text" class="form-control" readonly value="<%= @host %>/odata/<%= theme %>">
+            <label>Endpoint <a href="<%= get_host(@conn) %>/odata/<%= theme %>">view &#187;</a></label>
+            <input type="text" class="form-control" readonly value="<%= get_host(@conn) %>/odata/<%= theme %>">
         </div>
     </div>
     <% end %>

@@ -7,10 +7,7 @@ defmodule ApiServer.PageController do
   end
 
   def about(conn, _params) do
-    host = Database.Lookups.find(:general, :host)
-
     conn
-    |> assign(:host, host)
     |> render "about.html"
   end
 
@@ -19,9 +16,7 @@ defmodule ApiServer.PageController do
   end
 
   def docs(conn, _) do
-    host = Database.Lookups.find(:general, :host)
     conn
-    |> assign(:host, host)
     |> render "docs.html"
   end
 
@@ -44,31 +39,25 @@ defmodule ApiServer.PageController do
   defp theme_inner(conn, theme, manifest) do
     schema_task = Task.async(fn ()-> Database.Schema.get_schemas(theme) end)
 
-    host = Database.Lookups.find(:general, :host)
     distincts = Database.Lookups.find(:distincts, theme)
     filters = Manifest.filter_fields(manifest, theme)
 
     # TODO: Get distincts, filters and schema from the JSON endpoint
-    # as and when required.  Want to only really send theme, manifest and
-    # host here.
+    # as and when required.  Want to only really send theme and manifest
     conn
     |> assign(:theme, theme)
     |> assign(:manifest, manifest)
     |> assign(:distincts, distincts)
     |> assign(:filters, filters)
-    |> assign(:host, host)
     |> assign(:schema, Task.await(schema_task))
     |> delete_resp_header("cache-control")
     |> render("theme.html")
   end
 
   def service(conn, %{"theme"=>theme, "service"=>service}) do
-    host = Database.Lookups.find(:general, :host)
-
     conn
     |> assign(:theme, theme)
     |> assign(:service_name, service)
-    |> assign(:host, host)
     |> render("service.html")
   end
 

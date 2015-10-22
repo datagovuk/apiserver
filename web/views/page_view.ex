@@ -2,6 +2,12 @@ defmodule ApiServer.PageView do
   use ApiServer.Web, :view
   alias Poison, as: JSON
 
+  def get_host(conn) do
+    host_url(conn.host, conn.port)
+  end
+  defp host_url(host, 80), do: "//#{host}"
+  defp host_url(host, port), do: "//#{host}:#{port}"
+
   def to_js_list(items) do
     JSON.encode!(items)
   end

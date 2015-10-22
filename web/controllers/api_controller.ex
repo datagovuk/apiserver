@@ -95,7 +95,7 @@ defmodule ApiServer.ApiController do
         |> put_resp_header("content-disposition",
                            "attachment; filename=\"query.ttl\";")
         |> assign(:objects, Map.get(res, "result"))
-        |> assign(:base, url_for_ttl_base(theme, ""))
+        |> assign(:base, url_for_ttl_base(conn, theme, ""))
         |> render "ttl.html"
       _ ->
         conn |> put_status(400)
@@ -182,7 +182,7 @@ defmodule ApiServer.ApiController do
         |> put_resp_header("content-disposition",
                            "attachment; filename=\"query.ttl\";")
         |> assign(:objects, res)
-        |> assign(:base, url_for_ttl_base(theme, service))
+        |> assign(:base, url_for_ttl_base(conn, theme, service))
         |> render "ttl.html"
       _ ->
         conn |> put_status(400)
@@ -240,7 +240,7 @@ defmodule ApiServer.ApiController do
         |> put_resp_header("content-disposition",
                            "attachment; filename=\"query.ttl\";")
         |> assign(:objects, res)
-        |> assign(:base, url_for_ttl_base(theme, service))
+        |> assign(:base, url_for_ttl_base(conn, theme, service))
         |> render "ttl.html"
       end
   end
@@ -330,10 +330,15 @@ defmodule ApiServer.ApiController do
   defp convert(field, "string"), do: field
 
 
-  defp url_for_ttl_base(theme, service) do
-      host = Database.Lookups.find(:general, :host)
-      "#{host}/#{theme}/#{service}"
+  defp url_for_ttl_base(conn, theme, service) do
+      "#{get_host(conn)}/#{theme}/#{service}"
   end
+
+  def get_host(conn) do
+    host_url(conn.host, conn.port)
+  end
+  defp host_url(host, 80), do: "#{host}"
+  defp host_url(host, port), do: "#{host}:#{port}"
 
 
   def flatten_tabular(m) when is_map(m) do

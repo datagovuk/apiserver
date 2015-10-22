@@ -3,5 +3,6 @@ defmodule ApiServer.ODataView do
   alias ApiServer.PageView
 
   defdelegate prettify(word), to: PageView
+  defdelegate get_host(conn), to: PageView
 
 end

@@ -9,7 +9,6 @@ defmodule ApiServer.ODataController do
 
     conn
     |> assign(:themes, themes)
-    |> assign(:host, Database.Lookups.find(:general, :host))
     |> render("index.html")
   end
 

@@ -2,7 +2,7 @@
 
 <script>
 theme = '<%= @theme %>';
-host = '<%= @host %>';
+host = '<%= get_host(@conn) %>';
 </script>
 <script src="<%= static_path(@conn, "/data/api/js/api.js") %>"></script>
 
@@ -36,17 +36,17 @@ host = '<%= @host %>';
 
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="_basic" style="margin-top: 20px;">
-        <%= render "basic.html", manifest: @manifest, theme: @theme,
+        <%= render "basic.html", conn: @conn, manifest: @manifest, theme: @theme,
                                     schema: @schema, distincts: @distincts,
-                                    host: @host, filters: @filters %>
+                                    host: get_host(@conn), filters: @filters %>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="_advanced"  style="margin-top: 20px;">
-        <%= render "advanced.html", manifest: @manifest, theme: @theme,
+        <%= render "advanced.html",  conn: @conn, manifest: @manifest, theme: @theme,
                                     schema: @schema, distincts: @distincts%>
     </div>
     <div role="tabpanel" class="tab-pane" id="_map"  style="margin-top: 20px;">
-        <%= render "map.html", manifest: @manifest, theme: @theme,
+        <%= render "map.html",  conn: @conn, manifest: @manifest, theme: @theme,
                                     schema: @schema, distincts: @distincts%>
     </div>
 </div>
