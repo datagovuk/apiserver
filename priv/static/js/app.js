@@ -1126,8 +1126,6 @@ for (var i = 0; i < len; ++i) {
 // to also remove its path from "config.paths.watched".
 "use strict";
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 require("deps/phoenix_html/web/static/js/phoenix_html");
 
 // Import local files
@@ -1135,21 +1133,18 @@ require("deps/phoenix_html/web/static/js/phoenix_html");
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-var _socket = require("./socket");
+/*
+import socket from "./socket"
 
-var _socket2 = _interopRequireDefault(_socket);
+socket.connect()
 
-_socket2["default"].connect();
-
-var counter = 0;
+let counter = 0;
 
 // Now that you are connected, you can join channels with a topic:
-var channel = _socket2["default"].channel("info:api", {});
-channel.join().receive("ok", function (resp) {
-    console.log("Joined successfully");
-}).receive("error", function (resp) {
-    console.log("Unable to join", resp);
-});
+let channel = socket.channel("info:api", {})
+channel.join()
+  .receive("ok", resp => { console.log("Joined successfully") })
+  .receive("error", resp => { console.log("Unable to join", resp) });
 
 function process_users(users) {
     if (users < 1) users = 1;
@@ -1158,35 +1153,36 @@ function process_users(users) {
     } else {
         $('#plural').html("s");
     }
-    $("#users").html(users.toString());
+    $("#users").html(users.toString())
 }
 
-channel.on("user:joined", function (resp) {
+channel.on("user:joined",resp => {
     var users = parseInt($("#users").html(), 10);
-    process_users(users + 1);
+    process_users(users+1);
 });
 
-channel.on("user:left", function (resp) {
+channel.on("user:left",resp => {
     var users = parseInt($("#users").html(), 10);
-    console.log("Someone left...");
-    process_users(users - 1);
+    console.log("Someone left...")
+    process_users(users-1);
 });
 
-channel.on("new:message", function (resp) {
+channel.on("new:message",resp => {
     var block = "<div class='info-block row' style='display:none;'>";
     block += "<div class='col-sm-1'><img height='58' src='images/theme_" + resp.theme + ".jpg'></div>";
     block += "<div class='col-sm-11 query'>" + resp.query + "</div>";
     block += "</div>";
 
     var size = $('.info-block').size();
-    if (size == 20) {
+    if ( size == 20 ) {
         $('#info').find(".info-block").slice(19).remove();
     }
     $(block).hide().prependTo('#info').fadeIn();
 });
+*/
 });
 
-require.register("web/static/js/socket", function(exports, require, module) {
+;require.register("web/static/js/socket", function(exports, require, module) {
 // NOTE: The contents of this file will only be executed if
 // you uncomment its entry in "web/static/js/app.js".
 
