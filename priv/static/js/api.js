@@ -61,12 +61,12 @@ function execute_query(btn, partial_url) {
     var val = editor.getValue();
     if (!val) return;
 
-    if ($('#loading').size() > 0) return;
+    if ($('#eq_loading').size() > 0) return;
 
     $("#sql-results").html("");
 
     var b = $(btn);
-    b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
+    b.prepend('<span id="eq_loading" class="glyphicon glyphicon-refresh spinning"></span> ');
     var url = partial_url  +"?query=" + encodeURIComponent(val);
 
     $.ajax({
@@ -74,7 +74,7 @@ function execute_query(btn, partial_url) {
         url: url,
         dataType: "json"
     }).done(function(object) {
-        $('#loading').remove();
+        $('#eq_loading').remove();
         if (!object.success) {
             $("#download").hide();
             $("#error").html(object.error);
@@ -94,6 +94,8 @@ function execute_query(btn, partial_url) {
             $('.sql-results').html(text);
             $('.sql-results-container').show();
         }
+    }).error(function(){
+            $('#eq_loading').remove();
     });
 }
 
