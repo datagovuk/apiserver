@@ -1,6 +1,6 @@
 defmodule Database.Worker do
   use GenServer
-  @timeout 6000
+  @timeout 5100
 
   @moduledoc """
   Contains a connection to the database and handles running queries.
@@ -16,7 +16,7 @@ defmodule Database.Worker do
       try do
         GenServer.call(pid, {:query, query, args}, :infinity)
       catch
-        :exit, _ -> {:error, "The query took too long to run"}
+        _ -> {:error, "The query took too long to run"}
       end
   end
 
