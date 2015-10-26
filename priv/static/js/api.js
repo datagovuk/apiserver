@@ -16,6 +16,9 @@ function submit_distinct(service, field, btn) {
 
 function make_call(url, output, link, btn) {
     var b = $(btn);
+
+    if ($('#loading').size() > 0) return;
+
     b.prepend('<span id="loading" class="glyphicon glyphicon-refresh spinning"></span> ');
 
     $.ajax({
@@ -45,7 +48,7 @@ function make_call(url, output, link, btn) {
         $(output).html( text );
         $('#loading').remove();
     }).error(function(){
-        var text = "API call to " + url + " failed";
+        var text = "API call to " + url + " timed out";
         $(output).html( text );
         $('#loading').remove();
     });
@@ -57,6 +60,8 @@ function execute_query(btn, partial_url) {
 
     var val = editor.getValue();
     if (!val) return;
+
+    if ($('#loading').size() > 0) return;
 
     $("#sql-results").html("");
 
@@ -93,6 +98,7 @@ function execute_query(btn, partial_url) {
 }
 
 function form_request(btn, name, fname) {
+    if ($('#loading').size() > 0) return;
 
     var params = "";
     var f = $("#form-" + name + "-" + fname);

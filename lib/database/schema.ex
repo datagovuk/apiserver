@@ -6,7 +6,7 @@ defmodule Database.Schema do
   alias Database.Worker
   alias Poison, as: JSON
 
-  @timeout 6000
+  @timeout 5000
 
   def get_schemas(dbname) do
     # TODO: Cache this in :schema_cache ...
