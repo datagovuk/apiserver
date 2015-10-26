@@ -14,7 +14,7 @@ defmodule Database.Worker do
 
   def query(pid, query, args \\ []) do
       try do
-        GenServer.call(pid, {:query, query, args}, @timeout)
+        GenServer.call(pid, {:query, query, args}, :infinity)
       catch
         :exit, _ -> nil
       end
