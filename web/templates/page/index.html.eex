@@ -37,6 +37,17 @@
                 </div>
             </a>
         </div>
+
+        <!--
+        <div class="col-md-3">
+            <a href="/data/api/mapping" style="text-decoration:none;">
+                <div class="dataset-theme theme-mapping">
+                    <div>Mapping</div>
+                </div>
+            </a>
+        </div>
+        -->
+
     </div>
 </div>
 

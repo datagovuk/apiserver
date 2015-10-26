@@ -104,13 +104,23 @@ defmodule ApiServer.ApiController do
 
   def theme_sql(conn, %{"theme"=>theme}=params) do
     # How do we get the service? Check table name and then presence of LIMIT <500
-    %{"table"=>service_name} = Regex.named_captures(~r/.*from (?<table>\w+).*/iu, params["query"])
-    [service] = :themes
-    |> Database.Lookups.find(theme)
-    |> get_service_basics
-    |> Enum.filter(fn x-> Dict.get(x, "name", "") == service_name end)
+    # TODO: What if there is no match here!!!
+    service_name = case Regex.named_captures(~r/.*from (?<table>\w+).*/iu, params["query"]) do
+      %{"table"=>sname} -> sname
+      nil ->
+    end
+    # %{"table"=>service_name} = Regex.named_captures(~r/.*from (?<table>\w+).*/iu, params["query"])
 
-    {valid_query, errors} = validate_query(theme, service, params["query"])
+    IO.inspect service_name
+    {valid_query, errors} = case service_name do
+      nil -> {false, "Query is invalid"}
+      s ->
+          [service] = :themes
+          |> Database.Lookups.find(theme)
+          |> get_service_basics
+          |> Enum.filter(fn x-> Dict.get(x, "name", "") == service_name end)
+          validate_query(theme, service, params["query"])
+    end
     case valid_query do
       false ->
         conn |>  json %{"success"=>false, "error"=>errors}

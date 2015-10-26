@@ -103,7 +103,9 @@ a:hover {
 .theme-health {
     background-color: #912554;
 }
-
+.theme-mapping {
+    background-color: #c53696;
+}
 
 /*  About page */
 .about .special {
