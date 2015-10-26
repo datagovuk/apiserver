@@ -73,7 +73,7 @@ defmodule ApiServer.ApiController do
 
     res = Database.Schema.call_sql_api(theme, params["query"])
 
-    Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
+    #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
 
     case format do
       "csv" ->
@@ -105,7 +105,7 @@ defmodule ApiServer.ApiController do
   def theme_sql(conn, %{"theme"=>theme}=params) do
     # How do we get the service? Check table name and then presence of LIMIT <500
 
-      Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
+      #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
 
       conn
       |> json Database.Schema.call_sql_api(theme, params["query"])
@@ -152,7 +152,7 @@ defmodule ApiServer.ApiController do
     # parameters to expect
     v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
-    Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
+    #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
     res = process_api_call(params ,v)
     schema = Map.keys(Database.Schema.get_schema(theme, service))
 

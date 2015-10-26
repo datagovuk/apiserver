@@ -13,7 +13,11 @@ defmodule Database.Worker do
   end
 
   def query(pid, query, args \\ []) do
-    GenServer.call(pid, {:query, query, args}, @timeout)
+      try do
+        GenServer.call(pid, {:query, query, args}, @timeout)
+      catch
+        :exit, _ -> nil
+      end
   end
 
 
@@ -21,7 +25,6 @@ defmodule Database.Worker do
   # Genserver callbacks ..
   ######################################################################
   def init(arguments) do
-    Process.flag(:trap_exit, true)
     # Create a connection to the database ...
     {:ok, pid} = Postgrex.Connection.start_link(hostname: arguments.host,
                                                                  username: arguments.dbuser,
@@ -31,7 +34,6 @@ defmodule Database.Worker do
                                                                  extensions: [{Postgrex.Extensions.JSON, library: Poison},
                                                                                      {Geo.PostGIS.Extension, library: Geo}])
 
-    Postgrex.Connection.query!(pid, "set statement_timeout to 5000;", [])
     {:ok, pid}
   end
 
@@ -41,14 +43,11 @@ defmodule Database.Worker do
   end
 
   def handle_call({:query, query, arguments}, _from, connection) do
+    Postgrex.Connection.query!(connection, "set statement_timeout to 5000;", [])
     results = Postgrex.Connection.query(connection, query, arguments, [timeout: @timeout])
     {:reply, results, connection}
   end
 
-  def handle_info({:EXIT, _conn, _reason}, connection) do
-    disconnect(connection)
-    {:noreply, connection}
-  end
 
  defp disconnect(connection) do
     _ = connection && Connection.shutdown(connection)
