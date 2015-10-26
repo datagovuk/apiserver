@@ -52,6 +52,8 @@
     <p>Within this editor you may perform SQL queries against the <%= @theme %> database - queries
     are currently limited to 5 seconds execution time.</p>
 
+    <div id="error" class="alert alert-danger" style="display:none;"></div>
+
     <div style="margin-top: 0px; margin-bottom: 60px;">
         <div id="editor">SELECT * FROM <%= first_key(@schema) %> limit 10;</div>
         <button class="btn btn-default" onclick="execute_query(this, '/data/api/service/<%= @theme %>/sql');return false;">Execute</button>
@@ -69,7 +71,6 @@
     </div>
 
     <span id="results"></span>
-    <div id="error" class="alert alert-danger" style="display:none;"></div>
     <div class="container sql-results-container" style="display:none; margin-bottom: 40px;">
         <pre class="col-md-12 sql-results">
         </pre>

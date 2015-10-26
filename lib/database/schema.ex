@@ -84,8 +84,6 @@ defmodule Database.Schema do
     pool = String.to_atom(dbname)
 
     :poolboy.transaction(pool, fn(worker)->
-      {:ok, _} = Worker.query(worker, 'set statement_timeout to 5000;')
-
      resp = case Worker.query(worker, query)  do
           {:ok, result} ->
             results = result.rows
