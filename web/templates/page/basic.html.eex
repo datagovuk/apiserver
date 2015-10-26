@@ -7,23 +7,18 @@
                     <div id="basic-<%=name%>-details" class="service" style="margin-right:10px;">
                     <h3><%= service_description %></h3>
                     <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
-
-                    <form style="margin-top: 10px" id="form-<%= name %>-<%= fname %>" class="form " action="<%= get_host(@conn) %>/data/api/service/<%= @theme %>/<%= name %>/<%= fname %>">
-                            <%= if !fields do %>
-                                <h4 style="line-height: 30px; vertical-align:middle;"><%= description %> <button class='btn  btn-success pull-right'
-                                  onclick="form_request(this, '<%= name %>', '<%= fname %>');return false;">OK</button></h4>
-                                  <hr style="border: solid 1px #eee">
-                                  <div class="clearfix"></div>
-                            <% else %>
-                                <%= if length(fields) == 1 do %>
-                                    <% field_name = Map.get(hd(fields), "name") %>
-                                    <%= render "basic_single_field.html", name: name, field_name: field_name, func_name: fname, description: description  %>
+                        <form style="margin-top: 10px" id="form-<%= name %>-<%= fname %>" class="form " action="<%= get_host(@conn) %>/data/api/service/<%= @theme %>/<%= name %>/<%= fname %>">
+                                <%= if !fields do %>
+                                        <%= render "basic_no_fields.html", name: name, func_name: fname, description: description  %>
                                 <% else %>
-                                    <%= render "basic_multi_fields.html", fields: fields, name: name, func_name: fname, description: description  %>
+                                    <%= if length(fields) == 1 do %>
+                                        <% field_name = Map.get(hd(fields), "name") %>
+                                        <%= render "basic_single_field.html", name: name, field_name: field_name, func_name: fname, description: description  %>
+                                    <% else %>
+                                        <%= render "basic_multi_fields.html", fields: fields, name: name, func_name: fname, description: description  %>
+                                    <% end %>
                                 <% end %>
-                            <% end %>
-                    </form>
-
+                        </form>
                     <% end %> <!-- for searchable -->
 
                     <!-- Filters -->

@@ -1,0 +1,4 @@
+<h4 style="line-height: 30px; vertical-align:middle;"><%= @description %> <button class='btn  btn-success pull-right'
+onclick="form_request(this, '<%= @name %>', '<%= @func_name %>');return false;">OK</button></h4>
+<hr style="border: solid 1px #eee">
+<div class="clearfix"></div>
