@@ -96,6 +96,8 @@ function execute_query(btn, partial_url) {
         }
     }).error(function(){
             $('#eq_loading').remove();
+            $("#error").html("The query timed out");
+            $("#error").show();
     });
 }
 
