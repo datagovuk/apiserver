@@ -16,7 +16,7 @@ defmodule Database.Worker do
       try do
         GenServer.call(pid, {:query, query, args}, :infinity)
       catch
-        :exit, _ -> nil
+        :exit, _ -> {:error, "The query took too long to run"}
       end
   end
 

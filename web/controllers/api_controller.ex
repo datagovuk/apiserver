@@ -73,8 +73,6 @@ defmodule ApiServer.ApiController do
 
     res = Database.Schema.call_sql_api(theme, params["query"])
 
-    #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
-
     case format do
       "csv" ->
         results = Map.get(res, "result" )
