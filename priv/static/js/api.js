@@ -95,6 +95,9 @@ function execute_query(btn, partial_url) {
             $('.sql-results-container').show();
         }
     }).error(function(){
+            $("#download").hide();
+            $('.sql-results').html("");
+            $('.sql-results-container').hide();
             $('#eq_loading').remove();
             $("#error").html("The query timed out");
             $("#error").show();
