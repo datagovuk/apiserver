@@ -322,6 +322,12 @@ defmodule ApiServer.ApiController do
         :error -> ""
       end
   end
+  defp convert(field, "integer") do
+      case Integer.parse(field) do
+        {val, _} -> val
+        :error -> ""
+      end
+  end
   defp convert(field, "string"), do: field
 
 
