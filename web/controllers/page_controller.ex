@@ -37,7 +37,14 @@ defmodule ApiServer.PageController do
   end
 
   defp theme_inner(conn, theme, manifest) do
-    schema_task = Task.async(fn ()-> Database.Schema.get_schemas(theme) end)
+
+    schema_task = Task.async(fn ()->
+      svc_list = MapTraversal.find_value("services", manifest)
+      |> Enum.map(fn x -> Map.get(x, "name") end)
+      |> Enum.sort
+
+      Database.Schema.get_schemas(svc_list)
+    end)
 
     distincts = Database.Lookups.find(:distincts, theme)
     filters = Manifest.filter_fields(manifest, theme)

@@ -71,7 +71,7 @@ defmodule ApiServer.ApiController do
   """
   def theme_sql(conn, %{"theme"=>theme, "_format"=>format}=params) do
 
-    res = Database.Schema.call_sql_api(theme, params["query"])
+    res = Database.Schema.call_sql_api(params["query"])
 
     case format do
       "csv" ->
@@ -106,7 +106,7 @@ defmodule ApiServer.ApiController do
       #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
 
       conn
-      |> json Database.Schema.call_sql_api(theme, params["query"])
+      |> json Database.Schema.call_sql_api(params["query"])
   end
 
   defp validate_query(theme, service, query) do
@@ -152,7 +152,7 @@ defmodule ApiServer.ApiController do
 
     #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
     res = process_api_call(params ,v)
-    schema = Map.keys(Database.Schema.get_schema(theme, service))
+    schema = Map.keys(Database.Schema.get_schema(service))
 
     case format do
       "csv" ->
@@ -208,9 +208,9 @@ defmodule ApiServer.ApiController do
     |> Enum.into %{}
 
     {query, arguments} = service_direct_query(parameters, service)
-    res = Database.Schema.call_api(theme, query, arguments)
+    res = Database.Schema.call_api(query, arguments)
 
-    schema = Map.keys(Database.Schema.get_schema(theme, service))
+    schema = Map.keys(Database.Schema.get_schema(service))
 
     case format do
       "csv" ->
@@ -254,7 +254,7 @@ defmodule ApiServer.ApiController do
 
     {query, arguments} = service_direct_query(parameters, service)
 
-    res = Database.Schema.call_api(theme, query, arguments)
+    res = Database.Schema.call_api(query, arguments)
     case res do
       {:error, error} ->
           conn
@@ -308,7 +308,7 @@ defmodule ApiServer.ApiController do
     end
 
     if Enum.all?(parameters,  fn x -> x != "" end) do
-      Database.Schema.call_api(theme, query, parameters)
+      Database.Schema.call_api(query, parameters)
     else
       {:error, "Parameters are required"}
     end

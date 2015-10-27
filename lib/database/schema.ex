@@ -6,22 +6,23 @@ defmodule Database.Schema do
   alias Database.Worker
   alias Poison, as: JSON
 
-  def get_schemas(dbname) do
+  def get_schemas(service_list) do
     # TODO: Cache this in :schema_cache ...
+
+    names = service_list
+    |> Enum.map(fn s->
+          "'#{s}'"
+        end)
+    |> Enum.join(",")
 
     q = """
       SELECT table_name, column_name, data_type
       FROM information_schema.columns
       WHERE table_schema = 'public' AND
-      table_name NOT in (    'geography_columns',
-            'geometry_columns',
-            'raster_columns',
-            'raster_overviews',
-            'spatial_ref_sys')
+      table_name in ( #{names})
     """
-    pool = String.to_atom(dbname)
-
-    {:ok, result} = :poolboy.transaction(pool, fn(worker)->
+    IO.inspect q
+    {:ok, result} = :poolboy.transaction(:apiserver, fn(worker)->
       Worker.query(worker, q)
     end)
 
@@ -36,7 +37,7 @@ defmodule Database.Schema do
     |> Enum.into %{}
   end
 
-  def get_schema(dbname, table) do
+  def get_schema(table) do
     # TODO: Cache this in :schema_cache ...
 
     q = """
@@ -45,20 +46,16 @@ defmodule Database.Schema do
       WHERE table_schema = 'public'
         AND table_name   = '#{table}';
     """
-    pool = String.to_atom(dbname)
-
-    {:ok, results} = :poolboy.transaction(pool, fn(worker)->
+    {:ok, results} = :poolboy.transaction(:apiserver, fn(worker)->
        Worker.query(worker, q)
     end)
 
     results.rows |> Enum.map(fn [k,v] ->  {k, v} end) |>Enum.into(%{})
   end
 
- def call_api(dbname, query, arguments \\ []) do
+ def call_api( query, arguments \\ []) do
 
-    pool = String.to_atom(dbname)
-
-    results = :poolboy.transaction(pool, fn(worker)->
+    results = :poolboy.transaction(:apiserver, fn(worker)->
        Worker.query(worker, query, arguments)
     end)
 
@@ -77,11 +74,9 @@ defmodule Database.Schema do
     end
   end
 
- def call_sql_api(dbname, query) do
+ def call_sql_api(query) do
 
-    pool = String.to_atom(dbname)
-
-    :poolboy.transaction(pool, fn(worker)->
+    :poolboy.transaction(:apiserver, fn(worker)->
      resp = case Worker.query(worker, query)  do
           {:ok, result} ->
             results = result.rows
@@ -107,10 +102,10 @@ defmodule Database.Schema do
   { true, 1000 } - Limit of 1000
   { false, 0 } - No limit
   """
-  def check_query_limit(theme, query) do
+  def check_query_limit(query) do
     q = "EXPLAIN (format json) #{query}"
-    pool = String.to_atom(theme)
-    plan = :poolboy.transaction(pool, fn(worker)->
+
+    plan = :poolboy.transaction(:apiserver, fn(worker)->
       Worker.query(worker, q)
     end)
 

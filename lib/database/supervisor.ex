@@ -13,16 +13,15 @@ defmodule Database.Supervisor do
     dbpass = ETLConfig.get_config("database", "reader_password")
     {port, _} = Integer.parse(System.get_env("PGPORT") || "5432")
 
-    children = :themes
-    |> Lookups.find_all
-    |> Enum.map(fn {k, _} -> k end)
-    |> Enum.map(fn name->
-      :poolboy.child_spec(
+    name = "apiserver"
+
+    children =
+      [:poolboy.child_spec(
         String.to_atom(name),
         [
           name: {:local, String.to_atom(name)},
           worker_module: Database.Worker,
-          size: 10,
+          size: 50,
           max_overflow: 10
         ],
         [
@@ -33,7 +32,7 @@ defmodule Database.Supervisor do
           {:host, 'localhost'}
         ]
       )
-    end)
+    ]
 
    supervise(children, strategy: :one_for_one)
   end
