@@ -50,6 +50,19 @@ defmodule ApiServer.PageView do
     end
   end
 
+  def has_geo_data(manifest, service) do
+    svc = manifest
+    |> Dict.get("services")
+    |> Enum.filter(fn f-> Dict.get(f, "name") == service end)
+
+    if length(svc) > 0 do
+      svc
+      |> hd
+      |> Dict.get("has_geo_data", false)
+    else
+      false
+    end
+  end
 
   # Helpers for working with manifest ....
   def services(manifest) do
