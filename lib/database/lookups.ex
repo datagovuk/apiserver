@@ -41,16 +41,20 @@ defmodule Database.Lookups do
     data = YamlElixir.read_from_file(filepath)
 
     theme = String.downcase(data["title"])
-    :ets.insert(:themes, {theme, data})
+    if theme == "internal" do
+        nil
+    else
+      :ets.insert(:themes, {theme, data})
 
-    data["services"]
-    |> Enum.map(fn x-> process_service(x) end)
-    |> List.flatten
-    |> Enum.into(%{})
-    |> Enum.each(fn s->
-      {k, v} = s
-      :ets.insert(:services, {"#{theme}/#{k}", v})
-    end)
+      data["services"]
+      |> Enum.map(fn x-> process_service(x) end)
+      |> List.flatten
+      |> Enum.into(%{})
+      |> Enum.each(fn s->
+        {k, v} = s
+        :ets.insert(:services, {"#{theme}/#{k}", v})
+      end)
+    end
   end
 
   defp load_distinct(distincts_file) do
