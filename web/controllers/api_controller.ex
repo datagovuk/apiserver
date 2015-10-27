@@ -185,9 +185,6 @@ defmodule ApiServer.ApiController do
     Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
 
     case process_api_call(params, v) do
-      {:error, {:error, :error, _, error, _}} ->
-          conn
-          |> json %{"success"=> false, "error"=> error}
       {:error, error} ->
           conn
           |> json %{"success"=> false, "error"=> error}
@@ -259,7 +256,7 @@ defmodule ApiServer.ApiController do
 
     res = Database.Schema.call_api(theme, query, arguments)
     case res do
-      {:error, {:error, :error, _, error, _}} ->
+      {:error, error} ->
           conn
           |> json %{"success"=> false, "error"=> error}
       res ->
@@ -316,13 +313,14 @@ defmodule ApiServer.ApiController do
       {:error, "Parameters are required"}
     end
 
-
   end
 
   defp convert("", _), do: ""
   defp convert(field, "float") do
-      {val, _} = Float.parse(field)
-      val
+      case Float.parse(field) do
+        {val, _} -> val
+        :error -> ""
+      end
   end
   defp convert(field, "string"), do: field
 

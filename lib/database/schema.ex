@@ -73,7 +73,7 @@ defmodule Database.Schema do
           |> Enum.map(fn r -> Enum.zip(columns, r) end)
           |> Enum.map(fn res -> Enum.into(res, %{}) end )
       {:error, error} ->
-          error
+          {:error, error}
     end
   end
 
