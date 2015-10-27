@@ -6,8 +6,6 @@ defmodule Database.Schema do
   alias Database.Worker
   alias Poison, as: JSON
 
-  @timeout 5000
-
   def get_schemas(dbname) do
     # TODO: Cache this in :schema_cache ...
 
@@ -25,7 +23,7 @@ defmodule Database.Schema do
 
     {:ok, result} = :poolboy.transaction(pool, fn(worker)->
       Worker.query(worker, q)
-    end, @timeout)
+    end)
 
     result.rows
     |> Enum.group_by(fn x->
@@ -51,7 +49,7 @@ defmodule Database.Schema do
 
     {:ok, results} = :poolboy.transaction(pool, fn(worker)->
        Worker.query(worker, q)
-    end, @timeout)
+    end)
 
     results.rows |> Enum.map(fn [k,v] ->  {k, v} end) |>Enum.into(%{})
   end
@@ -62,7 +60,7 @@ defmodule Database.Schema do
 
     results = :poolboy.transaction(pool, fn(worker)->
        Worker.query(worker, query, arguments)
-    end, @timeout)
+    end)
 
     case results do
       {:ok, result} ->
@@ -98,7 +96,7 @@ defmodule Database.Schema do
           {:error, error} ->
             %{"success"=> false, "error" => Postgrex.Error.message(error)}
         end
-    end, @timeout)
+    end)
    end
 
 

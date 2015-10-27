@@ -1,6 +1,6 @@
 defmodule Database.Worker do
   use GenServer
-  @timeout 5100
+  @timeout 6000
 
   @moduledoc """
   Contains a connection to the database and handles running queries.
@@ -14,6 +14,7 @@ defmodule Database.Worker do
 
   def query(pid, query, args \\ []) do
       try do
+        # The database connection should time out before this call
         GenServer.call(pid, {:query, query, args}, :infinity)
       catch
         _ -> {:error, "The query took too long to run"}
@@ -37,21 +38,16 @@ defmodule Database.Worker do
     {:ok, pid}
   end
 
-  def terminate(_reason, connection) do
-    Postgrex.Connection.stop(connection)
-    :ok
-  end
-
   def handle_call({:query, query, arguments}, _from, connection) do
     Postgrex.Connection.query!(connection, "set statement_timeout to 5000;", [])
     results = Postgrex.Connection.query(connection, query, arguments, [timeout: @timeout])
     {:reply, results, connection}
   end
 
-
- defp disconnect(connection) do
-    _ = connection && Connection.shutdown(connection)
-    nil
+  def terminate(_reason, connection) do
+    Postgrex.Connection.stop(connection)
+    :ok
   end
+
 
 end
