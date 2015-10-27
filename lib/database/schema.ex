@@ -61,7 +61,7 @@ defmodule Database.Schema do
     results = :poolboy.transaction(pool, fn(worker)->
        Worker.query(worker, query, arguments)
     end)
-
+    IO.inspect results
     case results do
       {:ok, result} ->
           columns = result.columns

@@ -188,6 +188,9 @@ defmodule ApiServer.ApiController do
       {:error, {:error, :error, _, error, _}} ->
           conn
           |> json %{"success"=> false, "error"=> error}
+      {:error, error} ->
+          conn
+          |> json %{"success"=> false, "error"=> error}
       nil ->
           conn |> put_status(400)
       res ->
@@ -307,9 +310,16 @@ defmodule ApiServer.ApiController do
            end)
     end
 
-    Database.Schema.call_api(theme, query, parameters)
+    if Enum.all?(parameters,  fn x -> x != "" end) do
+      Database.Schema.call_api(theme, query, parameters)
+    else
+      {:error, "Parameters are required"}
+    end
+
+
   end
 
+  defp convert("", _), do: ""
   defp convert(field, "float") do
       {val, _} = Float.parse(field)
       val
