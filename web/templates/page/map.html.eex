@@ -51,8 +51,8 @@ var init_map = function() {
         target: 'mapbox',
         layers: [tileLayer],
         view: new ol.View({
-            center: ol.proj.fromLonLat([-2.5, 54.0]),
-            zoom: 4
+            center: ol.proj.fromLonLat([-4.5, 55.0]),
+            zoom: 5
         })
     });
 
@@ -165,16 +165,32 @@ var init_map = function() {
 };
 </script>
 
+<div class="nomaps alert alert-info" style="display:none;">
+  This theme has no geographic data to display
+</div>
+
 <div class="map">
     <ul class="nav nav-pills nav-stacked col-md-3" id="maptabs">
         <%= for {key, v}<- @schema do %>
-        <li><a href="" dataset_name="<%= key %>"><%= prettify(key) %></a></li>
+            <%= if has_geo_data(@manifest, key) do %>
+              <li><a href="" dataset_name="<%= key %>"><%= prettify(key) %></a></li>
+            <% end %>
         <% end %>
     </ul>
 
-    <div class="tab-content" style="height: 500px">
-        <div id="mapbox" style="width: 400px; height: 400px">
+
+    <div id="mapcontainer" class="col-md-9">
+        <div id="mapbox" style="width: 600px; height: 600px">
         </div>
         <a href="" id="to_clusters">Clusters</a> <a href="" id="to_points">Points</a>
     </div>
 </div>
+
+<script type="text/javascript">
+  var cnt = $("#maptabs li").size();
+  if (cnt == 0) {
+    $('.map').hide();
+    $('.nomaps').show();
+  }
+
+</script>
