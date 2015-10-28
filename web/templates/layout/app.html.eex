@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/style.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/app.css") %>">
 
+    <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/ol.css") %>">
+
     <script src="<%= static_path(@conn, "/data/api/js/jquery-1.11.3.min.js") %>"></script>
     <script src="<%= static_path(@conn, "/data/api/js/app.js") %>"></script>
     <script src="<%= static_path(@conn, "/data/api/js//bootstrap.min.js") %>"></script>
@@ -28,6 +30,8 @@
     <script src="<%= static_path(@conn, "/data/api/js/ace.js") %>"></script>
     <script src="<%= static_path(@conn, "/data/api/js/sql.js") %>"></script>
     <script src="<%= static_path(@conn, "/data/api/js/theme-monokai.js") %>"></script>
+
+    <script src="<%= static_path(@conn, "/data/api/js/ol.js") %>"></script>
 
   </head>
 

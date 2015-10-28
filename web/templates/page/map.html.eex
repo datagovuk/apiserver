@@ -1,6 +1,180 @@
+
+
+<script type="text/javascript">
+var datasets = {};
+var current_dataset = null;
+var current_point_style = 'points';
+
+var init_map = function() {
+    var styleCache = {};
+    var styleFunc = function(feature, resolution) {
+        var size = feature.get('features').length;
+        var style = styleCache[size];
+        if (!style) {
+            style = [new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 10,
+                    stroke: new ol.style.Stroke({
+                        color: '#fff'
+                    }),
+                    fill: new ol.style.Fill({
+                        color: '#3399CC'
+                    })
+                }),
+                text: new ol.style.Text({
+                    text: size.toString(),
+                    fill: new ol.style.Fill({
+                        color: '#fff'
+                    })
+                })
+              })];
+            styleCache[size] = style;
+        }
+        return style;
+    }
+
+    var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+            anchor: [0.5, 0.5],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            opacity: 0.75,
+            src: '/data/api/data/api/images/pin.png'
+        })
+    });
+
+    var tileLayer = new ol.layer.Tile({
+        'source': new ol.source.OSM()
+    });
+
+    var map = new ol.Map({
+        target: 'mapbox',
+        layers: [tileLayer],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([-2.5, 54.0]),
+            zoom: 4
+        })
+    });
+
+    var setup_layers = function(dataset_name) {
+      var data_url = '/data/api/service/transport/' + dataset_name + '/nearest';
+      return $.get(data_url, {lat: 53.399397, lon: -2.9803698000000622}, function(data){
+          var features = [];
+          if (data['success'] === true) {
+              features = _.map(data['result'], function(ob, index) {
+                  options = {featureProjection: 'EPSG:3857',
+                             dataProjection: 'EPSG:4326'};
+                  var iconFeature = new ol.Feature({
+                      geometry: (new ol.format.GeoJSON()).readGeometryFromObject(ob['latlong'], options),
+		  });
+                  iconFeature.setStyle(iconStyle);
+                  return iconFeature;
+              });
+          }
+
+          var vectorSource = new ol.source.Vector({
+              features: features
+          });
+
+	  var clusterSource = new ol.source.Cluster({
+              distance: 20,
+              source: vectorSource
+          });
+
+          var vectorLayer = new ol.layer.Vector({
+              'source': vectorSource,
+              'style': styleFunc
+          });
+
+          var clusterLayer = new ol.layer.Vector({
+              'source': clusterSource,
+              'style': styleFunc
+          });
+
+          datasets[dataset_name] = {setToPoints: function(){
+                                                  map.getLayers().clear();
+                                                  map.addLayer(tileLayer);
+                                                  map.addLayer(vectorLayer);
+                                                  map.updateSize();
+                                              },
+                                    setToClusters: function(){
+                                                  map.getLayers().clear();
+                                                  map.addLayer(tileLayer);
+                                                  map.addLayer(clusterLayer);
+                                                  map.updateSize();
+                                              }};
+
+      });
+    };
+
+    var setup_missing_layers = function(dataset_name) {
+        datasets[dataset_name] = {
+            setToPoints: function(){
+                map.getLayers().clear();
+                map.addLayer(tileLayer);
+            },
+            setToClusters: function(){
+                map.getLayers().clear();
+                map.addLayer(tileLayer);
+            }
+        }
+    };
+
+    var to_points = function(e) {
+        current_point_style = 'points';
+        datasets[current_dataset].setToPoints();
+        return false;
+    };
+    $('#to_points').click(to_points);
+
+    var to_clusters = function() {
+        current_point_style = 'clusters';
+        datasets[current_dataset].setToClusters();
+        return false;
+    };
+    $('#to_clusters').click(to_clusters);
+
+    var update_map = function() {
+        if(current_point_style == 'points') {
+            to_points();
+        } else {
+            to_clusters();
+        }
+    }
+
+    var promises = [];
+<%= for {key, v}<- @schema do %>
+    <%= if has_geo_data(@manifest, key) do %>
+    promises.push(setup_layers('<%= key %>'));
+    <%= else %>
+    setup_missing_layers('<%= key %>');
+    <% end %>
+<% end %>
+
+    $('#maptabs a').click(function(e){
+        $('#maptabs li').removeClass('active');
+        $(e.target).parent().addClass('active');
+        current_dataset = $(e.target).attr('dataset_name');
+        update_map();
+        return false;
+    });
+
+    $.when.apply(this, promises).done(function(){
+        $('#maptabs a:first').click();
+    });
+};
+</script>
+
 <div class="map">
-    <div class="alert alert-info">
-        This theme has no maps yet.
+    <ul class="nav nav-pills nav-stacked col-md-3" id="maptabs">
+        <%= for {key, v}<- @schema do %>
+        <li><a href="" dataset_name="<%= key %>"><%= prettify(key) %></a></li>
+        <% end %>
+    </ul>
+
+    <div class="tab-content" style="height: 500px">
+        <div id="mapbox" style="width: 400px; height: 400px">
+        </div>
+        <a href="" id="to_clusters">Clusters</a> <a href="" id="to_points">Points</a>
     </div>
 </div>
-
