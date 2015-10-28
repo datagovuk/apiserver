@@ -37,13 +37,13 @@ defmodule ApiServer.Format.Utils do
   def convert(field, "float") do
       case Float.parse(field) do
         {val, _} -> val
-        :error -> ""
+        :error -> throw({:conversion_fail, "'#{field}' must be a float"})
       end
   end
   def convert(field, "integer") do
       case Integer.parse(field) do
         {val, _} -> val
-        :error -> ""
+        :error -> throw({:conversion_fail, "#'{field}' must be an integer"})
       end
   end
   def convert(field, "string"), do: field

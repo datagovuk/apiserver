@@ -154,7 +154,6 @@ defmodule ApiServer.ApiController do
     # parameters to expect
     v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
-    #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
     res = process_api_call(params ,v, format)
     schema = Map.keys(Database.Schema.get_schema(service))
 
@@ -304,20 +303,24 @@ defmodule ApiServer.ApiController do
                        %{"query"=>query, "fields"=>fields},
                        fmt \\ nil) do
 
-    parameters = case fields do
-      nil -> []
-      _ -> Enum.map(fields, fn f ->
-             %{"name"=>name, "type"=>type} =  f
-             Utils.convert( Map.get(params, name), type )
-           end)
-    end
+    try do
+      parameters = case fields do
+        nil -> []
+        _ -> Enum.map(fields, fn f ->
+               %{"name"=>name, "type"=>type} =  f
+               Utils.convert( Map.get(params, name), type )
+             end)
+      end
 
-    if Enum.all?(parameters,  fn x -> x != "" end) do
-      Database.Schema.call_api(query, parameters, format: fmt)
-    else
-      {:error, "Parameters are required"}
+      if Enum.all?(parameters,  fn x -> x != "" end) do
+        Database.Schema.call_api(query, parameters, format: fmt)
+      else
+        {:error, "Parameters are required"}
+      end
+    catch
+      {:conversion_fail, msg} ->
+          {:error, msg}
     end
-
   end
 
 
