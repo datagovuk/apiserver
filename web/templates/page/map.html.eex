@@ -1,9 +1,11 @@
 
 
 <script type="text/javascript">
-var maps = {};
+var datasets = {};
+var current_dataset = null;
+var current_point_style = 'points';
 
-$(function() {
+var init_map = function() {
     var styleCache = {};
     var styleFunc = function(feature, resolution) {
         var size = feature.get('features').length;
@@ -41,11 +43,22 @@ $(function() {
         })
     });
 
-    var setup_map = function(dataset_name) {
-      $('#mapbox-' + dataset_name + ' h3').remove();
+    var tileLayer = new ol.layer.Tile({
+        'source': new ol.source.OSM()
+    });
 
+    var map = new ol.Map({
+        target: 'mapbox',
+        layers: [tileLayer],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([-2.5, 54.0]),
+            zoom: 4
+        })
+    });
+
+    var setup_layers = function(dataset_name) {
       var data_url = '/data/api/service/transport/' + dataset_name + '/nearest';
-      $.get(data_url, {lat: 53.399397, lon: -2.9803698000000622}, function(data){
+      return $.get(data_url, {lat: 53.399397, lon: -2.9803698000000622}, function(data){
           var features = [];
           if (data['success'] === true) {
               features = _.map(data['result'], function(ob, index) {
@@ -78,71 +91,90 @@ $(function() {
               'style': styleFunc
           });
 
-          var tileLayer = new ol.layer.Tile({
-              'source': new ol.source.OSM()
-          });
-
-          var map = new ol.Map({
-            target: 'mapbox-' + dataset_name,
-            layers: [tileLayer, vectorLayer],
-            view: new ol.View({
-              center: ol.proj.fromLonLat([-2.5, 54.0]),
-              zoom: 4
-            })
-          });
-
-          maps[dataset_name] = {map: map,
-                                setToRegular: function(){
+          datasets[dataset_name] = {setToPoints: function(){
                                                   map.getLayers().clear();
                                                   map.addLayer(tileLayer);
                                                   map.addLayer(vectorLayer);
+                                                  map.updateSize();
                                               },
-                                setToCluster: function(){
+                                    setToClusters: function(){
                                                   map.getLayers().clear();
                                                   map.addLayer(tileLayer);
                                                   map.addLayer(clusterLayer);
+                                                  map.updateSize();
                                               }};
 
       });
     };
 
-    $('a.to_clusters').click(function(e){
-        _.each(maps, function(map) {
-            map.setToCluster();
-        });
-        return false;
-    });
+    var setup_missing_layers = function(dataset_name) {
+        datasets[dataset_name] = {
+            setToPoints: function(){
+                map.getLayers().clear();
+                map.addLayer(tileLayer);
+            },
+            setToClusters: function(){
+                map.getLayers().clear();
+                map.addLayer(tileLayer);
+            }
+        }
+    };
 
-    $('a.to_regular').click(function(){
-        _.each(maps, function(map) {
-            map.setToRegular();
-        });
+    var to_points = function(e) {
+        current_point_style = 'points';
+        datasets[current_dataset].setToPoints();
         return false;
-    });
+    };
+    $('#to_points').click(to_points);
 
+    var to_clusters = function() {
+        current_point_style = 'clusters';
+        datasets[current_dataset].setToClusters();
+        return false;
+    };
+    $('#to_clusters').click(to_clusters);
+
+    var update_map = function() {
+        if(current_point_style == 'points') {
+            to_points();
+        } else {
+            to_clusters();
+        }
+    }
+
+    var promises = [];
 <%= for {key, v}<- @schema do %>
     <%= if has_geo_data(@manifest, key) do %>
-    setup_map('<%= key %>');
+    promises.push(setup_layers('<%= key %>'));
+    <%= else %>
+    setup_missing_layers('<%= key %>');
     <% end %>
 <% end %>
-});
+
+    $('#maptabs a').click(function(e){
+        $('#maptabs li').removeClass('active');
+        $(e.target).parent().addClass('active');
+        current_dataset = $(e.target).attr('dataset_name');
+        update_map();
+        return false;
+    });
+
+    $.when.apply(this, promises).done(function(){
+        $('#maptabs a:first').click();
+    });
+};
 </script>
 
 <div class="map">
-    <ul class="nav nav-pills nav-stacked col-md-3" id="schematabs2">
+    <ul class="nav nav-pills nav-stacked col-md-3" id="maptabs">
         <%= for {key, v}<- @schema do %>
-        <li><a href="#map-<%= key %>" data-toggle="tab"><%= prettify(key) %></a></li>
+        <li><a href="" dataset_name="<%= key %>"><%= prettify(key) %></a></li>
         <% end %>
     </ul>
 
     <div class="tab-content" style="height: 500px">
-        <%= for {key, v}<- @schema do %>
-        <div role="tabpanel" class="tab-pane" id="map-<%= key %>" style="margin-top: 20px;">
-            <div id="mapbox-<%= key %>" style="width: 400px; height: 400px">
-                <h3>This dataset has no geographic data</h3>
-            </div>
-            <a href="" class="to_clusters" dataset="<%= key %>">Clusters</a> <a href="" class="to_regular">Points</a>
+        <div id="mapbox" style="width: 400px; height: 400px">
         </div>
-        <% end %>
+        <a href="" id="to_clusters">Clusters</a> <a href="" id="to_points">Points</a>
     </div>
 </div>

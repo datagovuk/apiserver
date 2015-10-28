@@ -56,6 +56,7 @@ host = '<%= get_host(@conn) %>';
 <script type="text/javascript">
     var editor = null;
     var editor_loaded = false;
+    var map_loaded = false;
 
     function setup_editor() {
         editor = ace.edit("editor");
@@ -65,10 +66,16 @@ host = '<%= get_host(@conn) %>';
         $('#schematabs a:first').tab('show');
     }
 
+    function setup_map() {
+        init_map();
+        map_loaded = true;
+    }
+
     $('.dgu-tab a').click(function (e) {
         e.preventDefault();
 
         if (e.target.hash == "#_advanced" && !editor_loaded) { setup_editor(); }
+        if (e.target.hash == "#_map" && !map_loaded) { setup_map(); }
         if (e.target.hash == "#_basic" ){
             <%= for {name, _, _, _} <- services @manifest do %>
                 var h = $('#basic-<%= name %>-details').first().css('height');
@@ -82,6 +89,7 @@ host = '<%= get_host(@conn) %>';
     if (window.location.hash != undefined) {
         var hash = window.location.hash.substring(1);
         if ( hash == 'sql') { setup_editor(); }
+        if ( hash == 'map') { setup_map(); }
         $('#' + hash + '_tab').tab('show');
     }
 
@@ -99,8 +107,6 @@ host = '<%= get_host(@conn) %>';
             <% end %>
         }
     })
-
-    $('#schematabs2 a:first').tab('show');
 </script>
 
 
