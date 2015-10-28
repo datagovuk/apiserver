@@ -2,6 +2,7 @@ defmodule ApiServer.ApiController do
   use ApiServer.Web, :controller
   alias ApiServer.TTL
   alias ApiServer.Endpoint, as: Endpoint
+  alias ApiServer.Format.Utils
 
   @doc """
   Returns the manifest metadata for the specified theme.
@@ -132,7 +133,7 @@ defmodule ApiServer.ApiController do
   end
 
   defp write_csv(conn, schema, data) do
-      decoded  = data |> Enum.map(fn x-> Enum.map(x, &flatten_tabular/1) end)
+      decoded  = data |> Enum.map(fn x-> Enum.map(x, &Utils.flatten_tabular/1) end)
       csv_stream = [schema|decoded] |> CSV.encode
 
       conn
@@ -307,7 +308,7 @@ defmodule ApiServer.ApiController do
       nil -> []
       _ -> Enum.map(fields, fn f ->
              %{"name"=>name, "type"=>type} =  f
-             convert( Map.get(params, name), type )
+             Utils.convert( Map.get(params, name), type )
            end)
     end
 
@@ -318,21 +319,6 @@ defmodule ApiServer.ApiController do
     end
 
   end
-
-  defp convert("", _), do: ""
-  defp convert(field, "float") do
-      case Float.parse(field) do
-        {val, _} -> val
-        :error -> ""
-      end
-  end
-  defp convert(field, "integer") do
-      case Integer.parse(field) do
-        {val, _} -> val
-        :error -> ""
-      end
-  end
-  defp convert(field, "string"), do: field
 
 
   defp url_for_ttl_base(conn, theme, service) do
@@ -346,9 +332,5 @@ defmodule ApiServer.ApiController do
   defp host_url(host, port), do: "#{host}:#{port}"
 
 
-  def flatten_tabular(m) when is_map(m) do
-    Poison.encode!(m)
-  end
-  def flatten_tabular(v), do: v
 
 end

@@ -5,6 +5,7 @@ defmodule Database.Schema do
   """
   alias Database.Worker
   alias Poison, as: JSON
+  alias ApiServer.Format.Utils
 
   def get_schemas(service_list) do
     # TODO: Cache this in :schema_cache ...
@@ -21,7 +22,7 @@ defmodule Database.Schema do
       WHERE table_schema = 'public' AND
       table_name in ( #{names})
     """
-    IO.inspect q
+
     {:ok, result} = :poolboy.transaction(:apiserver, fn(worker)->
       Worker.query(worker, q)
     end)
@@ -56,7 +57,6 @@ defmodule Database.Schema do
  def call_api( query, arguments, options \\ []) do
 
     fmt = Keyword.get(options, :format)
-    IO.inspect "Format #{fmt}"
 
     results = :poolboy.transaction(:apiserver, fn(worker)->
        Worker.query(worker, query, arguments)
@@ -68,7 +68,7 @@ defmodule Database.Schema do
           results = result.rows
           |> Enum.map(fn row ->
             row
-            |> Enum.map(fn cell-> clean(cell, fmt) end)
+            |> Enum.map(fn cell-> Utils.clean(cell, fmt) end)
           end)
           |> Enum.map(fn r -> Enum.zip(columns, r) end)
           |> Enum.map(fn res -> Enum.into(res, %{}) end )
@@ -87,7 +87,7 @@ defmodule Database.Schema do
             results = result.rows
             |> Enum.map(fn row ->
               row
-              |> Enum.map(fn cell-> clean(cell, fmt) end)
+              |> Enum.map(fn cell-> Utils.clean(cell, fmt) end)
             end)
             |> Enum.map(fn r -> Enum.zip(result.columns, r) end)
             |> Enum.map(fn res -> Enum.into(res, %{}) end )
@@ -129,22 +129,5 @@ defmodule Database.Schema do
         {true, 0}
     end
  end
-
-  defp clean(%Postgrex.Timestamp{}=ts, _) do
-    "#{ts.day}/#{ts.month}/#{ts.year} #{filled_int(ts.hour)}:#{filled_int(ts.min)}:#{filled_int(ts.sec)}"
-  end
-  defp clean(%Geo.Point{}=point, nil), do:  Geo.JSON.encode(point)
-  defp clean(%Geo.Point{}=point, fmt) do
-    comma_join_latlng(point.coordinates)
-  end
-  defp clean(val, _), do: val
-
-  defp comma_join_latlng({a, b}), do: "#{b},#{a}"
-
-
-  defp filled_int(i) when i < 10 do
-    "0#{i}"
-  end
-  defp filled_int(i), do: "#{i}"
 
 end
