@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/projects/0b4849a6-8e75-4040-9855-3747f08b7376/584694/badge.svg)](https://semaphoreci.com/ross/apiserver)
+
 # ApiServer
 
 To start the server
