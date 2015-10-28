@@ -71,19 +71,22 @@ defmodule ApiServer.ApiController do
   """
   def theme_sql(conn, %{"theme"=>theme, "_format"=>format}=params) do
 
-    res = Database.Schema.call_sql_api(params["query"])
+    res = Database.Schema.call_sql_api(params["query"], format: format)
 
     case format do
       "csv" ->
         results = Map.get(res, "result" )
+
         rows = Enum.map(results, fn m ->
           Map.values(m)
         end)
+
         schema = case hd(results) do
           m when is_map(m) ->
             Map.keys(m)
           _ -> []
         end
+
         conn
         |> write_csv schema, rows
       "ttl" ->
@@ -151,7 +154,7 @@ defmodule ApiServer.ApiController do
     v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
     #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
-    res = process_api_call(params ,v)
+    res = process_api_call(params ,v, format)
     schema = Map.keys(Database.Schema.get_schema(service))
 
     case format do
@@ -208,7 +211,7 @@ defmodule ApiServer.ApiController do
     |> Enum.into %{}
 
     {query, arguments} = service_direct_query(parameters, service)
-    res = Database.Schema.call_api(query, arguments)
+    res = Database.Schema.call_api(query, arguments, format: format)
 
     schema = Map.keys(Database.Schema.get_schema(service))
 
@@ -295,9 +298,10 @@ defmodule ApiServer.ApiController do
 
 
   @doc false
-  defp process_api_call(_, nil), do: nil
+  defp process_api_call(_, nil, _), do: nil
   defp process_api_call(%{"theme"=>theme}=params,
-                       %{"query"=>query, "fields"=>fields}) do
+                       %{"query"=>query, "fields"=>fields},
+                       fmt \\ nil) do
 
     parameters = case fields do
       nil -> []
@@ -308,7 +312,7 @@ defmodule ApiServer.ApiController do
     end
 
     if Enum.all?(parameters,  fn x -> x != "" end) do
-      Database.Schema.call_api(query, parameters)
+      Database.Schema.call_api(query, parameters, format: fmt)
     else
       {:error, "Parameters are required"}
     end

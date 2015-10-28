@@ -53,7 +53,10 @@ defmodule Database.Schema do
     results.rows |> Enum.map(fn [k,v] ->  {k, v} end) |>Enum.into(%{})
   end
 
- def call_api( query, arguments \\ []) do
+ def call_api( query, arguments, options \\ []) do
+
+    fmt = Keyword.get(options, :format)
+    IO.inspect "Format #{fmt}"
 
     results = :poolboy.transaction(:apiserver, fn(worker)->
        Worker.query(worker, query, arguments)
@@ -65,7 +68,7 @@ defmodule Database.Schema do
           results = result.rows
           |> Enum.map(fn row ->
             row
-            |> Enum.map(fn cell-> clean(cell) end)
+            |> Enum.map(fn cell-> clean(cell, fmt) end)
           end)
           |> Enum.map(fn r -> Enum.zip(columns, r) end)
           |> Enum.map(fn res -> Enum.into(res, %{}) end )
@@ -74,7 +77,9 @@ defmodule Database.Schema do
     end
   end
 
- def call_sql_api(query) do
+ def call_sql_api(query, options \\ []) do
+
+    fmt = Keyword.get(options, :format)
 
     :poolboy.transaction(:apiserver, fn(worker)->
      resp = case Worker.query(worker, query)  do
@@ -82,7 +87,7 @@ defmodule Database.Schema do
             results = result.rows
             |> Enum.map(fn row ->
               row
-              |> Enum.map(fn cell-> clean(cell) end)
+              |> Enum.map(fn cell-> clean(cell, fmt) end)
             end)
             |> Enum.map(fn r -> Enum.zip(result.columns, r) end)
             |> Enum.map(fn res -> Enum.into(res, %{}) end )
@@ -125,11 +130,17 @@ defmodule Database.Schema do
     end
  end
 
-  defp clean(%Postgrex.Timestamp{}=ts) do
+  defp clean(%Postgrex.Timestamp{}=ts, _) do
     "#{ts.day}/#{ts.month}/#{ts.year} #{filled_int(ts.hour)}:#{filled_int(ts.min)}:#{filled_int(ts.sec)}"
   end
-  defp clean(%Geo.Point{}=point), do:  Geo.JSON.encode(point)
-  defp clean(val), do: val
+  defp clean(%Geo.Point{}=point, nil), do:  Geo.JSON.encode(point)
+  defp clean(%Geo.Point{}=point, fmt) do
+    comma_join_latlng(point.coordinates)
+  end
+  defp clean(val, _), do: val
+
+  defp comma_join_latlng({a, b}), do: "#{b},#{a}"
+
 
   defp filled_int(i) when i < 10 do
     "0#{i}"
