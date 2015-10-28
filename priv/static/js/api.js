@@ -34,7 +34,12 @@ function make_call(url, output, link, btn) {
             $(link + "-ttl").attr("href",  url + "&_format=ttl");
 
             $(link).removeAttr('disabled');
+            $(link).removeClass('btn-default');
+            $(link).addClass('btn-success');
             $(link + "-downloads").removeAttr('disabled');
+            $(link + "-downloads").removeClass('btn-default');
+            $(link + "-downloads").addClass('btn-success');
+
         } else {
             text = "ERROR: " + obj.error;
             $("#link-modal").val("");
@@ -42,6 +47,11 @@ function make_call(url, output, link, btn) {
             $(link + "-ttl").attr("href", "");
 
             $(link).attr('disabled', 'disabled');
+            $(link).removeClass('btn-success');
+            $(link).addClass('btn-default');
+
+            $(link + "-downloads").removeClass('btn-success');
+            $(link + "-downloads").addClass('btn-default');
             $(link + "-downloads").attr('disabled', 'disabled');
         }
 

@@ -60,18 +60,18 @@
 
                     <div style="margin-top: 10px; text-align: center;">
                         <div class="dropdown" style="display:inline;" >
-                            <a class="basic btn btn-lg dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" disabled="disabled" id="basic-<%= name %>-link-downloads" >
+                            <button class="basic btn btn-default btn-lg dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  disabled id="basic-<%= name %>-link-downloads" >
                                 <i class="glyphicon glyphicon-download-alt"> </i> Download
-                            </a>
+                            </button>
 
                               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 <li><a id="basic-<%= name %>-link-csv" href="#">CSV</a></li>
                                 <li><a id="basic-<%= name %>-link-ttl" href="#">TTL</a></li>
                               </ul>
                         </div>
-                        <a class="basic btn btn-lg" id="basic-<%= name %>-link"  disabled="disabled" data-toggle="modal" data-target=".bs-example-modal-lg">
+                        <button class="basic btn btn-default btn-lg" id="basic-<%= name %>-link"  disabled data-toggle="modal" data-target=".bs-example-modal-lg">
                             <i class="glyphicon glyphicon-share"></i> Get Link
-                        </a>
+                        </button>
                     </div>
                 </div>
                 </div>
