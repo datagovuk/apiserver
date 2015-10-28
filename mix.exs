@@ -45,7 +45,8 @@ defmodule ApiServer.Mixfile do
      { :econfig, github: "benoitc/econfig" },
      { :yaml_elixir, github: "KamilLelonek/yaml-elixir" },
      { :yamerl, github: "yakaz/yamerl" },
-     { :dogma,  github: "lpil/dogma", only: :dev}
+     { :dogma,  github: "lpil/dogma", only: :dev},
+     { :exrm,  "~> 0.19.9"}
   ]
   end
 end

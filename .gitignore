@@ -3,6 +3,8 @@
 /db
 /deps
 /*.ez
+/rel
+.iex.exs
 
 priv/static/distincts/*.json
 
