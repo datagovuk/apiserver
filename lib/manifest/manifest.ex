@@ -5,7 +5,6 @@ defmodule ApiServer.Manifest do
   """
   defstruct dbname: "", tablename: "", fields: [], choice_fields: [], searchables: []
 
-
   def filter_fields(manifest, theme) do
     manifest
     |> Dict.get("services")

@@ -80,7 +80,6 @@ defmodule Database.Schema do
  def call_sql_api(query, options \\ []) do
 
     fmt = Keyword.get(options, :format)
-
     :poolboy.transaction(:apiserver, fn(worker)->
      resp = case Worker.query(worker, query)  do
           {:ok, result} ->

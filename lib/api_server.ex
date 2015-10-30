@@ -6,6 +6,10 @@ defmodule ApiServer do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    :ets.new(:theme_objects, [:named_table, :public, read_concurrency: true])
+    :ets.new(:manifest_objects, [:named_table, :public, read_concurrency: true])
+
+
     ini_path = System.get_env("DGU_ETL_CONFIG")
     if ini_path == nil do
       IO.puts "DGU_ETL_CONFIG is not defined"
@@ -19,7 +23,7 @@ defmodule ApiServer do
     children = [
       supervisor(ApiServer.Endpoint, []),
       supervisor(Database.Supervisor, []),
-      worker(Stats, [])
+      worker(ApiServer.Manifest.Server, [[path: "/tmp"]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

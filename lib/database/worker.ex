@@ -44,6 +44,13 @@ defmodule Database.Worker do
     {:reply, results, connection}
   end
 
+  def handle_call({:slow_query, query, arguments}, _from, connection) do
+    Postgrex.Connection.query!(connection, "set statement_timeout to 10000;", [])
+    results = Postgrex.Connection.query(connection, query, arguments, [timeout: @timeout*2])
+    {:reply, results, connection}
+  end
+
+
   def terminate(_reason, connection) do
     Postgrex.Connection.stop(connection)
     :ok
