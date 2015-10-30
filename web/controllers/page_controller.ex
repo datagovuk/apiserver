@@ -1,6 +1,6 @@
 defmodule ApiServer.PageController do
   use ApiServer.Web, :controller
-  alias ApiServer.Manifest
+  alias ApiServer.Manifest.Manifest
 
   def index(conn, _params) do
     render conn, "index.html"

@@ -10,8 +10,6 @@ defmodule ApiServer.ManifestTest do
   test "can list themes", context do
     themes = Server.list_themes(context.server)
     assert length(themes) == 2
-
-    IO.inspect :timer.tc(Server, :list_themes, [context.server])
   end
 
   test "can list manifests for theme", context do
@@ -20,9 +18,8 @@ defmodule ApiServer.ManifestTest do
   end
 
   test "can load manifests for theme/by name", context do
-    manifest = Server.get_manifest(context.server, "health", "test")
+    manifest = Server.get_manifest(context.server, "health", "clinics")
     refute manifest == nil
   end
-
 
 end

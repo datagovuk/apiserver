@@ -1,6 +1,7 @@
 defmodule ApiServer.Manifest.Server do
   use GenServer
   alias ApiServer.Manifest.Theme
+  alias ApiServer.Manifest.Manifest
 
   def start_link(options) do
     GenServer.start_link(__MODULE__, options)
@@ -11,11 +12,11 @@ defmodule ApiServer.Manifest.Server do
   end
 
   def list_manifests(pid, theme) do
-    []
+    GenServer.call(pid, {:list_all, :manifest_objects})
   end
 
   def get_manifest(pid, theme, name) do
-    []
+    GenServer.call(pid, {:find_manifest, theme_manifest_key(theme, name)})
   end
 
   def theme_manifest_key(theme, manifest) do
@@ -30,7 +31,7 @@ defmodule ApiServer.Manifest.Server do
       root = Keyword.get(state, :path)
 
       load_themes(Path.join([root, "themes", "*.json"]))
-
+      load_manifests(Path.join([root, "manifests", "*.json"]))
       {:ok, state}
   end
 
@@ -41,6 +42,13 @@ defmodule ApiServer.Manifest.Server do
     {:reply, items, state}
   end
 
+  def handle_call({:find_manifest, key}, _from, state) do
+    result = case :ets.lookup(:manifest_objects, key) do
+      [{^key, bucket}] -> bucket
+      [] -> nil
+    end
+    {:reply, result, state}
+  end
 
 
   defp load_themes(path) do
@@ -53,6 +61,16 @@ defmodule ApiServer.Manifest.Server do
     end)
   end
 
+  defp load_manifests(path) do
+    Path.wildcard(path)
+    |> Enum.map(fn file->
+         manifest = File.read!(file)
+          |> Poison.decode!( as: Manifest)
+
+          key = theme_manifest_key(manifest.theme, manifest.id)
+          :ets.insert(:manifest_objects, {key, manifest})
+    end)
+  end
 
 
 
