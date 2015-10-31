@@ -3,6 +3,7 @@ defmodule ApiServer.ApiController do
   alias ApiServer.TTL
   alias ApiServer.Endpoint, as: Endpoint
   alias ApiServer.Format.Utils
+  alias ApiServer.Manifest.Server, as: Manifests
 
   @doc """
   Returns the manifest metadata for the specified theme.
@@ -150,11 +151,12 @@ defmodule ApiServer.ApiController do
   """
   def service(conn, %{"theme"=>theme, "service"=>service,
                       "method"=>method, "_format"=>format}=params) do
-    # Based on theme/service/method we want the sql query, and the
-    # parameters to expect
-    v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
-    res = process_api_call(params ,v, format)
+    manifest = Manifests.get_manifest(:lookup, theme, service)
+    [svc] = manifest.queries
+    |> Enum.filter(fn s-> s.name == method end)
+
+    res = process_api_call(params ,svc, format)
     schema = Map.keys(Database.Schema.get_schema(service))
 
     case format do
@@ -181,13 +183,12 @@ defmodule ApiServer.ApiController do
 
   def service(conn, %{"theme"=>theme, "service"=>service,
                       "method"=>method}=params) do
-    # Based on theme/service/method we want the sql query,
-    # and the parameters to expect
-    v = Database.Lookups.find(:services, "#{theme}/#{service}/#{method}")
 
-    Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=> "Basic: #{service}/#{method}"}
+    manifest = Manifests.get_manifest(:lookup, theme, service)
+    [svc] = manifest.queries
+    |> Enum.filter(fn s-> s.name == method end)
 
-    case process_api_call(params, v) do
+    case process_api_call(params, svc) do
       {:error, error} ->
           conn
           |> json %{"success"=> false, "error"=> error}
@@ -300,14 +301,14 @@ defmodule ApiServer.ApiController do
   @doc false
   defp process_api_call(_, nil, _), do: nil
   defp process_api_call(%{"theme"=>theme}=params,
-                       %{"query"=>query, "fields"=>fields},
+                       %{:query=>query, :fields=>fields},
                        fmt \\ nil) do
 
     try do
       parameters = case fields do
         nil -> []
         _ -> Enum.map(fields, fn f ->
-               %{"name"=>name, "type"=>type} =  f
+               %{:name=>name, :type=>type} =  f
                Utils.convert( Map.get(params, name), type )
              end)
       end

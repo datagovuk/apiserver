@@ -1,9 +1,14 @@
 defmodule ApiServer.PageController do
   use ApiServer.Web, :controller
-  alias ApiServer.Manifest.Manifest
+  alias ApiServer.Manifest.Server, as: Manifests
 
   def index(conn, _params) do
-    render conn, "index.html"
+
+    themes = Manifests.list_themes(:lookup)
+
+    conn
+    |> assign(:themes, themes)
+    |> render "index.html"
   end
 
   def about(conn, _params) do
@@ -25,38 +30,31 @@ defmodule ApiServer.PageController do
   The theme homepage containing the API UI and information on usage
   """
   def theme(conn, %{"theme"=>theme}) do
-    manifest = Database.Lookups.find(:themes, theme)
-    case manifest do
-      nil ->
+    manifests = Manifests.list_manifests(:lookup, theme)
+
+    case manifests do
+      [] ->
         conn
         |> put_status(404)
         |> render "404.html"
       _ ->
-        theme_inner(conn, theme, manifest)
+        theme_inner(conn, theme, manifests)
     end
   end
 
-  defp theme_inner(conn, theme, manifest) do
+  defp theme_inner(conn, theme, manifests) do
 
-    schema_task = Task.async(fn ()->
-      svc_list = MapTraversal.find_value("services", manifest)
-      |> Enum.map(fn x -> Map.get(x, "name") end)
-      |> Enum.sort
-
-      Database.Schema.get_schemas(svc_list)
-    end)
+    schemas = manifests
+    |> Enum.map(fn x-> {x.id, x.fields} end)
+    |> Enum.into %{}
 
     distincts = Database.Lookups.find(:distincts, theme)
-    filters = Manifest.filter_fields(manifest, theme)
 
-    # TODO: Get distincts, filters and schema from the JSON endpoint
-    # as and when required.  Want to only really send theme and manifest
     conn
     |> assign(:theme, theme)
-    |> assign(:manifest, manifest)
+    |> assign(:manifests, manifests)
     |> assign(:distincts, distincts)
-    |> assign(:filters, filters)
-    |> assign(:schema, Task.await(schema_task))
+    |> assign(:schema, schemas)
     |> delete_resp_header("cache-control")
     |> render("theme.html")
   end

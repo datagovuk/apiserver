@@ -1,86 +1,85 @@
 
     <p>Please provide at least one criteria</p>
 
-    <%= for {name, service_description, documentation, dataset} <- services @manifest do %>
+    <%= for manifest <- @manifests do %>
         <div class="row">
                 <div class="col-lg-6">
-                    <div id="basic-<%=name%>-details" class="service" style="margin-right:10px;">
-                    <h3><%= service_description %></h3>
-                    <%= for [fname, description, fields] <- searchables_for_service(@manifest, name) do %>
-                        <form style="margin-top: 10px" id="form-<%= name %>-<%= fname %>" class="form " action="<%= get_host(@conn) %>/data/api/service/<%= @theme %>/<%= name %>/<%= fname %>">
-                                <%= if !fields do %>
-                                        <%= render "basic_no_fields.html", name: name, func_name: fname, description: description  %>
+                    <div id="basic-<%=manifest.id %>-details" class="service" style="margin-right:10px;">
+                    <h3><%= manifest.title %></h3>
+                    <%= for q <- manifest.queries do %>
+                        <form style="margin-top: 10px" id="form-<%= manifest.id %>-<%= q.name %>" class="form " action="<%= get_host(@conn) %>/data/api/service/<%= @theme %>/<%= manifest.id %>/<%= q.name %>">
+                                <%= if !Map.has_key?(q, :fields) || q.fields == nil do %>
+                                        <%= render "basic_no_fields.html", name: manifest.id, func_name: q.name, description: q.description  %>
                                 <% else %>
-                                    <%= if length(fields) == 1 do %>
-                                        <% field_name = Map.get(hd(fields), "name") %>
-                                        <%= render "basic_single_field.html", name: name, field_name: field_name, func_name: fname, description: description  %>
+                                    <%= if length(q.fields) == 1 do %>
+                                        <% single_field = List.first(q.fields)%>
+                                        <% field_name = single_field.name %>
+                                        <%= render "basic_single_field.html", name: manifest.id, field_name: field_name, func_name: q.name, description: q.description  %>
                                     <% else %>
-                                        <%= render "basic_multi_fields.html", fields: fields, name: name, func_name: fname, description: description  %>
+                                        <%= render "basic_multi_fields.html", fields: q.fields, name: manifest.id, func_name: q.name, description: q.description  %>
                                     <% end %>
                                 <% end %>
                         </form>
-                    <% end %> <!-- for searchable -->
+                    <% end %> <!-- for queries -->
 
                     <!-- Filters -->
-                    <%= if Dict.get(@filters, name) do %>
-                    <%= if @distincts do %>
-                        <% distincts = Map.get(@distincts, name) %>
+                    <%= if @distincts != nil do %>
+                    <% distincts = Map.get(@distincts, manifest.id) %>
+                    <%= if distincts != nil do %>
 
-                            <%= for fieldname<- Dict.get(@filters, name) do %>
-                            <div id="filters_<%= name %>">
-                                <form style="margin-top: 10px" id="form-<%= name %>-<%= fieldname %>" class="form " action="<%= get_host(@conn) %>/data/api/service/<%= @theme %>/<%= name %>" >
+                        <%= for {fieldname, values} <- distincts do %>
 
-                                    <% values = Map.get(distincts, fieldname) %>
+                        <div id="filters_<%= manifest.id %>">
+                            <form style="margin-top: 10px" id="form-<%= manifest.id %>-<%= fieldname %>" class="form " action="<%= get_host(@conn) %>/data/api/service/<%= @theme %>/<%= manifest.id %>" >
 
+                                        <h4>Find by <%= prettify(fieldname) %></h4>
 
-                                            <h4>Find by <%= prettify(fieldname) %></h4>
-
-                                            <div class="input-group">
-                                                <select class="form-control  selectpicker" name="filter-<%= name%>-<%= fieldname %>" data-live-search="true" id="filter-<%= name%>-<%= fieldname %>" data-size="10">
-                                                <option value=""></option>
-                                                <%= for value <- values do %>
-                                                    <%= if value != "" do %>
-                                                    <option value="<%= value %>"><%= value %></option>
-                                                    <% end %>
+                                        <div class="input-group">
+                                            <select class="form-control  selectpicker" name="filter-<%= manifest.id%>-<%= fieldname %>" data-live-search="true" id="filter-<%= manifest.id%>-<%= fieldname %>" data-size="10">
+                                            <option value=""></option>
+                                            <%= for value <- values do %>
+                                                <%= if value != "" do %>
+                                                <option value="<%= value %>"><%= value %></option>
                                                 <% end %>
-                                                </select>
+                                            <% end %>
+                                            </select>
 
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-success" type="button" onclick='submit_distinct("<%= name %>", "<%= fieldname %>", this); return false;' style='margin-left: -2px;'>OK</button>
-                                                </span>
-                                            </div>
-                                            <hr style="border: solid 1px #eee;">
-                                    </div>
-                                </form>
-                            <% end %>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-success" type="button" onclick='submit_distinct("<%= manifest.id %>", "<%= fieldname %>", this); return false;' style='margin-left: -2px;'>OK</button>
+                                            </span>
+                                        </div>
+                                        <hr style="border: solid 1px #eee;">
+                                </div>
+                            </form>
+                        <% end %>
+                    <% end %>
+                    <% end %> <!-- if distincts -->
 
-                    <% end %>
-                    <% end %>
                     <! -- end filters -->
 
                     <div style="margin-top: 10px; text-align: center;">
                         <div class="dropdown" style="display:inline;" >
-                            <button class="basic btn btn-default btn-lg dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  disabled id="basic-<%= name %>-link-downloads" >
+                            <button class="basic btn btn-default btn-lg dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  disabled id="basic-<%= manifest.id %>-link-downloads" >
                                 <i class="glyphicon glyphicon-download-alt"> </i> Download
                             </button>
 
                               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a id="basic-<%= name %>-link-csv" href="#">CSV</a></li>
-                                <li><a id="basic-<%= name %>-link-ttl" href="#">TTL</a></li>
+                                <li><a id="basic-<%= manifest.id %>-link-csv" href="#">CSV</a></li>
+                                <li><a id="basic-<%= manifest.id %>-link-ttl" href="#">TTL</a></li>
                               </ul>
                         </div>
-                        <button class="basic btn btn-default btn-lg" id="basic-<%= name %>-link"  disabled data-toggle="modal" data-target=".bs-example-modal-lg">
+                        <button class="basic btn btn-default btn-lg" id="basic-<%= manifest.id %>-link"  disabled data-toggle="modal" data-target=".bs-example-modal-lg">
                             <i class="glyphicon glyphicon-share"></i> Get Link
                         </button>
                     </div>
                 </div>
                 </div>
-                <div id="basic-<%= name %>-container" class="col-lg-6 service">
+                <div id="basic-<%= manifest.id %>-container" class="col-lg-6 service">
                     <script>
-                            var h = $('.basic-<%=name%>-details').css('height');
-                            $('#basic-<%= name %>-container').css('height', h);
+                            var h = $('.basic-<%=manifest.id%>-details').css('height');
+                            $('#basic-<%= manifest.id %>-container').css('height', h);
                     </script>
-                    <pre class="output" id="basic-<%= name %>-output" style="height: 100%; overflow: scroll">
+                    <pre class="output" id="basic-<%= manifest.id %>-output" style="height: 100%; overflow: scroll">
                     </pre>
                 </div>
         </div> <!-- row -->
@@ -92,10 +91,10 @@
 
     $(document).ready(function(){
         $('.selectpicker').selectpicker({dropupAuto:false});
-        <%= for {name, _, _, _} <- services @manifest do %>
-            var h = $('#basic-<%= name %>-details').first().css('height');
+        <%= for manifest <- @manifests do %>
+            var h = $('#basic-<%= manifest.id %>-details').first().css('height');
             if ( h != undefined ){
-                $('#basic-<%= name %>-container').css('height', h);
+                $('#basic-<%= manifest.id %>-container').css('height', h);
             }
         <% end %>
     })

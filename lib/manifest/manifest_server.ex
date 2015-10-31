@@ -4,7 +4,9 @@ defmodule ApiServer.Manifest.Server do
   alias ApiServer.Manifest.Manifest
 
   def start_link(options) do
-    GenServer.start_link(__MODULE__, options)
+    {:ok, pid} = GenServer.start_link(__MODULE__, options)
+    Process.register(pid, :lookup)
+    {:ok, pid}
   end
 
   def list_themes(pid) do
@@ -13,6 +15,7 @@ defmodule ApiServer.Manifest.Server do
 
   def list_manifests(pid, theme) do
     GenServer.call(pid, {:list_all, :manifest_objects})
+    |> Enum.filter(fn x-> x.theme == theme end)
   end
 
   def get_manifest(pid, theme, name) do
@@ -41,7 +44,9 @@ defmodule ApiServer.Manifest.Server do
   def handle_call({:list_all, key}, _from, state) do
     items = key
     |> :ets.tab2list
+    |> Enum.map( fn {n,v}-> v end)
     |> Enum.into []
+
     {:reply, items, state}
   end
 
@@ -62,7 +67,7 @@ defmodule ApiServer.Manifest.Server do
     Path.wildcard(path)
     |> Enum.map(fn file->
          theme = File.read!(file)
-          |> Poison.decode!( as: Theme)
+          |> Poison.decode!( as: Theme, keys: :atoms)
 
           :ets.insert(:theme_objects, {theme.id, theme})
     end)
@@ -71,9 +76,8 @@ defmodule ApiServer.Manifest.Server do
   defp load_manifests(path) do
     Path.wildcard(path)
     |> Enum.map(fn file->
-         IO.inspect file
          manifest = File.read!(file)
-          |> Poison.decode!( as: Manifest)
+          |> Poison.decode!( as: Manifest, keys: :atoms)
 
           key = theme_manifest_key(manifest.theme, manifest.id)
           :ets.insert(:manifest_objects, {key, manifest})

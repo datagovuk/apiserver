@@ -23,20 +23,15 @@
     <h2>Choose a theme below to explore the different APIs</h2>
 
     <div class="row" style="margin-top: 20px;">
-        <div class="col-md-3">
-            <a href='/data/api/health' style="text-decoration:none;">
-                <div class="dataset-theme theme-health">
-                    <div>Health</div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-3">
-            <a href="/data/api/transport" style="text-decoration:none;">
-                <div class="dataset-theme theme-transport">
-                    <div>Transport</div>
-                </div>
-            </a>
-        </div>
+        <%= for theme <- @themes do %>
+            <div class="col-md-3">
+                <a href='/data/api/<%= theme.id %>' style="text-decoration:none;">
+                    <div class="dataset-theme theme-<%= theme.id%>">
+                        <div><%= theme.title%></div>
+                    </div>
+                </a>
+            </div>
+        <% end %>
 
         <!--
         <div class="col-md-3">

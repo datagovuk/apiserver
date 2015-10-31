@@ -143,11 +143,11 @@ var init_map = function() {
     }
 
     var promises = [];
-<%= for {key, v}<- @schema do %>
-    <%= if has_geo_data(@manifest, key) do %>
-    promises.push(setup_layers('<%= key %>'));
+<%= for manifest <- @manifests do %>
+    <%= if manifest.geo do %>
+    promises.push(setup_layers('<%= manifest.id %>'));
     <%= else %>
-    setup_missing_layers('<%= key %>');
+    setup_missing_layers('<%= manifest.id %>');
     <% end %>
 <% end %>
 
@@ -171,9 +171,9 @@ var init_map = function() {
 
 <div class="map">
     <ul class="nav nav-pills nav-stacked col-md-3" id="maptabs">
-        <%= for {key, v}<- @schema do %>
-            <%= if has_geo_data(@manifest, key) do %>
-              <li><a href="" dataset_name="<%= key %>"><%= prettify(key) %></a></li>
+        <%= for manifest <- @manifests do %>
+            <%= if manifest.geo do %>
+              <li><a href="" dataset_name="<%= manifest.id %>"><%= prettify(manifest.id) %></a></li>
             <% end %>
         <% end %>
     </ul>

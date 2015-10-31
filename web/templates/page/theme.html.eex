@@ -36,17 +36,17 @@ host = '<%= get_host(@conn) %>';
 
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="_basic" style="margin-top: 20px;">
-        <%= render "basic.html", conn: @conn, manifest: @manifest, theme: @theme,
+        <%= render "basic.html", conn: @conn, manifests: @manifests, theme: @theme,
                                     schema: @schema, distincts: @distincts,
-                                    host: get_host(@conn), filters: @filters %>
+                                    host: get_host(@conn) %>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="_advanced"  style="margin-top: 20px;">
-        <%= render "advanced.html",  conn: @conn, manifest: @manifest, theme: @theme,
+        <%= render "advanced.html",  conn: @conn, manifests: @manifests, theme: @theme,
                                     schema: @schema, distincts: @distincts%>
     </div>
     <div role="tabpanel" class="tab-pane" id="_map"  style="margin-top: 20px;">
-        <%= render "map.html",  conn: @conn, manifest: @manifest, theme: @theme,
+        <%= render "map.html",  conn: @conn, manifests: @manifests, theme: @theme,
                                     schema: @schema, distincts: @distincts%>
     </div>
 </div>
@@ -77,10 +77,10 @@ host = '<%= get_host(@conn) %>';
         if (e.target.hash == "#_advanced" && !editor_loaded) { setup_editor(); }
         if (e.target.hash == "#_map" && !map_loaded) { setup_map(); }
         if (e.target.hash == "#_basic" ){
-            <%= for {name, _, _, _} <- services @manifest do %>
-                var h = $('#basic-<%= name %>-details').first().css('height');
+            <%= for manifest <- @manifests do %>
+                var h = $('#basic-<%= manifest.id %>-details').first().css('height');
                 if ( h != undefined ){
-                    $('#basic-<%= name %>-container').css('height', h);
+                    $('#basic-<%= manifest.id %>-container').css('height', h);
                 }
             <% end %>
         };
@@ -99,10 +99,10 @@ host = '<%= get_host(@conn) %>';
         window.location.hash = fragment;
 
         if ( t == 'basic_tab') {
-            <%= for {name, _, _, _} <- services @manifest do %>
-                var h = $('#basic-<%= name %>-details').first().css('height');
+            <%= for manifest <- @manifests do %>
+                var h = $('#basic-<%= manifest.id %>-details').first().css('height');
                 if ( h != undefined ){
-                    $('#basic-<%= name %>-container').css('height', h);
+                    $('#basic-<%= manifest.id %>-container').css('height', h);
                 }
             <% end %>
         }

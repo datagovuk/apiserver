@@ -15,6 +15,9 @@ defmodule Database.Supervisor do
 
     name = "apiserver"
 
+    # Load the distincts, for now...
+    Database.Lookups.load
+
     children =
       [:poolboy.child_spec(
         String.to_atom(name),

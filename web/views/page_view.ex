@@ -12,10 +12,11 @@ defmodule ApiServer.PageView do
     JSON.encode!(items)
   end
 
-
+def prettify(nil), do: ""
   def prettify("lat"), do: "Latitude"
   def prettify("lon"), do: "Longitude"
   def prettify(word) do
+
     word
     |> String.replace("_", " ")
     |> String.replace("-", " ")
@@ -50,18 +51,9 @@ defmodule ApiServer.PageView do
     end
   end
 
-  def has_geo_data(manifest, service) do
-    svc = manifest
-    |> Dict.get("services")
-    |> Enum.filter(fn f-> Dict.get(f, "name") == service end)
-
-    if length(svc) > 0 do
-      svc
-      |> hd
-      |> Dict.get("has_geo_data", false)
-    else
-      false
-    end
+  def has_geo_data(manifest) do
+    # FIXME
+    false
   end
 
   # Helpers for working with manifest ....

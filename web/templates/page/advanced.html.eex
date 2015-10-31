@@ -8,7 +8,7 @@
         </ul>
 
         <div class="tab-content" style="height: 260px; overflow: scroll;">
-            <%= for {key, v}<- @schema do %>
+            <%= for {key, values}<- @schema do %>
 
             <div role="tabpanel" class="tab-pane active" id="<%= key %>" style="margin-top: 20px;">
                 <div class="row" style="margin-top: 10px;">
@@ -16,13 +16,6 @@
                         <h4 style="margin-top: 0;"><%= prettify(key) %></h4>
                         <h5>Table Name: <%= key %></h5>
                     </div>
-
-                    <%= if is_dangerous(@manifest, key) do %>
-                    <div class="col-md-8">
-                        <div style="font-size: 1.1em" class="label label-danger">Large dataset</div>
-                        Queries to this dataset <strong>must</strong> use a LIMIT of at most 500 rows.
-                    </div>
-                    <% end %>
                 </div>
                     <div class="col-md-12 table-container">
                         <table class="table table-condensed">
@@ -32,10 +25,10 @@
                                 <th>Description</th>
                             </thead>
                             <tbody>
-                            <%= for [name, type] <- v do %>
+                            <%= for e <- values do %>
                                 <tr>
-                                    <td><%= name %></td>
-                                    <td><%= type %></td>
+                                    <td><%= e.name %></td>
+                                    <td><%= e.type %></td>
                                     <td></td>
                                 </tr>
                             <% end %>

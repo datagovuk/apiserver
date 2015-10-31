@@ -1,10 +1,9 @@
 <h4><%= @description %></h4>
 
 <%= for field <- @fields do %>
-    <% field_name = Map.get(field, "name") %>
     <div class='form-group'>
-        <input id='<%= @name %>_<%= @func_name %>_<%= field_name %>' name='<%= field_name %>'
-        class='form-control' type='text' placeholder='<%= prettify(field_name) %>'>
+        <input id='<%= @name %>_<%= @func_name %>_<%= field.name %>' name='<%= field.name %>'
+        class='form-control' type='text' placeholder='<%= prettify(field.name) %>'>
     </div>
 <% end %>
 
