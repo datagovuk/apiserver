@@ -3,7 +3,7 @@ defmodule ApiServer.Manifest.Manifest do
   @moduledoc """
   Models a manifest that is loaded from a manifest JSON file.
   """
-  defstruct id: "", theme: "", title: "", tablename: "", fields: [], choice_fields: [], searchables: []
+  defstruct id: "", theme: "", title: "", tablename: "", fields: [], choice_fields: [], queries: []
 
   def filter_fields(manifest, theme) do
     manifest

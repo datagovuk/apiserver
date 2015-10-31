@@ -34,7 +34,6 @@ defmodule Database.Worker do
                                                                  port: arguments.port,
                                                                  extensions: [{Postgrex.Extensions.JSON, library: Poison},
                                                                                      {Geo.PostGIS.Extension, library: Geo}])
-
     {:ok, pid}
   end
 

@@ -10,20 +10,12 @@ defmodule ApiServer do
     :ets.new(:manifest_objects, [:named_table, :public, read_concurrency: true])
 
 
-    ini_path = System.get_env("DGU_ETL_CONFIG")
-    if ini_path == nil do
-      IO.puts "DGU_ETL_CONFIG is not defined"
-      System.halt(1)
-    end
-    :ok = :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
-
-    # Load the manifests into ETS before the supervisors start ...
-    Database.Lookups.load
+    manifest_path = System.get_env("MANIFESTS")
 
     children = [
       supervisor(ApiServer.Endpoint, []),
       supervisor(Database.Supervisor, []),
-      worker(ApiServer.Manifest.Server, [[path: "/tmp"]])
+      worker(ApiServer.Manifest.Server, [[path: manifest_path]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

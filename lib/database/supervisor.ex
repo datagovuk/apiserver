@@ -9,8 +9,8 @@ defmodule Database.Supervisor do
   def init(%{}) do
     # For each theme (database) we need to create a new
     # pool named after the theme.....
-    dbuser = ETLConfig.get_config("database", "reader_username")
-    dbpass = ETLConfig.get_config("database", "reader_password")
+    dbuser = System.get_env("DBUSER")
+    dbpass = System.get_env("DBPASS")
     {port, _} = Integer.parse(System.get_env("PGPORT") || "5432")
 
     name = "apiserver"

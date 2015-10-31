@@ -1,4 +1,10 @@
 {
     "theme": "health",
-    "id": "dentists"
+    "id": "dentists",
+    "title": "Find dentists",
+    "tablename": "dentists",
+    "fields": [],
+    "choice_fields": [],
+    "queries": []
 }
+

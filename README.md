@@ -5,7 +5,7 @@
 To start the server
 
   1. Install dependencies with `mix deps.get`
-  2. export DGU_ETL_CONFIG="/path/to/apiserver/dgu-api-etl/config.ini"
+  2. export MANIFESTS="/path/to/manifests"
   3. For those themes that have them generate the distinct lookups with ```mix distinct.generate transport.anonymised_mot_tests```
   4. Start server with MIX_ENV=dev mix phoenix.server`
 

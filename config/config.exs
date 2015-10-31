@@ -15,6 +15,7 @@ config :api_server, ApiServer.Endpoint,
   pubsub: [name: ApiServer.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

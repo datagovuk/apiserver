@@ -20,6 +20,15 @@ defmodule ApiServer.ManifestTest do
   test "can load manifests for theme/by name", context do
     manifest = Server.get_manifest(context.server, "health", "clinics")
     refute manifest == nil
+    assert manifest.id == "clinics"
+    assert manifest.tablename == "clinics"
+    assert length(manifest.fields) > 0
+    assert length(manifest.queries) > 0
+  end
+
+  test "manifests do not need queries", context do
+    manifest = Server.get_manifest(context.server, "health", "dentists")
+    assert manifest.queries == []
   end
 
 end

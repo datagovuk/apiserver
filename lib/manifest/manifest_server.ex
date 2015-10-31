@@ -29,9 +29,12 @@ defmodule ApiServer.Manifest.Server do
 
   def init(state) do
       root = Keyword.get(state, :path)
-
-      load_themes(Path.join([root, "themes", "*.json"]))
-      load_manifests(Path.join([root, "manifests", "*.json"]))
+      case root do
+        nil -> nil
+        r ->
+          load_themes(Path.join([r, "themes", "*.json"]))
+          load_manifests(Path.join([r, "manifests", "*.json"]))
+      end
       {:ok, state}
   end
 
@@ -64,6 +67,7 @@ defmodule ApiServer.Manifest.Server do
   defp load_manifests(path) do
     Path.wildcard(path)
     |> Enum.map(fn file->
+         IO.inspect file
          manifest = File.read!(file)
           |> Poison.decode!( as: Manifest)
 
