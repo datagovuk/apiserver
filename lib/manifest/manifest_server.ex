@@ -54,6 +54,10 @@ defmodule ApiServer.Manifest.Server do
   end
 
 
+  ######################################################################
+  # Helpers
+  ######################################################################
+
   defp load_themes(path) do
     Path.wildcard(path)
     |> Enum.map(fn file->
