@@ -14,7 +14,7 @@ To start the server
 To run tests, you need to make sure your manifests are not picked up by running
 
 ```
-    MANIFEST=/tmp mix test 
+    MANIFESTS=/tmp mix test 
 ```
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
