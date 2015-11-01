@@ -5,7 +5,11 @@ defmodule ApiServer.Manifest.Server do
 
   def start_link(options) do
     {:ok, pid} = GenServer.start_link(__MODULE__, options)
-    Process.register(pid, :lookup)
+    try do
+      Process.register(pid, :lookup)
+    rescue
+      _ -> nil
+    end
     {:ok, pid}
   end
 
