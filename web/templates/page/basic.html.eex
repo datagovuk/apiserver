@@ -5,7 +5,23 @@
         <div class="row">
                 <div class="col-lg-6">
                     <div id="basic-<%=manifest.id %>-details" class="service" style="margin-right:10px;">
-                    <h3><%= manifest.title %></h3>
+                    <h3><%= manifest.title %>
+
+                        <span class="pull-right">
+                            <a tabindex="0" role="button"
+                                 style="font-size: 1.0em; color:#777; background-color: transparent;"
+                                 data-trigger="focus"
+                                 data-container="body"
+                                 data-toggle="popover"
+                                 data-placement="bottom"
+                                 data-html="true"
+                                 data-viewport="body"
+                                 data-content='
+                                    Source dataset:<br/><a href="<%= manifest.dataset %>" target="_blank"><%= manifest.title %></a>
+                                 '
+                                 data-title="<strong>Metadata Information</strong>"><i class="glyphicon glyphicon-info-sign"></i></a>
+                        </span>
+                    </h3>
                     <%= for q <- manifest.queries do %>
                         <form style="margin-top: 10px" id="form-<%= manifest.id %>-<%= q.name %>" class="form " action="<%= get_host(@conn) %>/data/api/service/<%= @theme %>/<%= manifest.id %>/<%= q.name %>">
                                 <%= if !Map.has_key?(q, :fields) || q.fields == nil do %>
@@ -97,6 +113,12 @@
                 $('#basic-<%= manifest.id %>-container').css('height', h);
             }
         <% end %>
+
+
+        $('[data-toggle="popover"]').popover();
+        function embolden(s) {
+            $(this).html( "<strong>" + s + "</strong>");
+        }
     })
 
 </script>
