@@ -299,7 +299,6 @@ defmodule ApiServer.ApiController do
 
 
   @doc false
-  defp process_api_call(_, nil, _), do: nil
   defp process_api_call(%{"theme"=>theme}=params,
                        %{:query=>query, :fields=>fields},
                        fmt \\ nil) do
@@ -323,7 +322,13 @@ defmodule ApiServer.ApiController do
           {:error, msg}
     end
   end
-
+  @doc false
+  defp process_api_call(%{"theme"=>theme}=params,
+                       %{:query=>query},
+                       fmt) do
+    Database.Schema.call_api(query, [], format: fmt)
+  end
+  defp process_api_call(_, nil, _), do: nil
 
   defp url_for_ttl_base(conn, theme, service) do
       "#{get_host(conn)}/#{theme}/#{service}"
