@@ -30,7 +30,7 @@
                                     <%= if length(q.fields) == 1 do %>
                                         <% single_field = List.first(q.fields)%>
                                         <% field_name = single_field.name %>
-                                        <%= render "basic_single_field.html", name: manifest.id, field_name: field_name, func_name: q.name, description: q.description  %>
+                                        <%= render "basic_single_field.html", name: manifest.id, field_name: field_name, func_name: q.name, description: q.description,  value: default_value(single_field) %>
                                     <% else %>
                                         <%= render "basic_multi_fields.html", fields: q.fields, name: manifest.id, func_name: q.name, description: q.description  %>
                                     <% end %>

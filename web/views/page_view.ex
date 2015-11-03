@@ -2,6 +2,11 @@ defmodule ApiServer.PageView do
   use ApiServer.Web, :view
   alias Poison, as: JSON
 
+  def default_value(field) do
+    field |> Map.get("default", "")
+  end
+
+
   def get_host(conn) do
     host_url(conn.host, conn.port)
   end

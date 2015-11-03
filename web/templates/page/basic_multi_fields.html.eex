@@ -2,8 +2,9 @@
 
 <%= for field <- @fields do %>
     <div class='form-group'>
+        <label for="<%= field.name %>"><%= prettify(field.name) %></label>
         <input id='<%= @name %>_<%= @func_name %>_<%= field.name %>' name='<%= field.name %>'
-        class='form-control' type='text' placeholder='<%= prettify(field.name) %>'>
+        class='form-control' type='text' placeholder='<%= prettify(field.name) %>'  value="<%= default_value(field) %>">
     </div>
 <% end %>
 
