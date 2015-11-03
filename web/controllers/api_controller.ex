@@ -188,7 +188,7 @@ defmodule ApiServer.ApiController do
     [svc] = manifest.queries
     |> Enum.filter(fn s-> s.name == method end)
 
-    case process_api_call(params, svc) do
+    case process_api_call(params, svc, nil) do
       {:error, error} ->
           conn
           |> json %{"success"=> false, "error"=> error}
@@ -301,7 +301,7 @@ defmodule ApiServer.ApiController do
   @doc false
   defp process_api_call(%{"theme"=>theme}=params,
                        %{:query=>query, :fields=>fields},
-                       fmt \\ nil) do
+                       fmt) do
 
     try do
       parameters = case fields do
