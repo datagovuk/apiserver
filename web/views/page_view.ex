@@ -3,7 +3,7 @@ defmodule ApiServer.PageView do
   alias Poison, as: JSON
 
   def default_value(field) do
-    field |> Map.get("default", "")
+    field |> Map.get(:default, "")
   end
 
 
