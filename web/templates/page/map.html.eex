@@ -182,6 +182,7 @@ var init_map = function() {
     $('#to_clusters').click(to_clusters);
 
     var update_map = function() {
+        overlay.setPosition(undefined);
         if(current_point_style == 'points') {
             to_points();
         } else {
