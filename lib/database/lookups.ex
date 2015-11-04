@@ -13,10 +13,16 @@ defmodule Database.Lookups do
   def load_distincts() do
      :ets.new(:distincts, [:named_table, read_concurrency: true])
 
+     path = Path.join( [System.get_env("MANIFESTS"), "distincts/*.json"])
 
-     Path.join( [System.get_env("MANIFESTS"), "distincts/*.json"])
-     |>  Path.wildcard
-     |> Enum.each(&load_distinct/1)
+     case File.exists?(path) do
+        true ->
+          path
+           |>  Path.wildcard
+           |> Enum.each(&load_distinct/1)
+        _ ->
+            nil
+      end
   end
 
   defp load_distinct(distincts_file) do
