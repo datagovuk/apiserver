@@ -16,7 +16,7 @@ var init_map = function() {
                         color: '#fff'
                     }),
                     fill: new ol.style.Fill({
-                        color: '#3399CC'
+                        color: '#8dc55e'
                     })
                 }),
                 text: new ol.style.Text({
@@ -49,6 +49,7 @@ var init_map = function() {
     var popup_content = $('#popup-content');
     $('#popup-closer').click(function () {
       overlay.setPosition(undefined);
+      return false;
     });
 
     var overlay = new ol.Overlay({
@@ -76,7 +77,18 @@ var init_map = function() {
         });
 
       if(feature) {
-        popup_content.html('<p>' + feature.get('content') + '</p>');
+        var cluster_features = feature.get('features');
+        if(cluster_features) {
+            if(cluster_features.length == 1){
+                content = cluster_features[0].get('content');
+            } else {
+                return; // Cluster of multiple points
+            }
+        } else {
+            content = feature.get('content');
+        }
+
+        popup_content.html('<p>' + content + '</p>');
 
         var coordinate = feature.getGeometry().getCoordinates();
         overlay.setPosition(coordinate);
