@@ -1,5 +1,3 @@
-
-
 <script type="text/javascript">
 var datasets = {};
 var current_dataset = null;
@@ -18,7 +16,7 @@ var init_map = function() {
                         color: '#fff'
                     }),
                     fill: new ol.style.Fill({
-                        color: '#3399CC'
+                        color: '#8dc55e'
                     })
                 }),
                 text: new ol.style.Text({
@@ -35,7 +33,7 @@ var init_map = function() {
 
     var iconStyle = new ol.style.Style({
         image: new ol.style.Icon({
-            anchor: [0.5, 0.5],
+            anchor: [0.5, 1.0],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
             opacity: 0.75,
@@ -47,13 +45,54 @@ var init_map = function() {
         'source': new ol.source.OSM()
     });
 
+    var popup = $('#popup')[0];
+    var popup_content = $('#popup-content');
+    $('#popup-closer').click(function () {
+      overlay.setPosition(undefined);
+      return false;
+    });
+
+    var overlay = new ol.Overlay({
+      element: popup,
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250
+      }
+    });
+
     var map = new ol.Map({
         target: 'mapbox',
         layers: [tileLayer],
+        overlays: [overlay],
         view: new ol.View({
             center: ol.proj.fromLonLat([-4.5, 55.0]),
             zoom: 5
         })
+    });
+
+    map.on('singleclick', function(evt) {
+      var feature = map.forEachFeatureAtPixel(evt.pixel,
+        function(feature, layer) {
+          return feature;
+        });
+
+      if(feature) {
+        var cluster_features = feature.get('features');
+        if(cluster_features) {
+            if(cluster_features.length == 1){
+                content = cluster_features[0].get('content');
+            } else {
+                return; // Cluster of multiple points
+            }
+        } else {
+            content = feature.get('content');
+        }
+
+        popup_content.html('<p>' + content + '</p>');
+
+        var coordinate = feature.getGeometry().getCoordinates();
+        overlay.setPosition(coordinate);
+      }
     });
 
     var setup_layers = function(dataset_name) {
@@ -64,7 +103,15 @@ var init_map = function() {
               features = _.map(data['result'], function(ob, index) {
                   options = {featureProjection: 'EPSG:3857',
                              dataProjection: 'EPSG:4326'};
+                  content_table = ['<table>']
+                  _.each(ob, function(val, key) {
+                      if(typeof val != 'object'){
+                          content_table.push('<tr><th>' + key + '</th><td>' + val + '</td></tr>');
+                      }
+                  });
+                  content_table.push('</table>')
                   var iconFeature = new ol.Feature({
+                      content: content_table.join(''),
                       geometry: (new ol.format.GeoJSON()).readGeometryFromObject(ob['latlong'], options),
 		  });
                   iconFeature.setStyle(iconStyle);
@@ -181,6 +228,10 @@ var init_map = function() {
 
     <div id="mapcontainer" class="col-md-9">
         <div id="mapbox" style="width: 600px; height: 600px">
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+            </div>
         </div>
         <a href="" id="to_clusters">Clusters</a> <a href="" id="to_points">Points</a>
     </div>
