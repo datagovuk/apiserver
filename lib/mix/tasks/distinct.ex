@@ -3,6 +3,7 @@ defmodule Mix.Tasks.Distinct do
   defmodule Generate do
     use Mix.Task
     alias Poison, as: JSON
+    alias ApiServer.Manifest.Manifest
 
     @shortdoc "Generate distinct fields for a table"
 
@@ -15,81 +16,74 @@ defmodule Mix.Tasks.Distinct do
     Runs the task, and require the theme name for the manifest to
     be loaded and processed.
     """
-    def run([]), do: IO.puts "ERROR: The name of the manifest is required!"
+    def run([]), do: IO.puts "ERROR: The name of the theme is required!"
     def run([theme]) do
-      :application.start(:gproc)
-      :application.start(:econfig)
-      :application.start(:yaml_elixir)
-      :application.start(:yamerl)
+      :application.start(:postgrex)
+      manifest_path = System.get_env("MANIFESTS")
 
-      ini_path = System.get_env("DGU_ETL_CONFIG")
-      :econfig.register_config(:inifile, [to_char_list(ini_path)], [])
+      manifests = Path.wildcard(Path.join([manifest_path, "manifests/*.json"]))
+      |> Enum.map(fn file->
+         File.read!(file)
+          |> Poison.decode!( as: Manifest, keys: :atoms)
+      end)
+      |> Enum.filter( fn m->
+          m.theme == theme
+      end)
 
-      ymlfile = "manifest"
-      |> ETLConfig.get_config("location")
-      |> Path.join("#{theme}.yml")
+      res = process_services(manifests, theme, %{})
 
-      IO.puts "Attempting to load #{ymlfile}"
-      data = YamlElixir.read_from_file(ymlfile)
+      IO.inspect res
 
-      res = process_services(data["services"],
-                             String.downcase(data["title"]),
-                             %{})
-
-      path = "#{Mix.Project.app_path}/priv/static/distincts/#{theme}.json"
-
+      path = Path.join([manifest_path, "distincts/#{theme}.json" ])
       :ok = File.write!(path, JSON.encode!(res))
       IO.puts "Wrote distincts file to #{path}"
 
-      :application.stop(:econfig)
-      :application.stop(:gproc)
-      :application.stop(:yamerl)
-      :application.stop(:yaml_elixir)
+      :application.stop(:postgrex)
     end
 
 
     defp process_services([h|t], theme, acc) do
       results = process_service(h, theme)
-      acc = Dict.put(acc, h["name"], results)
+      acc = Dict.put(acc, h.id, results)
       process_services(t, theme, acc)
     end
     defp process_services([], _, acc), do: acc
 
 
-    defp process_service(service_dict, theme_name) do
-      service_dict["table_settings"]
-      |> process_table_settings(theme_name, service_dict["name"])
+    defp process_service(manifest, theme_name) do
+      manifest
+      |> process_table_settings(theme_name, manifest.id)
     end
 
 
-    defp process_table_settings(table_settings, theme_name, name) do
-      table_settings
-      |> Dict.get("choice_fields", [])
+    defp process_table_settings(manifest, theme_name, name) do
+      manifest.choice_fields
       |> process_choice_field(theme_name, name, %{})
     end
 
 
     defp process_choice_field([h|t], theme_name, name, acc) do
-      dbuser = ETLConfig.get_config("database", "owner")
-      dbpass = ETLConfig.get_config("database", "owner")
+      dbuser = System.get_env("DBUSER")
+      dbpass = System.get_env("DBPASS")
 
       {port, _} = Integer.parse(System.get_env("PGPORT") || "5432")
 
-      {:ok, connection} = :epgsql.connect('localhost',
-                                          to_char_list(dbuser),
-                                          to_char_list(dbpass),
-        [{:database, to_char_list(theme_name)}, {:port, port}])
 
-      {:ok, _, results} = connection
-      |> :epgsql.squery(to_char_list("select distinct(#{h}) from #{name} order by #{h};"))
+     {:ok, connection} = Postgrex.Connection.start_link(hostname: "localhost",
+                                                                 username: dbuser,
+                                                                 password: dbpass,
+                                                                 database: "apiserver",
+                                                                 port: port)
 
-      sorted = results
-      |> Enum.map(&extract_val/1)
-      |> Enum.sort
 
-      :epgsql.close(connection)
+     {:ok, results} = Postgrex.Connection.query(connection, "select distinct(#{h}) from #{name} order by #{h};", [])
+      Postgrex.Connection.stop(connection)
 
-      process_choice_field(t, theme_name, name, Dict.put(acc, h, sorted))
+      res = results.rows
+      |> List.flatten
+      |> Enum.map(fn x-> String.strip(x) end)
+
+      process_choice_field(t, theme_name, name, Dict.put(acc, h, res))
     end
 
     defp process_choice_field([], _, _, acc), do: acc

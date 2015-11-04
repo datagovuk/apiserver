@@ -13,7 +13,8 @@ defmodule Database.Lookups do
   def load_distincts() do
      :ets.new(:distincts, [:named_table, read_concurrency: true])
 
-     "#{Mix.Project.app_path}/priv/static/distincts/*.json"
+
+     Path.join( [System.get_env("MANIFESTS"), "distincts/*.json"])
      |>  Path.wildcard
      |> Enum.each(&load_distinct/1)
   end
