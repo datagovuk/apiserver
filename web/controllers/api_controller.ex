@@ -1,7 +1,5 @@
 defmodule ApiServer.ApiController do
   use ApiServer.Web, :controller
-  alias ApiServer.TTL
-  alias ApiServer.Endpoint, as: Endpoint
   alias ApiServer.Format.Utils
   alias ApiServer.Manifest.Server, as: Manifests
 
@@ -105,13 +103,10 @@ defmodule ApiServer.ApiController do
     end
   end
 
-  def theme_sql(conn, %{"theme"=>theme}=params) do
-    # How do we get the service? Check table name and then presence of LIMIT <500
-
-      #Endpoint.broadcast! "info:api", "new:message", %{"theme"=>theme, "query"=>params["query"]}
-
+  def theme_sql(conn, %{"query"=>query}) do
+    # TODO: Still need to limit these properly ...
       conn
-      |> json Database.Schema.call_sql_api(params["query"])
+      |> json Database.Schema.call_sql_api(query)
   end
 
   defp validate_query(theme, service, query) do
@@ -250,11 +245,11 @@ defmodule ApiServer.ApiController do
     service_direct_process(conn, theme, parameters, service)
   end
 
-  defp service_direct_process(conn, theme, m, service) when map_size(m) == 0 do
+  defp service_direct_process(conn, _theme, m, _service) when map_size(m) == 0 do
     conn
     |> json %{"success"=> false, "error"=> "No filters were supplied"}
   end
-  defp service_direct_process(conn, theme, parameters, service) do
+  defp service_direct_process(conn, _theme, parameters, service) do
 
     {query, arguments} = service_direct_query(parameters, service)
 
@@ -299,7 +294,7 @@ defmodule ApiServer.ApiController do
 
 
   @doc false
-  defp process_api_call(%{"theme"=>theme}=params,
+  defp process_api_call(params,
                        %{:query=>query, :fields=>fields},
                        fmt) do
 
@@ -323,9 +318,7 @@ defmodule ApiServer.ApiController do
     end
   end
   @doc false
-  defp process_api_call(%{"theme"=>theme}=params,
-                       %{:query=>query},
-                       fmt) do
+  defp process_api_call(_params, %{:query=>query}, fmt) do
     Database.Schema.call_api(query, [], format: fmt)
   end
   defp process_api_call(_, nil, _), do: nil

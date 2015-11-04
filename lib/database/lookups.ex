@@ -13,7 +13,7 @@ defmodule Database.Lookups do
   def load_distincts() do
      :ets.new(:distincts, [:named_table, read_concurrency: true])
 
-     path = Path.join( [System.get_env("MANIFESTS"), "distincts/*.json"])
+     path = Path.join( [System.get_env("MANIFESTS") || "/tmp/__/", "distincts/*.json"])
 
      case File.exists?(path) do
         true ->

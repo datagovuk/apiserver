@@ -2,7 +2,7 @@ defmodule ApiServer.ManifestTest do
   use ExUnit.Case
   alias ApiServer.Manifest.Server
 
-  setup_all context do
+  setup_all _context do
     {:ok, pid} = Server.start_link(path: "./test/data/")
     {:ok, %{:server => pid}}
   end

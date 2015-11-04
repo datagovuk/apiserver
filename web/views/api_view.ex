@@ -15,11 +15,11 @@ defmodule ApiServer.ApiView do
     |> Base.encode16(case: :lower)
   end
 
-  def ttl_terminator({k, v}, object) do
+  def ttl_terminator({k, _}, object) do
     vals = object |> Enum.into([])
     pos = length(Dict.keys(object)) - 1
 
-    if pos == Enum.find_index(vals, fn({x,y}) -> x == k end) do
+    if pos == Enum.find_index(vals, fn({x, _}) -> x == k end) do
       "."
     else
       ";"
