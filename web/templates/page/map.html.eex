@@ -60,6 +60,50 @@ var init_map = function() {
       }
     });
 
+    var ToPointsControl = function(opt_options) {
+      var options = opt_options || {};
+
+      var button = document.createElement('button');
+      button.innerHTML = 'P';
+      button.title = 'Points';
+
+      button.addEventListener('click', function(){
+          to_points();
+      }, false);
+
+      var element = document.createElement('div');
+      element.className = 'to-points ol-unselectable ol-control';
+      element.appendChild(button);
+
+      ol.control.Control.call(this, {
+        element: element,
+        target: options.target
+      });
+    };
+    ol.inherits(ToPointsControl, ol.control.Control);
+
+    var ToClustersControl = function(opt_options) {
+      var options = opt_options || {};
+
+      var button = document.createElement('button');
+      button.innerHTML = 'C';
+      button.title = 'Clusters';
+
+      button.addEventListener('click', function(){
+          to_clusters();
+      }, false);
+
+      var element = document.createElement('div');
+      element.className = 'to-clusters ol-unselectable ol-control';
+      element.appendChild(button);
+
+      ol.control.Control.call(this, {
+        element: element,
+        target: options.target
+      });
+    };
+    ol.inherits(ToClustersControl, ol.control.Control);
+
     var map = new ol.Map({
         target: 'mapbox',
         layers: [tileLayer],
@@ -67,7 +111,15 @@ var init_map = function() {
         view: new ol.View({
             center: ol.proj.fromLonLat([-4.5, 55.0]),
             zoom: 5
-        })
+        }),
+        controls: ol.control.defaults({
+          attributionOptions: {
+            collapsible: false
+          }
+        }).extend([
+          new ToClustersControl(),
+          new ToPointsControl()
+        ])
     });
 
     map.on('singleclick', function(evt) {
@@ -172,14 +224,12 @@ var init_map = function() {
         datasets[current_dataset].setToPoints();
         return false;
     };
-    $('#to_points').click(to_points);
 
     var to_clusters = function() {
         current_point_style = 'clusters';
         datasets[current_dataset].setToClusters();
         return false;
     };
-    $('#to_clusters').click(to_clusters);
 
     var update_map = function() {
         overlay.setPosition(undefined);
@@ -234,7 +284,6 @@ var init_map = function() {
                 <div id="popup-content"></div>
             </div>
         </div>
-        <a href="" id="to_clusters">Clusters</a> <a href="" id="to_points">Points</a>
     </div>
 </div>
 

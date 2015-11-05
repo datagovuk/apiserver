@@ -316,3 +316,11 @@ a.basic:hover {
 #popup-content td {
   padding: 2px;
 }
+.to-clusters {
+  top: 65px;
+  left: .5em;
+}
+.to-points {
+  top: 95px;
+  left: .5em;
+}
