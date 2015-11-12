@@ -3,6 +3,11 @@ html, body,div[class^="container"] ,.column {
 }
 
 
+.breadcrumb li a {
+    text-decoration: none;
+    color: #777;
+}
+
 body {
   background-color: #EFEFEF;
   font-family: 'Roboto', Helvetica, Arial, sans-serif !important;

@@ -2,6 +2,33 @@
 
 <div class="container about">
 
-    <h1>About this site</h1>
+    <h1>About the API Server</h1>
 
+    <p>
+        This section of data.gov.uk provides API endpoints for datasets within the
+        <a href="https://data.gov.uk/data/search?core_dataset=true">National Information Infrastructure</a>.
+        It has been developed as a proof-of-concept to show how the data within the NII might be made more
+        widely available, other than via bulk-downloads. As a proof of concept it
+        is not yet ready for production usage, as it is subject to change.
+    </p>
+
+    <p>
+        Planned new features are listed in the
+        <a href="https://github.com/datagovuk/apiserver/labels/roadmap" target="_blank">roadmap</a>.
+    </p>
+
+    <h2>Feedback</h2>
+    <p>
+        Your <a href="mailto:team@data.gov.uk?Subject=API">feedback</a> will help us to improve this service, and allow us to prioritise
+        features and datasets to be imported.
+    </p>
+    <p>
+        Issues can also be <a href="https://github.com/datagovuk/apiserver/issues" target="_blank">reported within the github repository</a>
+    </p>
+
+    <h2>Source code</h2>
+    <p>
+        The source code for this service is <a href="https://github.com/datagovuk/apiserver" target="_blank">available on github</a>,
+        along with the <a href="https://github.com/datagovuk/api_etl" target="_blank">ETL scripts</a> which extract and transform the data.
+    </p>
 </div>

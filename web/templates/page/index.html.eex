@@ -1,5 +1,5 @@
 
-<%= render "banner.html", breadcrumb: false %>
+<%= render "banner.html", breadcrumb: true, themes: @themes %>
 
 <div class="container" style="margin-top: 10px">
 <div class="col-md-9">
