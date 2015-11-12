@@ -1,5 +1,6 @@
 
-<%= render "banner.html" %>
+<%= render "banner.html", breadcrumb: false %>
+
 <div class="container" style="margin-top: 10px">
 <div class="col-md-9">
     <h1>Data APIs project</h1>
@@ -13,9 +14,9 @@
         This site is a proof-of-concept providing APIs for datasets curated from the <a href="https://data.gov.uk/data/search?core_dataset=true">National Information Infrastructure</a>
     </p>
 
-    <h2>Brief introduction for the uninitiated</h2>
+    <h2>A brief introduction to APIs</h2>
     <p class="fancy">
-            APIs are ways in which you can ‘converse’ with a data service to obtain the data you want based on a criteria selected by you. Instead of downloading a file with location of hospitals, for example, you can tell the data service to give you only those hospitals in a specific postcode and you can either download just that data or get the data as you need it from the service to power your application.
+        APIs are ways in which you can ‘converse’ with a data service to obtain the data you want based on a criteria selected by you. Instead of downloading a file with location of hospitals, for example, you can tell the data service to give you only those hospitals in a specific postcode and you can either download just that data or get the data as you need it from the service to power your application.
     </p>
 
     <hr/>

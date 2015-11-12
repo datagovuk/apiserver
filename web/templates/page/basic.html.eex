@@ -1,6 +1,4 @@
 
-    <p>Please provide at least one criteria</p>
-
     <%= for manifest <- @manifests do %>
         <div class="row">
                 <div class="col-lg-6">

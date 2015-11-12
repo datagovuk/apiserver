@@ -1,4 +1,4 @@
-<%= render "banner.html" %>
+<%= render "banner.html", breadcrumb: "Documentation", themes: false %>
 
 <div class="container about">
 

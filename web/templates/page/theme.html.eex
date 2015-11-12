@@ -1,4 +1,4 @@
-<%= render "banner.html" %>
+<%= render "banner.html", breadcrumb: @theme, themes: @themes %>
 
 <script>
 theme = '<%= @theme %>';
@@ -108,5 +108,3 @@ host = '<%= get_host(@conn) %>';
         }
     })
 </script>
-
-

@@ -43,6 +43,7 @@ defmodule ApiServer.PageController do
   end
 
   defp theme_inner(conn, theme, manifests) do
+    themes = Manifests.list_themes(:lookup)
 
     schemas = manifests
     |> Enum.map(fn x-> {x.id, x.fields} end)
@@ -55,6 +56,7 @@ defmodule ApiServer.PageController do
     |> assign(:manifests, manifests)
     |> assign(:distincts, distincts)
     |> assign(:schema, schemas)
+    |> assign(:themes, themes)    
     |> delete_resp_header("cache-control")
     |> render("theme.html")
   end

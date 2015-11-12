@@ -1,1 +1,20 @@
-<div class="row header_section" style="line-height: 10px; height: 10px;"></div>
+<div class="row header_section" style="line-height: 10px; height: 10px;">
+</div>
+
+<%= if @breadcrumb do %>
+    <ul class="container breadcrumb" style="background-color: transparent; margin-bottom: 0; padding-left: 36px; font-weight:bold;">
+    <li><a style="color:#8EC464; font-weight: normal;" tabindex="-1" href="/"><i class="glyphicon glyphicon-home"></i></a></li>    
+    <li><a style="color:#8EC464;" tabindex="-1" href="/data/api">API Home</a></li>
+    <%= if @themes do %>
+    <li class="dropdown" >
+        <a class="dropdown-toggle" id="branches" role="button" data-toggle="dropdown" href="#" style="color:#8EC464;">Themes <b class="caret"></b></a>
+        <ul id="branches-dropdown" class="dropdown-menu">
+            <%= for theme <- @themes do %>
+            <li><a tabindex="-1" href="/data/api/<%= theme.id %>"><%= theme.title %></code></a></li>
+            <% end %>
+        </ul>
+      </li>
+     <% end %>
+        <li class="active"><%= prettify(@breadcrumb) %></li>
+    </ul>
+<% end %>
