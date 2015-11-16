@@ -6,16 +6,20 @@
     <h1>Data APIs project</h1>
 
     <p>
-        Your <a style="text-decoration: underline;" href="mailto:team@data.gov.uk?Subject=API Feedback">feedback</a> will help us improve. Any issues can be reported <a style="text-decoration: underline;" href="https://github.com/datagovuk/apiserver/issues">on Github</a>
+        Your <a style="text-decoration: underline;" href="mailto:team@data.gov.uk?Subject=API Feedback">feedback</a> will help us improve. Issues can also be reported <a style="text-decoration: underline;" href="https://github.com/datagovuk/apiserver/issues">on Github</a>
     </p>
 
 
     <p class="fancy">
-        This site is a proof-of-concept providing APIs for datasets curated from the <a href="https://data.gov.uk/data/search?core_dataset=true">National Information Infrastructure</a>
+    This is an early trial of APIs for data.gov.uk datasets that will grow to
+    include those in the
+    <a href="https://data.gov.uk/data/search?core_dataset=true">National Information Infrastructure</a>.
+    Read more about these APIs in this blog post: [link]
     </p>
 
-    <h2>A brief introduction to APIs</h2>
-    <p class="fancy">
+
+    <p>
+        <strong style='font-size: 1.1em;'>A brief introduction to APIs</strong><br/>
         APIs are ways in which you can ‘converse’ with a data service to obtain the data you want based on a criteria selected by you. Instead of downloading a file with location of hospitals, for example, you can tell the data service to give you only those hospitals in a specific postcode and you can either download just that data or get the data as you need it from the service to power your application.
     </p>
 

@@ -3,8 +3,8 @@
 
 <%= if @breadcrumb do %>
     <ul class="container breadcrumb" style="background-color: transparent; margin-bottom: 0; padding-left: 36px; font-weight:bold;">
-    <li><a style="font-weight: normal;" tabindex="-1" href="/"><i class="glyphicon glyphicon-home"></i></a></li>
-    <li><a tabindex="-1" href="/data/api">API Home</a></li>
+    <li><a style="font-weight: normal;" tabindex="-1" href="https://data.gov.uk"><i class="glyphicon glyphicon-home"></i></a></li>
+    <li><a tabindex="-1" href="/data/api">Data APIs</a></li>
     <%= if @themes do %>
     <li class="dropdown" >
         <a class="dropdown-toggle" id="branches" role="button" data-toggle="dropdown" href="#">Themes <b class="caret"></b></a>

@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>Data.gov.uk - API Server</title>
-    
+
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
 
@@ -55,8 +55,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse pull-right">
           <ul class="nav navbar-nav">
-            <li><a style='font-size: 13px;' href="http://data.gov.uk">Back to data.gov.uk</a></li>
-            <li><a href="/data/api">API Home</a></li>
+            <li><a style='font-size: 13px;' href="https://data.gov.uk">Back to data.gov.uk</a></li>
+            <li><a href="/data/api">Data APIs</a></li>
             <li><a href="/data/api/documentation">Documentation</a></li>
             <li><a href="/data/api/about">About</a></li>
           </ul>

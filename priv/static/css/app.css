@@ -28,7 +28,8 @@ p { font-size: 1.1em;}
 p.fancy {
     background-color: #fff;
     border: solid 2px #D9D9D9;
-    padding: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
 }
 
 
