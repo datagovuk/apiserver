@@ -56,7 +56,7 @@ defmodule ApiServer.PageController do
     |> assign(:manifests, manifests)
     |> assign(:distincts, distincts)
     |> assign(:schema, schemas)
-    |> assign(:themes, themes)    
+    |> assign(:themes, themes)
     |> delete_resp_header("cache-control")
     |> render("theme.html")
   end

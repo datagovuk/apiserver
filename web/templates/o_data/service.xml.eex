@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service xmlns="http://www.w3.org/2007/app" xml:base="http:<%= get_host(@conn) %>/odata/service/">
+	<workspace>
+		<title xmlns="http://www.w3.org/2005/Atom" type="text">Data.gov.uk OData Service</title>
+        <%= for collection <- @themes do %>
+		<collection href="http:<%= get_host(@conn) %>/odata/service/<%= collection.id %>">
+			<title xmlns="http://www.w3.org/2005/Atom" type="text"><%= prettify(collection.id) %></title>
+		</collection>
+        <%= end %>
+	</workspace>
+</service>

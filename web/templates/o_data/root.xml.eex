@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<feed xml:base="http:<%= get_host(@conn) %>/odata/"
+ xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
+ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+ xmlns="http://www.w3.org/2005/Atom">
+  <title type="text">{collection}</title>
+  <id>http:<%= get_host(@conn) %>/odata/<%= @collection %></id>
+  <updated>{update_time}</updated>
+  <m:count>100</m:count>
+  <link rel="self" title="<%= @collection %>"
+ href="http:<%= get_host(@conn) %>/odata/<%= @collection %>" />
+
+ <%= for entry <- @entries do %>
+    <%= render "entry.xml", conn: @conn, collection: @collection, entry: entry%>
+<%= end %>
+ </feed>

@@ -29,7 +29,6 @@ defmodule ApiServer.Router do
     get "/:_theme/:_service", ApiController, :service_direct
 
   end
-
   scope "/", ApiServer do
     pipe_through :browser # Use the default browser stack
 
@@ -39,7 +38,8 @@ defmodule ApiServer.Router do
     get "/stream", PageController, :info
 
     get "/odata", ODataController, :index
-    get "/odata/:theme", ODataController, :root
+    get "/odata/service", ODataController, :service
+    get "/odata/service/:theme", ODataController, :root
 
     get "/:theme", PageController, :theme
     get "/:theme/:service", PageController, :service

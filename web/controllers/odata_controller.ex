@@ -1,19 +1,31 @@
 defmodule ApiServer.ODataController do
   use ApiServer.Web, :controller
-  alias Database.Lookups
+  alias ApiServer.Manifest.Server, as: Manifests
 
   def index(conn, _params) do
-    themes =  Lookups.find_all(:themes)
-    |> Map.keys()
-    |> Enum.sort
+    themes = Manifests.list_themes(:lookup)
+    |> Enum.map(fn x-> x.id end)
 
     conn
     |> assign(:themes, themes)
     |> render("index.html")
   end
 
-  def root(conn, %{"theme"=>theme}) do
-    # Generate root document for the theme tables ....
+  def service(conn, %{}) do
+    themes = Manifests.list_themes(:lookup)
+
+    conn
+    |> assign(:themes, themes)
+    |> render("service.xml")
+  end
+
+  def root(conn, %{"theme"=>theme}=params) do
+    top = Map.get(params, "$top")
+
+    conn
+    |> assign(:collection, theme)
+    |> assign(:entries, [%{:fields => [{"wombles","Edm.Bool", ""}]}])    
+    |> render("root.xml")
   end
 
 end

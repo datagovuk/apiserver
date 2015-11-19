@@ -4,9 +4,8 @@
     <p>This page provides access to the OData Endpoints for each theme</p>
     <p>By selecting your desired OData feed you can <a href="https://support.office.com/en-za/article/Connect-to-an-OData-feed-Power-Query-4441a94d-9392-488a-a6a9-739b6d2ad500" target="_blank">download the data directly into Excel</a>, or import it into <a href="http://www.tableau.com" target="_blank">Tableau</a> for visualising the data</p>
 
-
     <%= for theme <- @themes do %>
-    <div style='margin-bottom: 40px;'>
+    <div style='margin-top: 40px;'>
         <h3><%= prettify(theme) %></h3>
 
         <div style="margin-top: 20px;">
