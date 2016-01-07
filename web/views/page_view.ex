@@ -2,6 +2,11 @@ defmodule ApiServer.PageView do
   use ApiServer.Web, :view
   alias Poison, as: JSON
 
+
+  def has_map(manifests) do
+    manifests |> Enum.any?(fn x->x.geo end)
+  end
+
   def default_value(field) do
     field |> Map.get(:default, "")
   end

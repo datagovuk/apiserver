@@ -29,8 +29,15 @@ defmodule ApiServer.Router do
     get "/:_theme/:_service", ApiController, :service_direct
 
   end
+
+  scope "/v2", ApiServer do
+    pipe_through :browser
+    get "/:theme/:service", V2Controller, :service
+  end
+
+
   scope "/", ApiServer do
-    pipe_through :browser # Use the default browser stack
+    pipe_through :browser
 
     get "/", PageController, :index
     get "/about", PageController, :about
@@ -45,5 +52,6 @@ defmodule ApiServer.Router do
     get "/:theme/:service", PageController, :service
     get "/:theme/:service/docs", PageController, :service_docs
   end
+
 
 end
