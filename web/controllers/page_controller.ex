@@ -1,14 +1,13 @@
 defmodule ApiServer.PageController do
+
   use ApiServer.Web, :controller
   alias ApiServer.Manifest.Server, as: Manifests
 
   def index(conn, _params) do
-
     themes = Manifests.list_themes(:lookup)
 
     conn
-    |> assign(:themes, themes)
-    |> render "index.html"
+    |> render "index.html", %{:themes => themes}
   end
 
   def about(conn, _params) do
@@ -24,7 +23,6 @@ defmodule ApiServer.PageController do
     conn
     |> render "docs.html"
   end
-
 
   @doc """
   The theme homepage containing the API UI and information on usage
@@ -52,20 +50,21 @@ defmodule ApiServer.PageController do
     distincts = Database.Lookups.find(:distincts, theme)
 
     conn
-    |> assign(:theme, theme)
-    |> assign(:manifests, manifests)
-    |> assign(:distincts, distincts)
-    |> assign(:schema, schemas)
-    |> assign(:themes, themes)
     |> delete_resp_header("cache-control")
-    |> render("theme.html")
+    |> render("theme.html", %{
+      :theme => theme,
+      :manifests =>manifests,
+      :distincts => distincts,
+      :schema => schemas,
+      :themes => themes} )
   end
 
   def service(conn, %{"theme"=>theme, "service"=>service}) do
     conn
-    |> assign(:theme, theme)
-    |> assign(:service_name, service)
-    |> render("service.html")
+    |> render("service.html", %{
+       :theme => theme,
+       :service_name => service
+      })
   end
 
 end
