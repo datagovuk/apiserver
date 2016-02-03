@@ -66,7 +66,7 @@
     <h3 id="filters">Filters</h3>
     <p>Filtered queries are available by specifying the field and value in the query string of a request to <span class="special">/data/api/service/:theme/:service</span>.  For example to find a clinic with the organisation_code of NCP21 a request should be made to <span class="special"><a target="_blank" href="/data/api/service/health/clinics?organisation_code=NCP21"><%= get_host(@conn) %>/data/api/health/clinics?organisation_code=NCP21</a></span></p>
 	
-	<pre class="special-lg">
+    <pre class="special-lg">
 {
   "success":true,
   "result": [
@@ -94,7 +94,7 @@
     }
   ]
 }
-	</pre>
+    </pre>
     <p>Information on what fields are available can be found in the Advanced tab, although an API may be made available to access the schema for a service directly in future.</p>
 
     <h3 id="sql">Using SQL</h3>
