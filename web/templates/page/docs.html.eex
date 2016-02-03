@@ -95,7 +95,7 @@
   ]
 }
 	</pre>
-    <p>Information on what fields are available can be found in the Advanced tab, although an API may be made available to access the schema for a service directly in future.</p>
+    <p>Information on what fields are available can be found in the SQL tab, although an API may be made available to access the schema for a service directly in future.</p>
 
     <h3 id="sql">Using SQL</h3>
 
