@@ -95,6 +95,9 @@
   ]
 }
     </pre>
+
+    <p>Multiple filters can be applied through the use of the &amp; operator. For example, to return all planned road works on the M1 where the local_authority is "Leicestershire / Northamptonshire" a request should be made to <span class="special"><a target="_blank" href="/data/api/service/transport/planned_road_works?road=M1&local_authority=Leicestershire / Northamptonshire"><%= get_host(@conn) %>/data/api/service/transport/planned_road_works?road=M1&local_authority=Leicestershire / Northamptonshire</a></span></p>
+
     <p>Information on what fields are available can be found in the SQL tab, although an API may be made available to access the schema for a service directly in future.</p>
 
     <h3 id="sql">Using SQL</h3>
