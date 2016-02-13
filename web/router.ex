@@ -19,6 +19,7 @@ defmodule ApiServer.Router do
     pipe_through :api
 
     get "/", ApiController, :info
+    get "/status", ApiController, :status
     get "/:theme", ApiController, :info
 
     get "/:theme/distinct", ApiController, :distinct

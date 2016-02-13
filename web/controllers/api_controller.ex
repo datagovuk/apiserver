@@ -15,6 +15,18 @@ defmodule ApiServer.ApiController do
   end
 
   @doc """
+  Returns status and info about the system
+  """
+ def status(conn, _) do
+    {:ok, vsn} = :application.get_key(:api_server, :vsn)
+
+    json conn, %{
+        version: List.to_string(vsn)
+    }
+  end
+
+
+  @doc """
   Returns the manifest metadata for all of the themes
   """
   def info(conn, %{}) do
