@@ -59,13 +59,13 @@
     <p>The list of service endpoints for a given theme is also available, for example <span class="special"><a href="/data/api/service/health"><%= get_host(@conn) %>/data/api/service/health</a></span></p>
 
     <h3 id="predefined">Pre-defined queries</h3>
-    <p>Within each theme, most services have a list of <a href="/health">pre-defined</a> queries that can be used and completed by the user.  This functionality can be replicated by using the filter api below.</p>
+    <p>Within each theme, most services have a list of pre-defined queries (such as those for the <a href="/data/api/health">health theme</a>) that can be used and completed by the user.  This functionality can be replicated by using the filter api below.</p>
 
     <p>It is possible however, for each theme and service, to get a list of the known distinct fields.  These fields have been identified as containing a limited set of values and are therefore available for use.  They can be accessed at <span class="special"><a href="/data/api/service/health/distinct"><%= get_host(@conn) %>/data/api/service/health/distinct</a></span>.  It is also possible to get the distinct values for a single service, so social_care_locations within health would be <span class="special"><a href="/data/api/service/health/distinct/social_care_locations"><%= get_host(@conn) %>/data/api/service/health/distinct/social_care_locations</a></span>.</p>
 
     <h3 id="filters">Filters</h3>
     <p>Filtered queries are available by specifying the field and value in the query string of a request to <span class="special">/data/api/service/:theme/:service</span>.  For example to find a clinic with the organisation_code of NCP21 a request should be made to <span class="special"><a target="_blank" href="/data/api/service/health/clinics?organisation_code=NCP21"><%= get_host(@conn) %>/data/api/health/clinics?organisation_code=NCP21</a></span></p>
-	
+
     <pre class="special-lg">
 {
   "success":true,
@@ -95,7 +95,10 @@
   ]
 }
     </pre>
-    <p>Information on what fields are available can be found in the Advanced tab, although an API may be made available to access the schema for a service directly in future.</p>
+
+    <p>Multiple filters can be applied through the use of the &amp; operator. For example, to return all planned road works on the M1 where the local_authority is "Leicestershire / Northamptonshire" a request should be made to <span class="special"><a target="_blank" href="/data/api/service/transport/planned_road_works?road=M1&local_authority=Leicestershire / Northamptonshire"><%= get_host(@conn) %>/data/api/service/transport/planned_road_works?road=M1&local_authority=Leicestershire / Northamptonshire</a></span></p>
+
+    <p>Information on what fields are available can be found in the SQL tab, although an API may be made available to access the schema for a service directly in future.</p>
 
     <h3 id="sql">Using SQL</h3>
 
