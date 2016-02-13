@@ -12,7 +12,7 @@
   "epgsql": {:git, "git://github.com/epgsql/epgsql.git", "9f52f198c15a7f5d364c3dd8413030e9d02e4e80", []},
   "erlware_commons": {:hex, :erlware_commons, "0.15.0"},
   "ex_statsd": {:hex, :ex_statsd, "0.5.0"},
-  "exrm": {:hex, :exrm, "0.19.9"},
+  "exrm": {:hex, :exrm, "1.0.0-rc7"},
   "fs": {:hex, :fs, "0.9.2"},
   "geo": {:hex, :geo, "0.17.0"},
   "getopt": {:hex, :getopt, "0.8.2"},

@@ -29,7 +29,8 @@ end
 # which you typically run after static files are built.
 config :api_server, ApiServer.Endpoint,
   http: [port: ConfigHelper.get_port(System.get_env("PORT")) ],
-  url: [host: ConfigHelper.get_host(System.get_env("HOST")), port: 80, path: "/"]
+  url: [host: ConfigHelper.get_host(System.get_env("HOST")), port: 80, path: "/"],
+  server: true
 
 config :api_server, ApiServer.Endpoint,
   live_reload: []
