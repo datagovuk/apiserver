@@ -330,3 +330,8 @@ a.basic:hover {
   top: 95px;
   left: .5em;
 }
+
+.control-div-inner {
+  background-color: #fff;
+  padding: 8px;
+}

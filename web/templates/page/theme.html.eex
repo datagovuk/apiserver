@@ -17,8 +17,7 @@ host = '<%= get_host(@conn) %>';
   </div>
 </div>
 
-
-<div style="margin-top: 20px">
+<div class="row" style="margin-top: 20px">
     <div class="pull-right">
         <div class="dataset-theme theme-<%= @theme %>">
             <div class="theme-name"><%= capitalize(@theme)%></div>
@@ -27,90 +26,23 @@ host = '<%= get_host(@conn) %>';
 </div>
 
 
- <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="dgu-tab active"><a id='basic_tab' href="#_basic" aria-controls="home" role="tab" data-toggle="tab">Basic</a></li>
-    <li class="dgu-tab" role="presentation"><a  id='sql_tab' href="#_advanced" aria-controls="profile" role="tab" data-toggle="tab">SQL</a></li>
-    <%= if has_map(@manifests)     do %>
-        <li class="dgu-tab" role="presentation"><a  id='map_tab' href="#_map" aria-controls="profile" role="tab" data-toggle="tab">Maps</a></li>
-    <% end %>
-</ul>
+<div class="row" style="margin-top: 40px;">
 
-
-<div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="_basic" style="margin-top: 20px;">
-        <%= render "basic.html", conn: @conn, manifests: @manifests, theme: @theme,
-                                    schema: @schema, distincts: @distincts,
-                                    host: get_host(@conn) %>
-    </div>
-
-    <div role="tabpanel" class="tab-pane" id="_advanced"  style="margin-top: 20px;">
-        <%= render "advanced.html",  conn: @conn, manifests: @manifests, theme: @theme,
-                                    schema: @schema, distincts: @distincts%>
-    </div>
-
-    <!-- We only want maps if we have any data to display -->
-     <%= if has_map(@manifests)     do %>
-        <div role="tabpanel" class="tab-pane" id="_map"  style="margin-top: 20px;">
-            <%= render "map.html",  conn: @conn, manifests: @manifests, theme: @theme,
-                                        schema: @schema, distincts: @distincts%>
+    <%= for manifest <- @manifests do %>
+    <div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3><%= manifest.title %></h3>
         </div>
-    <% end  %>
-</div>
+        <div class="panel-body">
+            <p><%= manifest.description %></p>
+            <a class="pull-right btn btn-success" href='/data/api/<%= @theme %>/<%= manifest.id %>' style="text-decoration:none;">
+                Visit API
+            </a>
+        </div>
+    </div>
+    </div>
+    <% end %>
 
 </div>
 
-<script type="text/javascript">
-    var editor = null;
-    var editor_loaded = false;
-    var map_loaded = false;
-
-    function setup_editor() {
-        editor = ace.edit("editor");
-        editor.setTheme("ace/theme/monokai");
-        editor.getSession().setMode("ace/mode/sql");
-        editor_loaded = true;
-        $('#schematabs a:first').tab('show');
-    }
-
-    function setup_map() {
-        init_map();
-        map_loaded = true;
-    }
-
-    $('.dgu-tab a').click(function (e) {
-        e.preventDefault();
-
-        if (e.target.hash == "#_advanced" && !editor_loaded) { setup_editor(); }
-        if (e.target.hash == "#_map" && !map_loaded) { setup_map(); }
-        if (e.target.hash == "#_basic" ){
-            <%= for manifest <- @manifests do %>
-                var h = $('#basic-<%= manifest.id %>-details').first().css('height');
-                if ( h != undefined ){
-                    $('#basic-<%= manifest.id %>-container').css('height', h);
-                }
-            <% end %>
-        };
-    });
-
-    if (window.location.hash != undefined) {
-        var hash = window.location.hash.substring(1);
-        if ( hash == 'sql') { setup_editor(); }
-        if ( hash == 'map') { setup_map(); }
-        $('#' + hash + '_tab').tab('show');
-    }
-
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var t = $(e.target).attr('id');
-        var fragment = t.substring(0, t.indexOf('_'));
-        window.location.hash = fragment;
-
-        if ( t == 'basic_tab') {
-            <%= for manifest <- @manifests do %>
-                var h = $('#basic-<%= manifest.id %>-details').first().css('height');
-                if ( h != undefined ){
-                    $('#basic-<%= manifest.id %>-container').css('height', h);
-                }
-            <% end %>
-        }
-    })
-</script>

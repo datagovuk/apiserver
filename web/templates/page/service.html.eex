@@ -1,18 +1,79 @@
+<%= render "banner.html", breadcrumb: @theme, themes: @themes %>
+
+<script>
+theme = '<%= @theme %>';
+host = '<%= get_host(@conn) %>';
+</script>
+<script src="<%= static_path(@conn, "/data/api/js/api.js") %>"></script>
 
 <div class="container">
 
-<ol class="breadcrumb pull-left">
-  <li><a href="/">Home</a></li>
-  <li><a href="/<%= @theme %>"><%= capitalize(@theme) %></a></li>
-  <li class="active"><%= prettify(@service_name) %></li>
-</ol>
-<h2 class='pull-right'><%= capitalize(@theme)%></h2>
-<div class="clearfix"></div>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <input type="text" id="link-modal" class="form-control input-lg" style="font-size: 1.3em">
+    </div>
+  </div>
+</div>
+
+<div class="row" style="margin-top: 20px">
+    <h2 class='pull-left'><%= @manifest.title %></h2>
+    <div class="pull-right">
+        <div class="dataset-theme theme-<%= @theme %>">
+            <div class="theme-name"><%= capitalize(@theme)%></div>
+        </div>
+    </div>
+</div>
 
 
+<div class="row" style="margin-top: 20px">
+    <div class="col-md-8">
+        <div class="control-div-inner">
+            <h4>Query</h4>
+            <form class="form form-horizontal">
+                <%= for item <- @manifest.fields do %>
+                    <div class="col-md-4" style="margin-top: 9px">
+                        <label for="">
+                            <%= prettify(item.name) %>
+                        </label>
+                        <input type="text" class="form-control">
+                    </div>
+                <% end %>
 
+                <div class="clearfix">&nbsp;</div>
+                <div>
+                    <input type='submit' class="btn btn-success pull-right" value='Update'>
+                </div>
+                <div class="clearfix">&nbsp;</div>
+            </form>
 
+        </div>
+    </div>
 
+    <div class="col-md-4">
+        <div class="control-div-inner">
+            <h4>Info</h4>
+            <p><%= @manifest.description %></p>
+        </div>
+    </div>
+</div>
 
+<div class="row" style="margin-top: 20px">
+    <div class="col-md-8">
+        <div class="control-div-inner">
+            <h4>Results</h4>
+        </div>
+    </div>
 
+    <div class="col-md-4">
+        <div class="control-div-inner">
+            <h4>Map</h4>
+            <%= if not @manifest.geo do %>
+                This dataset contains no geography
+            <% else %>
+b
+            <% end %>
+        </div>
+    </div>
 </div>

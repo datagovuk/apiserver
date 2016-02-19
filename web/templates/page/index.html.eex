@@ -31,7 +31,7 @@
         <%= for theme <- @themes do %>
             <div class="col-md-3">
                 <a href='/data/api/<%= theme.id %>' style="text-decoration:none;">
-                    <div class="dataset-theme theme-<%= theme.id%>">
+                    <div class="dataset-theme theme-<%= theme.id %>">
                         <div><%= theme.title%></div>
                     </div>
                 </a>

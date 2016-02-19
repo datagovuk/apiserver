@@ -18,40 +18,37 @@ defmodule ApiServer.Router do
   scope "/service", ApiServer do
     pipe_through :api
 
-    get "/", ApiController, :info
-    get "/status", ApiController, :status
-    get "/:theme", ApiController, :info
-
-    get "/:theme/distinct", ApiController, :distinct
-    get "/:theme/distinct/:service", ApiController, :distinct
-
-    get "/:theme/sql", ApiController, :theme_sql
-    get "/:theme/:service/:method", ApiController, :service
-    get "/:_theme/:_service", ApiController, :service_direct
+#     get "/", ApiController, :info
+#     get "/status", ApiController, :status
+#     get "/:theme", ApiController, :info
+#
+#     get "/:theme/distinct", ApiController, :distinct
+#     get "/:theme/distinct/:service", ApiController, :distinct
+#
+#     get "/:theme/sql", ApiController, :theme_sql
+#     get "/:theme/:service/:method", ApiController, :service
+#     get "/:_theme/:_service", ApiController, :service_direct
 
   end
-
-  scope "/v2", ApiServer do
-    pipe_through :browser
-    get "/:theme/:service", V2Controller, :service
-  end
-
 
   scope "/", ApiServer do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/about", PageController, :about
-    get "/documentation", PageController, :docs
-    get "/stream", PageController, :info
-
-    get "/odata", ODataController, :index
-    get "/odata/service", ODataController, :service
-    get "/odata/service/:theme", ODataController, :root
-
-    get "/:theme", PageController, :theme
     get "/:theme/:service", PageController, :service
-    get "/:theme/:service/docs", PageController, :service_docs
+    get "/:theme", PageController, :theme_page
+
+#    get "/about", PageController, :about
+#    get "/documentation", PageController, :docs
+#    get "/stream", PageController, :info
+
+#    get "/odata", ODataController, :index
+#    get "/odata/service", ODataController, :service
+#    get "/odata/service/:theme", ODataController, :root
+
+#    get "/:theme", PageController, :theme
+#    get "/:theme/:service", PageController, :service
+#    get "/:theme/:service/docs", PageController, :service_docs
   end
 
 
