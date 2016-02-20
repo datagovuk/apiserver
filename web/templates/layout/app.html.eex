@@ -10,7 +10,7 @@
     <title>Data.gov.uk - API Server</title>
 
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
-
+    <link href='//cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/bootstrap.min.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/data/api/css/bootstrap-select.min.css") %>">
@@ -32,6 +32,7 @@
     <script src="<%= static_path(@conn, "/data/api/js/theme-monokai.js") %>"></script>
 
     <script src="<%= static_path(@conn, "/data/api/js/ol.min.js") %>"></script>
+    <script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
   </head>
 

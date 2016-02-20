@@ -1,11 +1,5 @@
 <%= render "banner.html", breadcrumb: @theme, themes: @themes %>
 
-<script>
-theme = '<%= @theme %>';
-host = '<%= get_host(@conn) %>';
-</script>
-<script src="<%= static_path(@conn, "/data/api/js/api.js") %>"></script>
-
 <div class="container">
 
 
@@ -70,7 +64,8 @@ host = '<%= get_host(@conn) %>';
         <div class="panel panel-default">
             <div class="panel-heading"><h4>Results</h4></div>
             <div class="panel-body">
-
+                <table id='results'>
+                </table>
             </div>
             <div class="panel-footer">
 
@@ -91,3 +86,8 @@ host = '<%= get_host(@conn) %>';
         </div>
     </div>
 </div>
+
+<script src="<%= static_path(@conn, "/data/api/js/api.js") %>"></script>
+<script>
+init_service_page('<%= @manifest.tablename %>', '<%= @theme %>');
+</script>

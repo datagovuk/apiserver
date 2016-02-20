@@ -1,3 +1,44 @@
+var show_rows = 25;
+
+function init_service_page(tablename, theme){
+    var query = 'select * from ' + tablename + ' limit ' + show_rows;
+    make_sql_call(theme, query)
+}
+
+function get_table(inner){
+    if ( $.fn.dataTable.isDataTable( '#results' ) ) {
+        table = $('#results').DataTable();
+        return table;
+    }
+
+    return $('#results').DataTable( inner );
+}
+
+function make_sql_call(theme, query) {
+    var url = "/data/api/service/" + theme + "/sql?query=" + query
+    $.ajax({
+        url: url,
+        dataType: "json"
+    }).done(function( obj ) {
+        console.log(obj.result[0])
+        fields = Object.keys(obj.result[0]);
+        columns = [];
+        for( var i = 0; i< fields.length; i++)
+            columns.push({title: fields[i]})
+        console.log(columns)
+        get_table( {
+            data: obj.result,
+            columns: columns
+       });
+    }).error(function(){
+        console.log('error')
+    });
+}
+
+
+
+
+
 function submit_distinct(service, field, btn) {
     var url = $("#form-" + service + "-" + field).attr('action');
     var select = $("#filter-" + service + "-" + field);
