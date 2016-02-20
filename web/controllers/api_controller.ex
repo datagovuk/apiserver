@@ -15,6 +15,21 @@ defmodule ApiServer.ApiController do
   end
 
   @doc """
+  Returns the manifest metadata for all of the themes
+  """
+  def info(conn, %{}) do
+    manifests = :themes
+    |> Database.Lookups.find_all
+    |> Enum.map(fn {k, v}->
+        {k, get_service_basics(v)}
+    end)
+    |> Enum.into(%{})
+
+    json conn, manifests
+  end
+
+
+  @doc """
   Returns status and info about the system
   """
  def status(conn, _) do
@@ -25,21 +40,6 @@ defmodule ApiServer.ApiController do
     }
   end
 
-
-  @doc """
-  Returns the manifest metadata for all of the themes
-  """
-  def info(conn, %{}) do
-    manifests = :themes
-    |> Database.Lookups.find_all
-    |> Enum.map(fn {k, v}->
-        {k, get_service_basics(v)}
-    end)
-    |> Enum.into %{}
-
-    json conn, manifests
-  end
-
   @doc """
   Returns the distinct data for the specified theme
   """
@@ -47,18 +47,18 @@ defmodule ApiServer.ApiController do
     d = :distincts |> Database.Lookups.find(theme)
     case d do
       nil ->
-        conn |> put_status(404) |> json %{}
+        conn |> put_status(404) |> json(%{})
       _ ->
-        json conn, d |> Dict.get(service, %{})
+        json(conn, d |> Dict.get(service, %{}))
     end
   end
   def distinct(conn, %{"theme"=>theme}) do
     d = :distincts |> Database.Lookups.find(theme)
     case d do
       nil ->
-        conn |> put_status(404) |> json %{}
+        conn |> put_status(404) |> json(%{})
       _ ->
-        json conn, d
+        json(conn, d)
     end
   end
 
@@ -100,7 +100,7 @@ defmodule ApiServer.ApiController do
         end
 
         conn
-        |> write_csv schema, rows
+        |> write_csv(schema, rows)
       "ttl" ->
         conn
         |> put_layout(false)
@@ -109,7 +109,7 @@ defmodule ApiServer.ApiController do
                            "attachment; filename=\"query.ttl\";")
         |> assign(:objects, Map.get(res, "result"))
         |> assign(:base, url_for_ttl_base(conn, theme, ""))
-        |> render "ttl.html"
+        |> render("ttl.html")
       _ ->
         conn |> put_status(400)
     end
@@ -118,7 +118,7 @@ defmodule ApiServer.ApiController do
   def theme_sql(conn, %{"query"=>query}) do
     # TODO: Still need to limit these properly ...
       conn
-      |> json Database.Schema.call_sql_api(query)
+      |> json(Database.Schema.call_sql_api(query))
   end
 
   defp validate_query(theme, service, query) do
@@ -150,7 +150,7 @@ defmodule ApiServer.ApiController do
       |> put_resp_header("content-disposition",
                          "attachment; filename=\"query.csv\";")
       |> assign(:csv_stream, csv_stream)
-      |> render "csv.html"
+      |> render("csv.html")
   end
 
   @doc """
@@ -173,7 +173,7 @@ defmodule ApiServer.ApiController do
         end)
 
         conn
-        |> write_csv schema, rows
+        |> write_csv(schema, rows)
       "ttl" ->
         conn
         |> put_layout(false)
@@ -182,7 +182,7 @@ defmodule ApiServer.ApiController do
                            "attachment; filename=\"query.ttl\";")
         |> assign(:objects, res)
         |> assign(:base, url_for_ttl_base(conn, theme, service))
-        |> render "ttl.html"
+        |> render("ttl.html")
       _ ->
         conn |> put_status(400)
     end
@@ -198,12 +198,12 @@ defmodule ApiServer.ApiController do
     case process_api_call(params, svc, nil) do
       {:error, error} ->
           conn
-          |> json %{"success"=> false, "error"=> error}
+          |> json(%{"success"=> false, "error"=> error})
       nil ->
           conn |> put_status(400)
       res ->
           conn
-          |> json %{"success"=>true, "result"=>res}
+          |> json(%{"success"=>true, "result"=>res})
     end
   end
 
@@ -216,7 +216,7 @@ defmodule ApiServer.ApiController do
     parameters = params
     |> Enum.filter(fn {k, _}-> !String.starts_with?(k, "_")  end)
     |> Enum.filter(fn {_, v}-> String.length(v) > 0  end)
-    |> Enum.into %{}
+    |> Enum.into(%{})
 
     {query, arguments} = service_direct_query(parameters, service)
     res = Database.Schema.call_api(query, arguments, format: format)
@@ -230,7 +230,7 @@ defmodule ApiServer.ApiController do
         end)
 
         conn
-        |> write_csv schema, rows
+        |> write_csv(schema, rows)
       "ttl" ->
         conn
         |> put_layout(false)
@@ -239,7 +239,7 @@ defmodule ApiServer.ApiController do
                            "attachment; filename=\"query.ttl\";")
         |> assign(:objects, res)
         |> assign(:base, url_for_ttl_base(conn, theme, service))
-        |> render "ttl.html"
+        |> render("ttl.html")
       end
   end
 
@@ -252,14 +252,14 @@ defmodule ApiServer.ApiController do
     parameters = params
     |> Enum.filter(fn {k, _}-> !String.starts_with?(k, "_")  end)
     |> Enum.filter(fn {_, v}-> String.length(v) > 0  end)
-    |> Enum.into %{}
+    |> Enum.into(%{})
 
     service_direct_process(conn, theme, parameters, service)
   end
 
   defp service_direct_process(conn, _theme, m, _service) when map_size(m) == 0 do
     conn
-    |> json %{"success"=> false, "error"=> "No filters were supplied"}
+    |> json(%{"success"=> false, "error"=> "No filters were supplied"})
   end
   defp service_direct_process(conn, _theme, parameters, service) do
 
@@ -269,10 +269,10 @@ defmodule ApiServer.ApiController do
     case res do
       {:error, error} ->
           conn
-          |> json %{"success"=> false, "error"=> error}
+          |> json(%{"success"=> false, "error"=> error})
       res ->
           conn
-          |> json %{"success"=>true, "result"=>res}
+          |> json(%{"success"=>true, "result"=>res})
     end
   end
 
