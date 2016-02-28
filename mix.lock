@@ -34,6 +34,4 @@
   "providers": {:hex, :providers, "1.4.1"},
   "ranch": {:hex, :ranch, "1.1.0"},
   "relx": {:hex, :relx, "3.5.0"},
-  "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"},
-  "yamerl": {:git, "https://github.com/yakaz/yamerl.git", "ae810a808817d9482b4628ae3e20d746e3729fe0", []},
-  "yaml_elixir": {:git, "https://github.com/KamilLelonek/yaml-elixir.git", "fcafa4933cc7e2c8a1002dfd03c2a7249dc08565", []}}
+  "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"}}
