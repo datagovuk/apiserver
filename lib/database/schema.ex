@@ -78,7 +78,13 @@ defmodule Database.Schema do
   end
 
  def call_sql_api(query, options \\ []) do
+    check_query_performance(query) |> call_sql_api_inner(query, options)
+end
 
+def call_sql_api_inner(true, _, _) do
+    %{"success"=> false, "error" => "Query would take too long to run, please apply a LIMIT of less than 5000 rows"}
+end
+def call_sql_api_inner(_, query, options \\ []) do
     fmt = Keyword.get(options, :format)
     :poolboy.transaction(:apiserver, fn(worker)->
      resp = case Worker.query(worker, query)  do
@@ -98,6 +104,37 @@ defmodule Database.Schema do
     end)
    end
 
+
+  @doc """
+  For a given query, will check whether it is likely to run slowly
+  """
+  def check_query_performance(query) do
+    q = "EXPLAIN (format json) #{query}"
+
+    plan = :poolboy.transaction(:apiserver, fn(worker)->
+      Worker.query(worker, q)
+    end)
+
+    case plan do
+      {:ok, results} ->
+        data = results.rows
+        |> List.flatten
+        |> hd
+
+        node_type = MapTraversal.find_value("Plan.Node Type", data)
+        cost = MapTraversal.find_value("Plan.Total Cost", data)
+
+        slow?(node_type, cost )
+      {:error, _} ->
+        # This will fail further on
+        :ok
+    end
+ end
+
+  def slow?("Limit", cost) when cost > 1000, do: true
+  def slow?("Seq Scan", cost) when cost > 1000, do: true
+  def slow?("Seq Scan", _), do: false
+  def slow?(_, _), do: false
 
   @doc """
   For a given query, will check whether it is limited and whether
