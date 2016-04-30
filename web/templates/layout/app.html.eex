@@ -75,5 +75,7 @@
 
     </div>
 
+    <%= {:safe, ga_block} %>
+
   </body>
 </html>

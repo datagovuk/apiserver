@@ -23,13 +23,13 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 The table below documents the environment variables used/interpreted by the api server.
 
-| Environment Var | Description | Example | Default |
-|----------|-----------|-----------|-----------|
-| MANIFESTS | Location of folder containing theme and manifests folders | /var/lib/apiserver/ | None |
-| MIX_ENV  | Which version of app to run  |  DEV, TEST, PROD  | DEV  |
-| PGPORT | Port on which Postgres is listening  | 5432  | 5432  |
-| DBUSER | Username for reading from database  | reader  |   |
-| DBPASS | Password for user reading from database  | reader  |   |
-
+| Environment Var | Description                                                      | Example             | Default     |
+| ----------      | -----------                                                      | -----------         | ----------- |
+| MANIFESTS       | Location of folder containing theme and manifests folders        | /var/lib/apiserver/ | None        |
+| MIX_ENV         | Which version of app to run                                      | DEV, TEST, PROD     | DEV         |
+| PGPORT          | Port on which Postgres is listening                              | 5432                | 5432        |
+| DBUSER          | Username for reading from database                               | reader              |             |
+| DBPASS          | Password for user reading from database                          | reader              |             |
+| GA_KEY          | A Google Analytics key, presence of which creates relevant block | UA-XXXXXXXX-1       |             |
 
 
