@@ -33,11 +33,11 @@ defmodule ApiServer.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 1.0.2"},
-     {:phoenix_html, "~> 2.0"},
+    [{:phoenix, "~> 1.2.1"},
+     {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
-     {:plug, "~> 1.0"},
+     {:plug, "~> 1.2.2"},
      {:poison, "~> 1.5.0"},
      {:corsica, "~> 0.3"},
      {:httpoison, "~> 0.7.2"},
@@ -45,7 +45,6 @@ defmodule ApiServer.Mixfile do
      {:postgrex, "~> 0.9.1"},
      {:geo, "~> 0.17.0"},
      { :econfig, github: "benoitc/econfig" },
-     {:exrm, "~> 1.0.0-rc7"}
   ]
   end
 end

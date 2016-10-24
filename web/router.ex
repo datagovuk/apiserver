@@ -31,12 +31,6 @@ defmodule ApiServer.Router do
 
   end
 
-  scope "/v2", ApiServer do
-    pipe_through :browser
-    get "/:theme/:service", V2Controller, :service
-  end
-
-
   scope "/", ApiServer do
     pipe_through :browser
 

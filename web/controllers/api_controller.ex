@@ -7,9 +7,9 @@ defmodule ApiServer.ApiController do
   Returns the manifest metadata for the specified theme.
   """
   def info(conn, %{"theme"=>theme}) do
-    manifests = :themes
-    |> Database.Lookups.find(theme)
-    |> get_service_basics
+    manifests =
+      Manifests.list_manifests(:lookup, theme)
+      |> Enum.map(&get_service_basics/1)
 
     json conn, manifests
   end
@@ -30,12 +30,15 @@ defmodule ApiServer.ApiController do
   Returns the manifest metadata for all of the themes
   """
   def info(conn, %{}) do
-    manifests = :themes
-    |> Database.Lookups.find_all
-    |> Enum.map(fn {k, v}->
-        {k, get_service_basics(v)}
+    manifests = Manifests.list_themes(:lookup)
+    |> Enum.map(fn theme->
+      IO.inspect theme.id
+      services =
+        Manifests.list_manifests(:lookup, theme.id)
+        |> Enum.map(&get_service_basics/1)
+      {theme.id, services}
     end)
-    |> Enum.into %{}
+    |> Enum.into(%{})
 
     json conn, manifests
   end
@@ -64,16 +67,11 @@ defmodule ApiServer.ApiController do
 
   defp get_service_basics(nil), do: %{}
   defp get_service_basics(m) do
-    m
-    |> Dict.get("services")
-    |> Enum.map(fn x->
-       %{
-          "name"=> Map.get(x, "name"),
-          "description"=> Map.get(x, "description"),
-          "dataset" => Map.get(x, "dataset", ""),
-          "large_dataset" => Map.get(x, "large_dataset", false)
-        }
-    end)
+     %{
+        "name": m.tablename,
+        "description": m.title,
+        "dataset": m.dataset,
+      }
   end
 
 
