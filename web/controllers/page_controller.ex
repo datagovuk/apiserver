@@ -44,7 +44,7 @@ defmodule ApiServer.PageController do
     themes = Manifests.list_themes(:lookup)
 
     schemas = manifests
-    |> Enum.map(fn x-> {x.id, x.fields} end)
+    |> Enum.map(fn x-> {x.id, {x.fields, x.indexes}} end)
     |> Enum.into %{}
 
     distincts = Database.Lookups.find(:distincts, theme)

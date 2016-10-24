@@ -8,7 +8,7 @@
         </ul>
 
         <div class="tab-content" style="height: 260px; overflow: scroll;">
-            <%= for {key, values}<- @schema do %>
+            <%= for {key, {values, indexes}}<- @schema do %>
 
             <div role="tabpanel" class="tab-pane active" id="<%= key %>" style="margin-top: 20px;">
                 <div class="row" style="margin-top: 10px;">
@@ -27,7 +27,11 @@
                             <tbody>
                             <%= for e <- values do %>
                                 <tr>
-                                    <td><%= e.name %></td>
+                                    <td><%= e.name %>
+                                        <%= if e.name in indexes do %>
+                                        [Indexed]
+                                        <% end %>
+                                    </td>
                                     <td><%= e.type %></td>
                                     <td></td>
                                 </tr>
