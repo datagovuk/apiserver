@@ -148,7 +148,7 @@ var init_map = function() {
     });
 
     var setup_layers = function(dataset_name) {
-      var data_url = '/data/api/service/transport/' + dataset_name + '/nearest';
+      var data_url = '/data/api/service/<%= @theme %>/' + dataset_name + '/nearest';
       return $.get(data_url, {lat: 53.399397, lon: -2.9803698000000622}, function(data){
           var features = [];
           if (data['success'] === true) {
