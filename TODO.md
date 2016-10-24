@@ -31,3 +31,4 @@ What we actually want from a manifest:
 Currently everything is under /theme, but there is also /api/theme/endpoint.  Perhaps we should have a page at /theme/endpoint which would be a lot less cluttered.
 
 Should we them have each endpoint as a choosable item on the theme page?
+
