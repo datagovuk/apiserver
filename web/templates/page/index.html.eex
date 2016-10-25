@@ -14,6 +14,8 @@
     This is an early trial of APIs for data.gov.uk datasets that will grow to
     include those in the
     <a href="https://data.gov.uk/data/search?core_dataset=true">National Information Infrastructure</a>.
+    <br/><br/>
+    Please <strong>do not use this API in a production environment</strong> as it is experimental and subject to change as a result of feedback. No guarantees are made about availability of the APIs and they may be withdrawn at any time.
     </p>
 
 
