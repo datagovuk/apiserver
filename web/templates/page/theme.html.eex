@@ -101,6 +101,7 @@ host = '<%= get_host(@conn) %>';
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var t = $(e.target).attr('id');
+        if (!t) return;
         var fragment = t.substring(0, t.indexOf('_'));
         window.location.hash = fragment;
 
